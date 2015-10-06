@@ -17,13 +17,6 @@ addons: &clang34
       - graphviz
       # mscgen is currently not whitelisted :(
       #- mscgen
-    # third-party dependencies
-      - libboost1.55-dev
-      - libboost-date-time1.55-dev
-      - libboost-log1.55-dev
-      - libboost-thread1.55-dev
-      - libboost-wave1.55-dev
-      - libboost1.55-all-dev
     sources:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.6
@@ -46,7 +39,7 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build-gcc5 && mkdir build-clang36
-  - cd ../build-gcc5
+  - cd build-gcc5
   - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release ..
   - make
   - cd ../build-clang36
