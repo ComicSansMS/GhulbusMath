@@ -1,0 +1,62 @@
+
+language: cpp
+sudo: false
+
+compiler:
+  - gcc
+addons: &clang34
+  apt:
+    packages:
+    # compiler
+      - clang-3.6
+      - g++-5
+      - gcc-5
+      - ninja-build
+    # doc tools
+      - doxygen
+      - graphviz
+      # mscgen is currently not whitelisted :(
+      #- mscgen
+    # third-party dependencies
+      - libboost1.55-dev
+      - libboost-date-time1.55-dev
+      - libboost-log1.55-dev
+      - libboost-thread1.55-dev
+      - libboost-wave1.55-dev
+      - libboost1.55-all-dev
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+      - boost-latest
+
+install:
+  - gcc-5 --version
+  - clang-3.6 --version
+  # install CMake 3.3
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+  - echo "f3546812c11ce7f5d64dc132a566b749 *cmake-3.3.2-Linux-x86_64.tar.gz" > cmake_md5.txt
+  - travis_retry wget http://cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz
+  - md5sum -c cmake_md5.txt
+  - tar -xvf cmake-3.3.2-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.3.2-Linux-x86_64 cmake-install
+  - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+  - which cmake
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build-gcc5 && mkdir build-clang36
+  - cd ../build-gcc5
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release ..
+  - make
+  - cd ../build-clang36
+  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release ..
+  - make
+  - cd ${TRAVIS_BUILD_DIR}
+
+script:
+  - cd build-gcc5
+  - make test
+  - cd ../build-clang36
+  - make test
+
