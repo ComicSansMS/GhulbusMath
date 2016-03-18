@@ -54,6 +54,20 @@ public:
         y -= rhs.y;
         return *this;
     }
+
+    Vector2<T>& operator*=(T s)
+    {
+        x *= s;
+        y *= s;
+        return *this;
+    }
+
+    Vector2<T>& operator/=(T s)
+    {
+        x /= s;
+        y /= s;
+        return *this;
+    }
 };
 
 template<typename T>
@@ -64,9 +78,33 @@ inline bool operator==(Vector2<T> const& lhs, Vector2<T> const& rhs)
 }
 
 template<typename T>
+inline bool operator<(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return (lhs.x != rhs.x) ? (lhs.x < rhs.x) : (lhs.y < rhs.y);
+}
+
+template<typename T>
 inline bool operator!=(Vector2<T> const& lhs, Vector2<T> const& rhs)
 {
     return !(lhs == rhs);
+}
+
+template<typename T>
+inline bool operator<=(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return !(rhs < lhs);
+}
+
+template<typename T>
+inline bool operator>(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return rhs < lhs;
+}
+
+template<typename T>
+inline bool operator>=(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return !(lhs < rhs);
 }
 
 template<typename T>
@@ -81,6 +119,24 @@ inline Vector2<T> operator-(Vector2<T> const& lhs, Vector2<T> const& rhs)
 {
     return Vector2<T>(lhs.x - rhs.x,
                       lhs.y - rhs.y);
+}
+
+template<typename T>
+inline Vector2<T> operator*(Vector2<T> const& v, T s)
+{
+    return Vector2<T>(v.x * s, v.y * s);
+}
+
+template<typename T>
+inline Vector2<T> operator*(T s, Vector2<T> const& v)
+{
+    return Vector2<T>(s * v.x, s * v.y);
+}
+
+template<typename T>
+inline Vector2<T> operator/(Vector2<T> const& v, T s)
+{
+    return Vector2<T>(v.x / s, v.y / s);
 }
 }
 
