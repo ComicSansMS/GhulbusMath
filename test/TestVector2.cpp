@@ -34,9 +34,9 @@ TEST_CASE("Vector2")
     using GHULBUS_MATH_NAMESPACE::Vector2;
     std::mt19937 gen(42);
 
-    SECTION("Default construction initializes to 0")
+    SECTION("Value initialization initializes to 0")
     {
-        Vector2<float> v;
+        Vector2<float> v{};
 
         CHECK(v.x == 0.0f);
         CHECK(v.y == 0.0f);
@@ -63,7 +63,7 @@ TEST_CASE("Vector2")
     {
         Vector2<float> v(42.0f, 23.5f);
 
-        Vector2<float> v2(GHULBUS_MATH_NAMESPACE::leave_uninitialized{});
+        Vector2<float> v2;
 
         v2 = v;
         CHECK(v2.x == 42.0f);
@@ -260,4 +260,5 @@ TEST_CASE("Vector2")
         CHECK(v2.x == 5.5f);
         CHECK(v2.y == 11.f);
     }
+
 }

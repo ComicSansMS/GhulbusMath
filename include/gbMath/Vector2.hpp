@@ -8,7 +8,6 @@
 */
 
 #include <gbMath/config.hpp>
-#include <gbMath/Common.hpp>
 
 #include <type_traits>
 
@@ -20,12 +19,9 @@ public:
     T x;
     T y;
 
-    Vector2()
-        :x(), y()
-    {}
-
-    Vector2(leave_uninitialized const&)
-    {}
+    Vector2() = default;
+    Vector2(Vector2<T> const&) = default;
+    Vector2<T>& operator=(Vector2<T> const&) = default;
 
     Vector2(T vx, T vy)
         :x(vx), y(vy)

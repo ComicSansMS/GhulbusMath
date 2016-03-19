@@ -23,7 +23,6 @@ set(GB_MATH_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
 
 set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
-    ${GB_MATH_INCLUDE_DIR}/gbMath/Common.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2SIMD.hpp
 )
