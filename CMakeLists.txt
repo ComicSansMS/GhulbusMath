@@ -25,11 +25,13 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2SIMD.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
 )
 
 set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2SIMD.cpp
+    ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
     ${GB_MATH_TEST_DIR}/TestMath.cpp
 )
 
