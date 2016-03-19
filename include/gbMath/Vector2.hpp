@@ -164,7 +164,7 @@ inline long double length(Vector2<long double> const& v)
 }
 
 template<typename T>
-inline std::enable_if_t<std::is_floating_point<T>::value, Vector2<T>> normalized(Vector2<T> const& v)
+inline typename std::enable_if<std::is_floating_point<T>::value, Vector2<T>>::type normalized(Vector2<T> const& v)
 {
     T const len = length(v);
     return Vector2<T>(v.x / len, v.y / len);

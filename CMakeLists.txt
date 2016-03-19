@@ -43,7 +43,7 @@ target_compile_features(gbMath INTERFACE cxx_lambdas cxx_override cxx_range_for)
 target_compile_features(gbMath INTERFACE cxx_attributes cxx_func_identifier cxx_noexcept)
 target_compile_options(gbMath INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
 target_compile_options(gbMath INTERFACE
-    $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall -std=c++14>)
+    $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>)
 
 ###############################################################################
 ## Testing gbMath
