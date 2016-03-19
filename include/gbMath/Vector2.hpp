@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <cmath>
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
@@ -25,6 +26,11 @@ public:
 
     Vector2(T vx, T vy)
         :x(vx), y(vy)
+    {}
+
+    template<typename U>
+    explicit Vector2(Vector2<U> const& v)
+        :x(static_cast<T>(v.x)), y(static_cast<T>(v.y))
     {}
 
     T& operator[](std::size_t idx)
@@ -133,6 +139,35 @@ template<typename T>
 inline Vector2<T> operator/(Vector2<T> const& v, T s)
 {
     return Vector2<T>(v.x / s, v.y / s);
+}
+
+template<typename T>
+inline T dot(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return (lhs.x * rhs.x) + (lhs.y * rhs.y);
+}
+
+template<typename T>
+inline double length(Vector2<T> const& v)
+{
+    return std::sqrt(static_cast<double>(dot(v, v)));
+}
+
+inline float length(Vector2<float> const& v)
+{
+    return std::sqrt(dot(v, v));
+}
+
+inline long double length(Vector2<long double> const& v)
+{
+    return std::sqrt(dot(v, v));
+}
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point<T>::value, Vector2<T>> normalized(Vector2<T> const& v)
+{
+    T const len = length(v);
+    return Vector2<T>(v.x / len, v.y / len);
 }
 }
 

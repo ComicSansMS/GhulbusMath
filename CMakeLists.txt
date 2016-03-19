@@ -25,6 +25,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2SIMD.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
 )
 

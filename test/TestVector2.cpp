@@ -1,4 +1,5 @@
 #include <gbMath/Vector2.hpp>
+#include <gbMath/VectorIO.hpp>
 
 #include <catch.hpp>
 
@@ -68,6 +69,15 @@ TEST_CASE("Vector2")
         v2 = v;
         CHECK(v2.x == 42.0f);
         CHECK(v2.y == 23.5f);
+    }
+
+    SECTION("Conversion construction")
+    {
+        Vector2<float> v(42.f, 23.5f);
+
+        Vector2<int> vi(v);
+        CHECK(vi.x == 42);
+        CHECK(vi.y == 23);
     }
 
     SECTION("Equality and not-equal comparisons")
@@ -252,6 +262,12 @@ TEST_CASE("Vector2")
         v1 /= 2.f;
         CHECK(v1.x == 5.5f);
         CHECK(v1.y == 11.f);
+
+        // integer vector uses integer division
+        Vector2<int> vi(11, 22);
+        vi /= 2;
+        CHECK(vi.x == 5);
+        CHECK(vi.y == 11);
     }
 
     SECTION("Scalar Division Non-Member")
@@ -259,6 +275,29 @@ TEST_CASE("Vector2")
         Vector2<float> v2 = Vector2<float>(11.f, 22.f) / 2.f;
         CHECK(v2.x == 5.5f);
         CHECK(v2.y == 11.f);
+
+        // integer vector uses integer division
+        Vector2<int> vi = Vector2<int>(11, 22) / 2;
+        CHECK(vi.x == 5);
+        CHECK(vi.y == 11);
+    }
+
+    SECTION("Dot product")
+    {
+        CHECK(dot(Vector2<float>(3.f, 5.f), Vector2<float>(7.f, 11.f)) == 76.f);
+    }
+
+    SECTION("Vector length")
+    {
+        CHECK(length(Vector2<int>(3, -5)) == std::sqrt(34.0));
+        CHECK(length(Vector2<float>(3.f, -5.f)) == std::sqrt(34.f));
+        CHECK(length(Vector2<long double>(3.0, -5.0)) == std::sqrt(static_cast<long double>(34.0)));
+    }
+
+    SECTION("Vector normalization")
+    {
+        CHECK(normalized(Vector2<float>(10.f, 0.f)) == Vector2<float>(1.f, 0.f));
+        CHECK(normalized(Vector2<float>(5.f, 5.f)) == Vector2<float>(1.f / std::sqrt(2.f), 1.f / std::sqrt(2.f)));
     }
 
 }
