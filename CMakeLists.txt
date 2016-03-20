@@ -23,6 +23,8 @@ set(GB_MATH_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
 
 set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix2.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2SIMD.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO.hpp
@@ -30,6 +32,7 @@ set(GB_MATH_HEADER_FILES
 )
 
 set(GB_MATH_TEST_SOURCES
+    ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2SIMD.cpp
     ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
