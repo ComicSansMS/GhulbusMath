@@ -3,7 +3,6 @@
 
 #include <catch.hpp>
 
-#include <random>
 #include <vector>
 
 namespace {
@@ -33,7 +32,6 @@ public:
 TEST_CASE("Vector2")
 {
     using GHULBUS_MATH_NAMESPACE::Vector2;
-    std::mt19937 gen(42);
 
     SECTION("Value initialization initializes to 0")
     {
@@ -92,6 +90,10 @@ TEST_CASE("Vector2")
         CHECK(v != v2);
         v.x = v2.x;
         CHECK_FALSE(v != v2);
+
+        v2.y = 55.0f;
+        CHECK_FALSE(v == v2);
+        CHECK(v != v2);
     }
 
     SECTION("Less-than comparison (lexicographic order)")
@@ -99,27 +101,27 @@ TEST_CASE("Vector2")
         // first element takes precedence
         CHECK(Vector2<float>(1.0f, 2.0f) < Vector2<float>(3.0f, 4.0f));
         CHECK(Vector2<float>(1.0f, 4.0f) < Vector2<float>(3.0f, 2.0f));
-        CHECK(!(Vector2<float>(3.0f, 2.0f) < Vector2<float>(1.0f, 4.0f)));
-        CHECK(!(Vector2<float>(3.0f, 4.0f) < Vector2<float>(1.0f, 2.0f)));
+        CHECK_FALSE(Vector2<float>(3.0f, 2.0f) < Vector2<float>(1.0f, 4.0f));
+        CHECK_FALSE(Vector2<float>(3.0f, 4.0f) < Vector2<float>(1.0f, 2.0f));
         // second element used if first element is equal
         CHECK(Vector2<float>(1.0f, 2.0f) < Vector2<float>(1.0f, 4.0f));
-        CHECK(!(Vector2<float>(1.0f, 2.0f) < Vector2<float>(1.0f, 1.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 2.0f) < Vector2<float>(1.0f, 1.0f));
         // not less if both equal
-        CHECK(!(Vector2<float>(1.0f, 1.0f) < Vector2<float>(1.0f, 1.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 1.0f) < Vector2<float>(1.0f, 1.0f));
     }
 
     SECTION("Greater-than comparison (lexicographic order)")
     {
         // first element takes precedence
-        CHECK(!(Vector2<float>(1.0f, 2.0f) > Vector2<float>(3.0f, 4.0f)));
-        CHECK(!(Vector2<float>(1.0f, 4.0f) > Vector2<float>(3.0f, 2.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 2.0f) > Vector2<float>(3.0f, 4.0f));
+        CHECK_FALSE(Vector2<float>(1.0f, 4.0f) > Vector2<float>(3.0f, 2.0f));
         CHECK(Vector2<float>(3.0f, 2.0f) > Vector2<float>(1.0f, 4.0f));
         CHECK(Vector2<float>(3.0f, 4.0f) > Vector2<float>(1.0f, 2.0f));
         // second element used if first element is equal
-        CHECK(!(Vector2<float>(1.0f, 2.0f) > Vector2<float>(1.0f, 4.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 2.0f) > Vector2<float>(1.0f, 4.0f));
         CHECK(Vector2<float>(1.0f, 2.0f) > Vector2<float>(1.0f, 1.0f));
         // not greater if both equal
-        CHECK(!(Vector2<float>(1.0f, 1.0f) > Vector2<float>(1.0f, 1.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 1.0f) > Vector2<float>(1.0f, 1.0f));
     }
 
     SECTION("Less-or-equal comparison (lexicographic order)")
@@ -127,26 +129,26 @@ TEST_CASE("Vector2")
         // first element takes precedence
         CHECK(Vector2<float>(1.0f, 2.0f) <= Vector2<float>(3.0f, 4.0f));
         CHECK(Vector2<float>(1.0f, 4.0f) <= Vector2<float>(3.0f, 2.0f));
-        CHECK(!(Vector2<float>(3.0f, 2.0f) <= Vector2<float>(1.0f, 4.0f)));
-        CHECK(!(Vector2<float>(3.0f, 4.0f) <= Vector2<float>(1.0f, 2.0f)));
+        CHECK_FALSE(Vector2<float>(3.0f, 2.0f) <= Vector2<float>(1.0f, 4.0f));
+        CHECK_FALSE(Vector2<float>(3.0f, 4.0f) <= Vector2<float>(1.0f, 2.0f));
         // second element used if first element is equal
         CHECK(Vector2<float>(1.0f, 2.0f) <= Vector2<float>(1.0f, 4.0f));
-        CHECK(!(Vector2<float>(1.0f, 2.0f) <= Vector2<float>(1.0f, 1.0f)));
-        // not less if both equal
+        CHECK_FALSE(Vector2<float>(1.0f, 2.0f) <= Vector2<float>(1.0f, 1.0f));
+        // both equal
         CHECK(Vector2<float>(1.0f, 1.0f) <= Vector2<float>(1.0f, 1.0f));
     }
 
     SECTION("Greater-or-equal comparison (lexicographic order)")
     {
         // first element takes precedence
-        CHECK(!(Vector2<float>(1.0f, 2.0f) >= Vector2<float>(3.0f, 4.0f)));
-        CHECK(!(Vector2<float>(1.0f, 4.0f) >= Vector2<float>(3.0f, 2.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 2.0f) >= Vector2<float>(3.0f, 4.0f));
+        CHECK_FALSE(Vector2<float>(1.0f, 4.0f) >= Vector2<float>(3.0f, 2.0f));
         CHECK(Vector2<float>(3.0f, 2.0f) >= Vector2<float>(1.0f, 4.0f));
         CHECK(Vector2<float>(3.0f, 4.0f) >= Vector2<float>(1.0f, 2.0f));
         // second element used if first element is equal
-        CHECK(!(Vector2<float>(1.0f, 2.0f) >= Vector2<float>(1.0f, 4.0f)));
+        CHECK_FALSE(Vector2<float>(1.0f, 2.0f) >= Vector2<float>(1.0f, 4.0f));
         CHECK(Vector2<float>(1.0f, 2.0f) >= Vector2<float>(1.0f, 1.0f));
-        // not greater if both equal
+        // both equal
         CHECK(Vector2<float>(1.0f, 1.0f) >= Vector2<float>(1.0f, 1.0f));
     }
 

@@ -17,7 +17,7 @@ namespace GHULBUS_MATH_NAMESPACE
 template<typename T>
 std::ostream& operator<<(std::ostream& os, Vector2<T> const& rhs)
 {
-    os << '[' << rhs.x << ", " << rhs.y << ']';
+    os << '[' << rhs.x << ' ' << rhs.y << ']';
     return os;
 }
 }
