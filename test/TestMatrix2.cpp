@@ -1,5 +1,6 @@
 #include <gbMath/Matrix2.hpp>
 #include <gbMath/MatrixIO.hpp>
+#include <gbMath/VectorIO.hpp>
 
 #include <catch.hpp>
 
@@ -215,5 +216,57 @@ TEST_CASE("Matrix2")
         Matrix2<float> m(1.f, 2.f, 3.f, 4.f);
         CHECK((m * 5.f) == Matrix2<float>(5.f, 10.f, 15.f, 20.f));
         CHECK((5.f * m) == Matrix2<float>(5.f, 10.f, 15.f, 20.f));
+    }
+
+    SECTION("Matrix-matrix multiplication")
+    {
+        Matrix2<float> m1(1.f, 2.f,
+                          3.f, 4.f);
+        Matrix2<float> const m2(0.5f,  0.25f,
+                                0.75f, 1.f);
+        m1 *= m2;
+        CHECK(m1 == Matrix2<float>(2.f,  2.25f,
+                                   4.5f, 4.75f));
+    }
+
+    SECTION("Matrix-matrix multiplication non-member")
+    {
+        Matrix2<float> const m1(1.f, 2.f,
+                                3.f, 4.f);
+        Matrix2<float> const m2(0.5f,  0.25f,
+                                0.75f, 1.f);
+        CHECK(m1 * m2 == Matrix2<float>(2.f,  2.25f,
+                                        4.5f, 4.75f));
+    }
+}
+
+TEST_CASE("Matrix2-Vector2 Interaction")
+{
+    using GHULBUS_MATH_NAMESPACE::Matrix2;
+    using GHULBUS_MATH_NAMESPACE::Vector2;
+
+    SECTION("Matrix from row vectors")
+    {
+        Vector2<float> row1(1.f, 2.f);
+        Vector2<float> row2(3.f, 4.f);
+
+        CHECK(matrixFromRowVectors(row1, row2) == Matrix2<float>(1.f, 2.f, 3.f, 4.f));
+    }
+
+    SECTION("Matrix from column vectors")
+    {
+        Vector2<float> col1(1.f, 2.f);
+        Vector2<float> col2(3.f, 4.f);
+
+        CHECK(matrixFromColumnVectors(col1, col2) == Matrix2<float>(1.f, 3.f, 2.f, 4.f));
+    }
+
+    SECTION("Matrix-vector multiplication")
+    {
+        Vector2<float> const v(1.f, 2.f);
+        Matrix2<float> const m(0.5f,  0.25f,
+                               0.75f, 1.f);
+
+        CHECK((m * v) == Vector2<float>(1.f, 2.75f));
     }
 }

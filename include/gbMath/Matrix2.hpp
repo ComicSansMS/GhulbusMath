@@ -9,6 +9,8 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Vector2.hpp>
+
 #include <cmath>
 #include <type_traits>
 
@@ -69,6 +71,17 @@ public:
         m12 *= f;
         m21 *= f;
         m22 *= f;
+        return *this;
+    }
+
+    Matrix2<T>& operator*=(Matrix2<T> const& rhs)
+    {
+        float const n11 = m11 * rhs.m11 + m12 * rhs.m21;
+        m12 = m11 * rhs.m12 + m12 * rhs.m22;
+        m11 = n11;
+        float const n21 = m21 * rhs.m11 + m22 * rhs.m21;
+        m22 = m21 * rhs.m12 + m22 * rhs.m22;
+        m21 = n21;
         return *this;
     }
 };
@@ -137,6 +150,33 @@ inline Matrix2<T> operator*(T f, Matrix2<T> const& rhs)
 {
     return Matrix2<T>(f * rhs.m11, f * rhs.m12,
                       f * rhs.m21, f * rhs.m22);
+}
+
+template<typename T>
+inline Matrix2<T> operator*(Matrix2<T> const& lhs, Matrix2<T> const& rhs)
+{
+    return Matrix2<T>(lhs.m11*rhs.m11 + lhs.m12*rhs.m21, lhs.m11*rhs.m12 + lhs.m12*rhs.m22,
+                      lhs.m21*rhs.m11 + lhs.m22*rhs.m21, lhs.m21*rhs.m12 + lhs.m22*rhs.m22);
+}
+
+template<typename T>
+Matrix2<T> matrixFromRowVectors(Vector2<T> const& r1, Vector2<T> const& r2)
+{
+    return Matrix2<T>(r1.x, r1.y,
+                      r2.x, r2.y);
+}
+
+template<typename T>
+Matrix2<T> matrixFromColumnVectors(Vector2<T> const& c1, Vector2<T> const& c2)
+{
+    return Matrix2<T>(c1.x, c2.x,
+                      c1.y, c2.y);
+}
+
+template<typename T>
+Vector2<T> operator*(Matrix2<T> const& m, Vector2<T> const& v)
+{
+    return Vector2<T>(m.m11*v.x + m.m12*v.y, m.m21*v.x + m.m22*v.y);
 }
 }
 #endif
