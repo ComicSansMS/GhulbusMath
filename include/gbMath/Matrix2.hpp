@@ -74,6 +74,15 @@ public:
         return *this;
     }
 
+    Matrix2<T>& operator/=(T f)
+    {
+        m11 /= f;
+        m12 /= f;
+        m21 /= f;
+        m22 /= f;
+        return *this;
+    }
+
     Matrix2<T>& operator*=(Matrix2<T> const& rhs)
     {
         float const n11 = m11 * rhs.m11 + m12 * rhs.m21;
@@ -153,6 +162,13 @@ inline Matrix2<T> operator*(T f, Matrix2<T> const& rhs)
 }
 
 template<typename T>
+inline Matrix2<T> operator/(Matrix2<T> const& lhs, T f)
+{
+    return Matrix2<T>(lhs.m11 / f, lhs.m12 / f,
+                      lhs.m21 / f, lhs.m22 / f);
+}
+
+template<typename T>
 inline Matrix2<T> operator*(Matrix2<T> const& lhs, Matrix2<T> const& rhs)
 {
     return Matrix2<T>(lhs.m11*rhs.m11 + lhs.m12*rhs.m21, lhs.m11*rhs.m12 + lhs.m12*rhs.m22,
@@ -160,23 +176,83 @@ inline Matrix2<T> operator*(Matrix2<T> const& lhs, Matrix2<T> const& rhs)
 }
 
 template<typename T>
-Matrix2<T> matrixFromRowVectors(Vector2<T> const& r1, Vector2<T> const& r2)
+inline Matrix2<T> matrixFromRowVectors(Vector2<T> const& r1, Vector2<T> const& r2)
 {
     return Matrix2<T>(r1.x, r1.y,
                       r2.x, r2.y);
 }
 
 template<typename T>
-Matrix2<T> matrixFromColumnVectors(Vector2<T> const& c1, Vector2<T> const& c2)
+inline Matrix2<T> matrixFromColumnVectors(Vector2<T> const& c1, Vector2<T> const& c2)
 {
     return Matrix2<T>(c1.x, c2.x,
                       c1.y, c2.y);
 }
 
 template<typename T>
-Vector2<T> operator*(Matrix2<T> const& m, Vector2<T> const& v)
+inline Vector2<T> operator*(Matrix2<T> const& m, Vector2<T> const& v)
 {
     return Vector2<T>(m.m11*v.x + m.m12*v.y, m.m21*v.x + m.m22*v.y);
+}
+
+template<typename T>
+inline Matrix2<T> transpose(Matrix2<T> const& m)
+{
+    return Matrix2<T>(m.m11, m.m21, m.m12, m.m22);
+}
+
+template<typename T>
+inline T determinant(Matrix2<T> const& m)
+{
+    return m.m11*m.m22 - m.m21*m.m12;
+}
+
+/** Represents a matrix together with a 1/n scaling factor.
+ * Use this to model matrices with fractional indices using integral types.
+ */
+template<typename T>
+struct ScaledMatrix2
+{
+    Matrix2<T> m;
+    T inverse_scale_factor;
+
+    ScaledMatrix2() = default;
+    ScaledMatrix2(ScaledMatrix2 const&) = default;
+    ScaledMatrix2& operator=(ScaledMatrix2 const&) = default;
+
+    ScaledMatrix2(Matrix2<T> const& mat, T n_inverse_scale_factor)
+        :m(mat), inverse_scale_factor(n_inverse_scale_factor)
+    {}
+
+    template<typename U>
+    Matrix2<U> evaluate() const
+    {
+        Matrix2<U> ret(m);
+        ret /= static_cast<U>(inverse_scale_factor);
+        return ret;
+    }
+};
+
+/** Gives the inverse of the matrix.
+ * To allow lossless computation of the inverse for integral types, the resulting inverse matrix is given
+ * as a ScaledMatrix, where the scaling factor is stored separately from the matrix itself.
+ * To obtain the true inverse, call ScaledMatrix2::evaluate() on the return value.
+ */
+template<typename T>
+inline ScaledMatrix2<T> inverse_scaled(Matrix2<T> const& m)
+{
+    T const det = determinant(m);
+    return ScaledMatrix2<T>(Matrix2<T>( m.m22, -m.m12,
+                                       -m.m21,  m.m11),
+                              det);
+}
+
+template<typename T>
+inline Matrix2<T> inverse(Matrix2<T> const& m)
+{
+    T const det = determinant(m);
+    return Matrix2<T>( m.m22/det, -m.m12/det,
+                      -m.m21/det,  m.m11/det);
 }
 }
 #endif

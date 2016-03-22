@@ -218,6 +218,19 @@ TEST_CASE("Matrix2")
         CHECK((5.f * m) == Matrix2<float>(5.f, 10.f, 15.f, 20.f));
     }
 
+    SECTION("Scalar division")
+    {
+        Matrix2<float> m(1.f, 2.f, 3.f, 4.f);
+        m /= 2.f;
+        CHECK(m == Matrix2<float>(0.5f, 1.f, 1.5f, 2.f));
+    }
+
+    SECTION("Scalar division non-member")
+    {
+        Matrix2<float> m(1.f, 2.f, 3.f, 4.f);
+        CHECK((m / 2.f) == Matrix2<float>(0.5f, 1.f, 1.5f, 2.f));
+    }
+
     SECTION("Matrix-matrix multiplication")
     {
         Matrix2<float> m1(1.f, 2.f,
@@ -237,6 +250,33 @@ TEST_CASE("Matrix2")
                                 0.75f, 1.f);
         CHECK(m1 * m2 == Matrix2<float>(2.f,  2.25f,
                                         4.5f, 4.75f));
+    }
+
+    SECTION("Matrix transpose")
+    {
+        CHECK(transpose(Matrix2<int>(1, 2, 3, 4)) == Matrix2<int>(1, 3, 2, 4));
+    }
+
+    SECTION("Determinant")
+    {
+        CHECK(determinant(Matrix2<int>(1, 2, 3, 4)) == -2);
+        CHECK(determinant(Matrix2<int>(1, 2, 4, 8)) == 0);
+    }
+
+    SECTION("Inverse")
+    {
+        CHECK(inverse(Matrix2<float>(1.f, 2.f, 3.f, 4.f)) == Matrix2<float>(-2.f, 1.f, 1.5f, -0.5f));
+    }
+
+    SECTION("Inverse scaled")
+    {
+        auto const scaled_inv = inverse_scaled(Matrix2<int>(1, 2, 3, 4));
+        CHECK(scaled_inv.m == Matrix2<int>(4, -2, -3, 1));
+        CHECK(scaled_inv.inverse_scale_factor == -2);
+        CHECK(scaled_inv.evaluate<float>() == Matrix2<float>(-2.f, 1.f, 1.5f, -0.5f));
+
+        auto const noninvertible = inverse_scaled(Matrix2<int>(1, 2, 4, 8));
+        CHECK(noninvertible.inverse_scale_factor == 0);
     }
 }
 
@@ -268,5 +308,51 @@ TEST_CASE("Matrix2-Vector2 Interaction")
                                0.75f, 1.f);
 
         CHECK((m * v) == Vector2<float>(1.f, 2.75f));
+    }
+}
+
+TEST_CASE("ScaledMatrix2")
+{
+    using GHULBUS_MATH_NAMESPACE::ScaledMatrix2;
+    using GHULBUS_MATH_NAMESPACE::Matrix2;
+
+    SECTION("Value initialization initializes to 0")
+    {
+        ScaledMatrix2<int> const sm{};
+        CHECK(sm.m == Matrix2<int>{});
+        CHECK(sm.inverse_scale_factor == 0);
+    }
+
+    SECTION("Construction")
+    {
+        ScaledMatrix2<int> const m(Matrix2<int>(1, 2, 3, 4), 42);
+        CHECK(m.m == Matrix2<int>(1, 2, 3, 4));
+        CHECK(m.inverse_scale_factor == 42);
+    }
+
+    SECTION("Copy construction")
+    {
+        ScaledMatrix2<int> const m(Matrix2<int>(1, 2, 3, 4), 42);
+
+        ScaledMatrix2<int> const m_copy(m);
+        CHECK(m_copy.m == Matrix2<int>(1, 2, 3, 4));
+        CHECK(m_copy.inverse_scale_factor == 42);
+    }
+
+    SECTION("Copy assignment")
+    {
+        ScaledMatrix2<int> const m(Matrix2<int>(1, 2, 3, 4), 42);
+
+        ScaledMatrix2<int> m_copy{};
+
+        m_copy = m;
+        CHECK(m_copy.m == Matrix2<int>(1, 2, 3, 4));
+        CHECK(m_copy.inverse_scale_factor == 42);
+    }
+
+    SECTION("Evaluate")
+    {
+        ScaledMatrix2<int> m(Matrix2<int>(2, 4, 12, 15), 4);
+        CHECK(m.evaluate<float>() == Matrix2<float>(0.5f, 1.f, 3.f, 3.75f));
     }
 }
