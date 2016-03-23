@@ -170,10 +170,20 @@ inline typename std::enable_if<std::is_floating_point<T>::value, Vector2<T>>::ty
     return Vector2<T>(v.x / len, v.y / len);
 }
 
+/** Computes the counter-clockwise perpendicular vector.
+ */
 template<typename T>
 inline Vector2<T> perp(Vector2<T> const& v)
 {
     return Vector2<T>(-v.y, v.x);
+}
+
+/** The 2D pseudo cross product, aka perp-dot product.
+ */
+template<typename T>
+inline T perp_dot(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return dot(perp(lhs), rhs);
 }
 }
 

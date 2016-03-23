@@ -308,4 +308,14 @@ TEST_CASE("Vector2")
         CHECK(perp(v) == Vector2<float>(-2.f, 1.f));
     }
 
+    SECTION("Perp-dot product")
+    {
+        Vector2<float> v1(1.f, 2.f);
+        Vector2<float> v2(4.f, 8.f);
+        CHECK(perp_dot(v1, v2) == 0.f);
+
+        Vector2<float> v3(3.f, 4.f);
+        CHECK(perp_dot(v1, v3) == -2.f);
+    }
+
 }
