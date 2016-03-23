@@ -4,8 +4,6 @@
 
 #include <catch.hpp>
 
-#include <vector>
-
 TEST_CASE("Matrix2")
 {
     using GHULBUS_MATH_NAMESPACE::Matrix2;
@@ -278,6 +276,17 @@ TEST_CASE("Matrix2")
         auto const noninvertible = inverse_scaled(Matrix2<int>(1, 2, 4, 8));
         CHECK(noninvertible.inverse_scale_factor == 0);
     }
+
+    SECTION("Identity")
+    {
+        Matrix2<float> const m = GHULBUS_MATH_NAMESPACE::identity<float>();
+        CHECK(m == Matrix2<float>(1.f, 0.f,
+                                  0.f, 1.f));
+
+        Matrix2<unsigned char> const mi = GHULBUS_MATH_NAMESPACE::identity<unsigned char>();
+        CHECK(mi == Matrix2<unsigned char>(1, 0,
+                                           0, 1));
+    }
 }
 
 TEST_CASE("Matrix2-Vector2 Interaction")
@@ -356,3 +365,66 @@ TEST_CASE("ScaledMatrix2")
         CHECK(m.evaluate<float>() == Matrix2<float>(0.5f, 1.f, 3.f, 3.75f));
     }
 }
+
+struct DynType
+{
+    float* f;
+    DynType()
+        :f(new float(0.f))
+    {
+    }
+
+    ~DynType()
+    {
+        delete f;
+    }
+
+    DynType& operator=(DynType const& rhs)
+    {
+        *f = *(rhs.f);
+    }
+
+    DynType(DynType const& rhs)
+        :f(new float(*rhs.f))
+    {
+    }
+};
+
+namespace GHULBUS_MATH_NAMESPACE {
+namespace traits {
+template<>
+struct Constants<DynType>
+{
+    static DynType One()
+    {
+        DynType ret;
+        *ret.f = 1.f;
+        return ret;
+    }
+
+    static DynType Zero()
+    {
+        DynType ret;
+        return ret;
+    }
+};
+}
+}
+
+TEST_CASE("MatrixCustomType")
+{
+    using GHULBUS_MATH_NAMESPACE::Matrix2;
+    Matrix2<DynType> m;
+
+    CHECK(*m.m11.f == 0.f);
+    CHECK(*m.m12.f == 0.f);
+    CHECK(*m.m21.f == 0.f);
+    CHECK(*m.m22.f == 0.f);
+
+    Matrix2<DynType> dt = GHULBUS_MATH_NAMESPACE::identity<DynType>();
+    CHECK(*dt.m11.f == 1.f);
+    CHECK(*dt.m12.f == 0.f);
+    CHECK(*dt.m21.f == 0.f);
+    CHECK(*dt.m22.f == 1.f);
+}
+

@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector2.hpp>
 
 #include <cmath>
@@ -248,11 +249,19 @@ inline ScaledMatrix2<T> inverse_scaled(Matrix2<T> const& m)
 }
 
 template<typename T>
-inline Matrix2<T> inverse(Matrix2<T> const& m)
+inline typename std::enable_if<!std::is_integral<T>::value, Matrix2<T>>::type inverse(Matrix2<T> const& m)
 {
     T const det = determinant(m);
     return Matrix2<T>( m.m22/det, -m.m12/det,
                       -m.m21/det,  m.m11/det);
+}
+
+template<typename T>
+inline Matrix2<T> identity()
+{
+    using ::GHULBUS_MATH_NAMESPACE::traits::Constants;
+    return Matrix2<T>(Constants<T>::One(),  Constants<T>::Zero(),
+                      Constants<T>::Zero(), Constants<T>::One());
 }
 }
 #endif
