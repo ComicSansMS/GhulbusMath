@@ -169,6 +169,12 @@ inline typename std::enable_if<std::is_floating_point<T>::value, Vector2<T>>::ty
     T const len = length(v);
     return Vector2<T>(v.x / len, v.y / len);
 }
+
+template<typename T>
+inline Vector2<T> perp(Vector2<T> const& v)
+{
+    return Vector2<T>(-v.y, v.x);
+}
 }
 
 #endif

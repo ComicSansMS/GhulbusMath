@@ -302,4 +302,10 @@ TEST_CASE("Vector2")
         CHECK(normalized(Vector2<float>(5.f, 5.f)) == Vector2<float>(1.f / std::sqrt(2.f), 1.f / std::sqrt(2.f)));
     }
 
+    SECTION("Perp vector")
+    {
+        Vector2<float> v(1.f, 2.f);
+        CHECK(perp(v) == Vector2<float>(-2.f, 1.f));
+    }
+
 }
