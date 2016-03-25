@@ -382,6 +382,7 @@ struct DynType
     DynType& operator=(DynType const& rhs)
     {
         *f = *(rhs.f);
+        return *this;
     }
 
     DynType(DynType const& rhs)
