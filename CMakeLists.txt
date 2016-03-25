@@ -9,6 +9,17 @@ if($ENV{TRAVIS})
     endif()
 endif()
 
+option(GB_GENERATE_COVERAGE_INFO "If set, line coverage info will be generated from debug test runs." OFF)
+if(GB_GENERATE_COVERAGE_INFO)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        # this is an undocumented option for changing the output extension from *.cpp.ext
+        # to *.ext; As there is no reasonable way to obtain the list of object files
+        # this seems to be the best option to generate the naming gcov expects.
+        set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
+        set(GCOV_COMMAND gcov CACHE STRING "Command to invoke to run gcov.")
+    endif()
+endif()
+
 ###############################################################################
 ## Library gbMath
 ###############################################################################
@@ -88,4 +99,15 @@ if(GB_BUILD_TESTS)
     add_executable(gbMath_Test ${GB_MATH_TEST_SOURCES})
     target_link_libraries(gbMath_Test gbMath Catch)
     add_test(NAME TestMath COMMAND gbMath_Test)
+
+    if(GB_GENERATE_COVERAGE_INFO AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+        target_compile_options(gbMath_Test PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+        target_link_libraries(gbMath_Test -fprofile-arcs -ftest-coverage)
+        add_custom_target(gbMath_TestCoverage
+            COMMAND ${GCOV_COMMAND} -o CMakeFiles/gbMath_Test.dir/test ${GB_MATH_TEST_SOURCES}
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+            COMMENT "Collecting gcov coverage information"
+        )
+    endif()
+
 endif()
