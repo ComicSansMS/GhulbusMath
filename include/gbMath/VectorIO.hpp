@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 #include <gbMath/Vector2.hpp>
+#include <gbMath/Vector3.hpp>
 
 #include <ostream>
 
@@ -18,6 +19,13 @@ template<typename T>
 std::ostream& operator<<(std::ostream& os, Vector2<T> const& rhs)
 {
     os << '[' << rhs.x << ' ' << rhs.y << ']';
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, Vector3<T> const& rhs)
+{
+    os << '[' << rhs.x << ' ' << rhs.y << ' ' << rhs.z << ']';
     return os;
 }
 }

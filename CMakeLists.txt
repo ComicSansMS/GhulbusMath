@@ -39,6 +39,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/NumberTypeTraits.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2SIMD.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Vector3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
 )
@@ -47,6 +48,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2SIMD.cpp
+    ${GB_MATH_TEST_DIR}/TestVector3.cpp
     ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
     ${GB_MATH_TEST_DIR}/TestMath.cpp
 )
