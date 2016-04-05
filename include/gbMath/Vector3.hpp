@@ -43,6 +43,38 @@ public:
     {
         return (&x)[idx];
     }
+
+    Vector3<T>& operator+=(Vector3<T> const& rhs)
+    {
+        x += rhs.x;
+        y += rhs.y;
+        z += rhs.z;
+        return *this;
+    }
+
+    Vector3<T>& operator-=(Vector3<T> const& rhs)
+    {
+        x -= rhs.x;
+        y -= rhs.y;
+        z -= rhs.z;
+        return *this;
+    }
+
+    Vector3<T>& operator*=(T s)
+    {
+        x *= s;
+        y *= s;
+        z *= s;
+        return *this;
+    }
+
+    Vector3<T>& operator/=(T s)
+    {
+        x /= s;
+        y /= s;
+        z /= s;
+        return *this;
+    }
 };
 
 template<typename T>
@@ -69,6 +101,64 @@ template<typename T>
 inline bool operator!=(Vector3<T> const& lhs, Vector3<T> const& rhs)
 {
     return !(lhs == rhs);
+}
+
+template<typename T>
+inline bool operator<=(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return !(rhs < lhs);
+}
+
+template<typename T>
+inline bool operator>(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return rhs < lhs;
+}
+
+template<typename T>
+inline bool operator>=(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return !(lhs < rhs);
+}
+
+template<typename T>
+inline Vector3<T> operator+(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return Vector3<T>(lhs.x + rhs.x,
+                      lhs.y + rhs.y,
+                      lhs.z + rhs.z);
+}
+
+template<typename T>
+inline Vector3<T> operator-(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return Vector3<T>(lhs.x - rhs.x,
+                      lhs.y - rhs.y,
+                      lhs.z - rhs.z);
+}
+
+template<typename T>
+inline Vector3<T> operator*(Vector3<T> const& v, T s)
+{
+    return Vector3<T>(v.x * s, v.y * s, v.z * s);
+}
+
+template<typename T>
+inline Vector3<T> operator*(T s, Vector3<T> const& v)
+{
+    return Vector3<T>(s * v.x, s * v.y, s * v.z);
+}
+
+template<typename T>
+inline Vector3<T> operator/(Vector3<T> const& v, T s)
+{
+    return Vector3<T>(v.x / s, v.y / s, v.z / s);
+}
+
+template<typename T>
+inline T dot(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
 }
 
