@@ -1,33 +1,11 @@
 #include <gbMath/Vector2.hpp>
 #include <gbMath/VectorIO.hpp>
 
+#include <test_utils/MultiplicationOrderAwareOperand.hpp>
+
 #include <catch.hpp>
 
 #include <vector>
-
-namespace {
-/* Helper type to track order of operands in multiplication operations */
-struct MultiplicationOrderAwareOperand {
-private:
-    int id_;
-    std::vector<int>* lhsIds_;
-    std::vector<int>* rhsIds_;
-public:
-    MultiplicationOrderAwareOperand(int id, std::vector<int>& lhsIds, std::vector<int>& rhsIds)
-        :id_(id), lhsIds_(&lhsIds), rhsIds_(&rhsIds)
-    {}
-
-    int id() const {
-        return id_;
-    }
-
-    MultiplicationOrderAwareOperand operator*(MultiplicationOrderAwareOperand const& rhs) const {
-        lhsIds_->push_back(id());
-        rhsIds_->push_back(rhs.id());
-        return MultiplicationOrderAwareOperand(id_ + 10, *lhsIds_, *rhsIds_);
-    }
-};
-}
 
 TEST_CASE("Vector2")
 {
@@ -299,6 +277,8 @@ TEST_CASE("Vector2")
     SECTION("Vector normalization")
     {
         CHECK(normalized(Vector2<float>(10.f, 0.f)) == Vector2<float>(1.f, 0.f));
+        CHECK(normalized(Vector2<float>(0.f, 10.f)) == Vector2<float>(0.f, 1.f));
+        CHECK(normalized(Vector2<float>(-10.f, 0.f)) == Vector2<float>(-1.f, 0.f));
         CHECK(normalized(Vector2<float>(5.f, 5.f)) == Vector2<float>(1.f / std::sqrt(2.f), 1.f / std::sqrt(2.f)));
     }
 

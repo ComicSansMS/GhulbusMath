@@ -1,33 +1,12 @@
 #include <gbMath/Vector3.hpp>
 #include <gbMath/VectorIO.hpp>
 
+#include <test_utils/MultiplicationOrderAwareOperand.hpp>
+
 #include <catch.hpp>
 
 #include <vector>
 
-namespace {
-/* Helper type to track order of operands in multiplication operations */
-struct MultiplicationOrderAwareOperand {
-private:
-    int id_;
-    std::vector<int>* lhsIds_;
-    std::vector<int>* rhsIds_;
-public:
-    MultiplicationOrderAwareOperand(int id, std::vector<int>& lhsIds, std::vector<int>& rhsIds)
-        :id_(id), lhsIds_(&lhsIds), rhsIds_(&rhsIds)
-    {}
-
-    int id() const {
-        return id_;
-    }
-
-    MultiplicationOrderAwareOperand operator*(MultiplicationOrderAwareOperand const& rhs) const {
-        lhsIds_->push_back(id());
-        rhsIds_->push_back(rhs.id());
-        return MultiplicationOrderAwareOperand(id_ + 10, *lhsIds_, *rhsIds_);
-    }
-};
-}
 
 TEST_CASE("Vector3")
 {
@@ -327,5 +306,37 @@ TEST_CASE("Vector3")
     SECTION("Dot product")
     {
         CHECK(dot(Vector3<float>(3.f, 5.f, 9.f), Vector3<float>(7.f, 11.f, 0.5f)) == 80.5f);
+    }
+
+    SECTION("Vector length")
+    {
+        CHECK(length(Vector3<int>(3, -5, 12)) == std::sqrt(178.0));
+        CHECK(length(Vector3<float>(3.f, -5.f, 12.f)) == std::sqrt(178.f));
+        CHECK(length(Vector3<long double>(3.0, -5.0, 12.0)) == std::sqrt(static_cast<long double>(178.0)));
+    }
+
+    SECTION("Vector normalization")
+    {
+        CHECK(normalized(Vector3<float>(10.f, 0.f, 0.f)) == Vector3<float>(1.f, 0.f, 0.f));
+        CHECK(normalized(Vector3<float>(0.f, 20.f, 0.f)) == Vector3<float>(0.f, 1.f, 0.f));
+        CHECK(normalized(Vector3<float>(0.f, 0.f, 30.f)) == Vector3<float>(0.f, 0.f, 1.f));
+        CHECK(normalized(Vector3<float>(-10.f, 0.f, 0.f)) == Vector3<float>(-1.f, 0.f, 0.f));
+        CHECK(normalized(Vector3<float>(5.f, 5.f, 5.f)) ==
+            Vector3<float>(1.f / std::sqrt(3.f), 1.f / std::sqrt(3.f), 1.f / std::sqrt(3.f)));
+    }
+
+    SECTION("Cross product")
+    {
+        CHECK(cross(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(4.f, 5.f, 6.f)) == Vector3<float>(-3.f, 6.f, -3.f));
+        CHECK(cross(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(0.f, 1.f, 0.f)) == Vector3<float>(0.f, 0.f, 1.f));
+        CHECK(cross(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(0.f, 0.f, 1.f)) == Vector3<float>(0.f, -1.f, 0.f));
+        CHECK(cross(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(5.f, 10.f, 15.f)) == Vector3<float>());
+    }
+
+    SECTION("Box product")
+    {
+        CHECK(box(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(4.f, 5.f, 6.f), Vector3<float>(7.f, 8.f, 9.f)) == 0.f);
+        CHECK(box(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(0.f, 1.f, 0.f), Vector3<float>(0.f, 0.f, 1.f)) == 1.f);
+        CHECK(box(Vector3<int>(15, 42, 17), Vector3<int>(23, 55, 47), Vector3<int>(92, 13, 58)) == 83328);
     }
 }

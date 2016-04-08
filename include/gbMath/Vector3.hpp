@@ -160,6 +160,46 @@ inline T dot(Vector3<T> const& lhs, Vector3<T> const& rhs)
 {
     return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
+
+template<typename T>
+inline double length(Vector3<T> const& v)
+{
+    return std::sqrt(static_cast<double>(dot(v, v)));
+}
+
+inline float length(Vector3<float> const& v)
+{
+    return std::sqrt(dot(v, v));
+}
+
+inline long double length(Vector3<long double> const& v)
+{
+    return std::sqrt(dot(v, v));
+}
+
+template<typename T>
+inline typename std::enable_if<std::is_floating_point<T>::value, Vector3<T>>::type normalized(Vector3<T> const& v)
+{
+    T const len = length(v);
+    return Vector3<T>(v.x / len, v.y / len, v.z / len);
+}
+
+template<typename T>
+inline Vector3<T> cross(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return Vector3<T>(lhs.y*rhs.z - lhs.z*rhs.y,
+                      lhs.z*rhs.x - lhs.x*rhs.z,
+                      lhs.x*rhs.y - lhs.y*rhs.x);
+}
+
+/** Scalar triple product, aka box product.
+ */
+template<typename T>
+inline T box(Vector3<T> const& u, Vector3<T> const& v, Vector3<T> const& w)
+{
+    auto const cross_u_v = cross(u, v);
+    return dot(cross_u_v, w);
+}
 }
 
 #endif

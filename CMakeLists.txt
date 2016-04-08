@@ -45,6 +45,7 @@ set(GB_MATH_HEADER_FILES
 )
 
 set(GB_MATH_TEST_SOURCES
+    ${GB_MATH_TEST_DIR}/test_utils/MultiplicationOrderAwareOperand.hpp
     ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2SIMD.cpp
@@ -100,6 +101,7 @@ if(GB_BUILD_TESTS)
 
     add_executable(gbMath_Test ${GB_MATH_TEST_SOURCES})
     target_link_libraries(gbMath_Test gbMath Catch)
+    target_include_directories(gbMath_Test PRIVATE ${GB_MATH_TEST_DIR})
     add_test(NAME TestMath COMMAND gbMath_Test)
 
     if(GB_GENERATE_COVERAGE_INFO AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
