@@ -249,7 +249,7 @@ inline ScaledMatrix2<T> inverse_scaled(Matrix2<T> const& m)
 }
 
 template<typename T>
-inline typename std::enable_if<!std::is_integral<T>::value, Matrix2<T>>::type inverse(Matrix2<T> const& m)
+inline std::enable_if_t<!std::is_integral<T>::value, Matrix2<T>> inverse(Matrix2<T> const& m)
 {
     T const det = determinant(m);
     return Matrix2<T>( m.m22/det, -m.m12/det,
