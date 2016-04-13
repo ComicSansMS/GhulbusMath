@@ -10,6 +10,7 @@
 #include <gbMath/config.hpp>
 
 #include <gbMath/NumberTypeTraits.hpp>
+#include <gbMath/MatrixPolicies.hpp>
 #include <gbMath/Vector2.hpp>
 
 #include <cmath>
@@ -36,6 +37,16 @@ public:
     explicit Matrix2(Matrix2<U> const& rhs)
         :m11(static_cast<T>(rhs.m11)), m12(static_cast<T>(rhs.m12)),
          m21(static_cast<T>(rhs.m21)), m22(static_cast<T>(rhs.m22))
+    {}
+
+    explicit Matrix2(T const* arr, MatrixPolicies::InputOrder_RowMajor)
+        :m11(arr[0]), m12(arr[1]),
+         m21(arr[2]), m22(arr[3])
+    {}
+
+    explicit Matrix2(T const* arr, MatrixPolicies::InputOrder_ColumnMajor)
+        :m11(arr[0]), m12(arr[2]),
+         m21(arr[1]), m22(arr[3])
     {}
 
     T& operator[](std::size_t idx)

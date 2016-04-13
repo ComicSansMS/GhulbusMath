@@ -39,6 +39,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixPolicies.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/NumberTypeTraits.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2SIMD.hpp

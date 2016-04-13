@@ -28,6 +28,27 @@ TEST_CASE("Matrix2")
         CHECK(m.m22 == 4.f);
     }
 
+    SECTION("Construction from array")
+    {
+        using namespace GHULBUS_MATH_NAMESPACE::MatrixPolicies;
+        float const arr[] = {
+            1.f, 2.f,
+            3.f, 4.f
+        };
+
+        Matrix2<float> m(arr, InputOrder_RowMajor());
+        CHECK(m.m11 == 1.f);
+        CHECK(m.m12 == 2.f);
+        CHECK(m.m21 == 3.f);
+        CHECK(m.m22 == 4.f);
+
+        Matrix2<float> m_col(arr, InputOrder_ColumnMajor());
+        CHECK(m_col.m11 == 1.f);
+        CHECK(m_col.m12 == 3.f);
+        CHECK(m_col.m21 == 2.f);
+        CHECK(m_col.m22 == 4.f);
+    }
+
     SECTION("Equality and not-equal comparison")
     {
         Matrix2<float> const m1(1.f, 2.f, 3.f, 4.f);
