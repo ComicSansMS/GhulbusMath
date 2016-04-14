@@ -59,6 +59,18 @@ public:
         return (&m11)[idx];
     }
 
+    Vector2<T> row(std::size_t idx) const
+    {
+        auto const& m = *this;
+        return Vector2<T>(m[idx*2], m[idx*2 + 1]);
+    }
+
+    Vector2<T> column(std::size_t idx) const
+    {
+        auto const& m = *this;
+        return Vector2<T>(m[idx], m[idx + 2]);
+    }
+
     Matrix2<T>& operator+=(Matrix2<T> const& rhs)
     {
         m11 += rhs.m11;

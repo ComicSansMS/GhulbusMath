@@ -129,6 +129,22 @@ TEST_CASE("Matrix2")
         CHECK(m_const[3] == 4.f);
     }
 
+    SECTION("Row access")
+    {
+        using GHULBUS_MATH_NAMESPACE::Vector2;
+        Matrix2<float> const m(1.f, 2.f, 3.f, 4.f);
+        CHECK(m.row(0) == Vector2<float>(1.f, 2.f));
+        CHECK(m.row(1) == Vector2<float>(3.f, 4.f));
+    }
+
+    SECTION("Column access")
+    {
+        using GHULBUS_MATH_NAMESPACE::Vector2;
+        Matrix2<float> const m(1.f, 2.f, 3.f, 4.f);
+        CHECK(m.column(0) == Vector2<float>(1.f, 3.f));
+        CHECK(m.column(1) == Vector2<float>(2.f, 4.f));
+    }
+
     SECTION("Less-than comparison (lexicographic order)")
     {
         // lower elements take precedence
