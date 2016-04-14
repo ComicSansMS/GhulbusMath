@@ -13,19 +13,19 @@ namespace GHULBUS_MATH_NAMESPACE
 {
 namespace MatrixPolicies
 {
-enum class InputOrder
+enum class Order
 {
     RowMajor,
     ColumnMajor
 };
 
-template<InputOrder order>
+template<Order order>
 struct InputOrder_T {
-    static constexpr InputOrder const value = order;
+    static constexpr Order const value = order;
 };
 
-using InputOrder_RowMajor = InputOrder_T<InputOrder::RowMajor>;
-using InputOrder_ColumnMajor = InputOrder_T<InputOrder::ColumnMajor>;
+using InputOrder_RowMajor = InputOrder_T<Order::RowMajor>;
+using InputOrder_ColumnMajor = InputOrder_T<Order::ColumnMajor>;
 }
 }
 #endif
