@@ -257,7 +257,7 @@ struct ScaledMatrix2
     }
 };
 
-/** Gives the inverse of the matrix.
+/** Computes the inverse of a matrix.
  * To allow lossless computation of the inverse for integral types, the resulting inverse matrix is given
  * as a ScaledMatrix, where the scaling factor is stored separately from the matrix itself.
  * To obtain the true inverse, call ScaledMatrix2::evaluate() on the return value.
@@ -268,19 +268,27 @@ inline ScaledMatrix2<T> inverse_scaled(Matrix2<T> const& m)
     T const det = determinant(m);
     return ScaledMatrix2<T>(Matrix2<T>( m.m22, -m.m12,
                                        -m.m21,  m.m11),
-                              det);
+                            det);
 }
 
+/** Computes the inverse of a matrix.
+ * This function is not defined for integral types, as the division by the determinant might mess up
+ * the entries of the inverse for integer matrices. Use inverse_scaled() instead.
+ * @note This implementation assumes that multiplying by the inverse is more efficient than division, which
+ * is true for floating point types, but might not be true for custom types.
+ * If this is undesired, inverse_scaled() instead which evaluates by division instead.
+ */
 template<typename T>
 inline std::enable_if_t<!std::is_integral<T>::value, Matrix2<T>> inverse(Matrix2<T> const& m)
 {
-    T const det = determinant(m);
-    return Matrix2<T>( m.m22/det, -m.m12/det,
-                      -m.m21/det,  m.m11/det);
+    using ::GHULBUS_MATH_NAMESPACE::traits::Constants;
+    T const invDet = Constants<T>::One() / determinant(m);
+    return Matrix2<T>( m.m22*invDet, -m.m12*invDet,
+                      -m.m21*invDet,  m.m11*invDet);
 }
 
 template<typename T>
-inline Matrix2<T> identity()
+inline Matrix2<T> identity2()
 {
     using ::GHULBUS_MATH_NAMESPACE::traits::Constants;
     return Matrix2<T>(Constants<T>::One(),  Constants<T>::Zero(),

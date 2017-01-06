@@ -316,11 +316,11 @@ TEST_CASE("Matrix2")
 
     SECTION("Identity")
     {
-        Matrix2<float> const m = GHULBUS_MATH_NAMESPACE::identity<float>();
+        Matrix2<float> const m = GHULBUS_MATH_NAMESPACE::identity2<float>();
         CHECK(m == Matrix2<float>(1.f, 0.f,
                                   0.f, 1.f));
 
-        Matrix2<unsigned char> const mi = GHULBUS_MATH_NAMESPACE::identity<unsigned char>();
+        Matrix2<unsigned char> const mi = GHULBUS_MATH_NAMESPACE::identity2<unsigned char>();
         CHECK(mi == Matrix2<unsigned char>(1, 0,
                                            0, 1));
     }
@@ -459,7 +459,7 @@ TEST_CASE("MatrixCustomType")
     CHECK(*m.m21.f == 0.f);
     CHECK(*m.m22.f == 0.f);
 
-    Matrix2<DynType> dt = GHULBUS_MATH_NAMESPACE::identity<DynType>();
+    Matrix2<DynType> dt = GHULBUS_MATH_NAMESPACE::identity2<DynType>();
     CHECK(*dt.m11.f == 1.f);
     CHECK(*dt.m12.f == 0.f);
     CHECK(*dt.m21.f == 0.f);
