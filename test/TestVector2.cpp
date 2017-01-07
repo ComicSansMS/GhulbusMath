@@ -409,5 +409,4 @@ TEST_CASE("Vector2")
             CHECK(std::abs(rej.y - 0.5f) <= std::numeric_limits<float>::epsilon());
         }
     }
-
 }

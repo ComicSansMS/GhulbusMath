@@ -221,7 +221,6 @@ inline Vector2<T> reject_unit(Vector2<T> const& lhs, Vector2<T> const& rhs)
 {
     return lhs - project_unit(lhs, rhs);
 }
-
 }
 
 #endif

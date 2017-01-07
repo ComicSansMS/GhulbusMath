@@ -200,6 +200,42 @@ inline T box(Vector3<T> const& u, Vector3<T> const& v, Vector3<T> const& w)
     auto const cross_u_v = cross(u, v);
     return dot(cross_u_v, w);
 }
+
+template<typename T>
+inline T angle_vector(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return std::acos(dot(lhs, rhs) / (length(lhs) * length(rhs)));
+}
+
+template<typename T>
+inline T angle_vector_unit(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return std::acos(dot(lhs, rhs));
+}
+
+template<typename T>
+inline Vector3<T> project(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return rhs * (dot(lhs, rhs) / dot(rhs, rhs));
+}
+
+template<typename T>
+inline Vector3<T> project_unit(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return rhs * dot(lhs, rhs);
+}
+
+template<typename T>
+inline Vector3<T> reject(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return lhs - project(lhs, rhs);
+}
+
+template<typename T>
+inline Vector3<T> reject_unit(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    return lhs - project_unit(lhs, rhs);
+}
 }
 
 #endif

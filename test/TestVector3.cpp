@@ -339,4 +339,126 @@ TEST_CASE("Vector3")
         CHECK(box(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(0.f, 1.f, 0.f), Vector3<float>(0.f, 0.f, 1.f)) == 1.f);
         CHECK(box(Vector3<int>(15, 42, 17), Vector3<int>(23, 55, 47), Vector3<int>(92, 13, 58)) == 83328);
     }
+
+    SECTION("Angle between two Vectors")
+    {
+        // 90 degrees
+        {
+            Vector3<float> v1(5.f, 0.f, 0.0f);
+            Vector3<float> v2(0.f, 0.f, 20.0f);
+            CHECK(angle_vector(v1, v2) == std::acos(0.f));
+        }
+        // 45 degrees
+        {
+            Vector3<float> v1(1.f, 1.f, 0.f);
+            Vector3<float> v2(0.f, 20.f, 0.f);
+            CHECK(angle_vector(v1, v2) == std::acos(std::sqrt(0.5f)));
+        }
+        // 180 degrees
+        {
+            Vector3<float> v1(1.f, 0.f, 1.f);
+            Vector3<float> v2(-10.f, 0.f, -10.f);
+            CHECK(angle_vector(v1, v2) == std::acos(-1.f));
+        }
+    }
+
+    SECTION("Angle between two Unit Vectors")
+    {
+        // 90 degrees
+        {
+            Vector3<float> v1(1.f, 0.f, 0.0f);
+            Vector3<float> v2(0.f, 0.f, 1.0f);
+            CHECK(angle_vector_unit(v1, v2) == std::acos(0.f));
+        }
+        // 45 degrees
+        {
+            Vector3<float> v1(std::sqrt(0.5f), std::sqrt(0.5f), 0.f);
+            Vector3<float> v2(0.f, 1.f, 0.f);
+            CHECK(angle_vector_unit(v1, v2) == std::acos(std::sqrt(0.5f)));
+        }
+        // 180 degrees
+        {
+            Vector3<float> v1(0.f, 0.f, 1.f);
+            Vector3<float> v2(0.f, 0.f, -1.f);
+            CHECK(angle_vector_unit(v1, v2) == std::acos(-1.f));
+        }
+    }
+
+    SECTION("Projection")
+    {
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(5.f, 0.f, 0.f);
+            Vector3<float> v3(0.f, 3.f, 0.f);
+            Vector3<float> v4(0.f, 0.f, 7.f);
+            CHECK(project(v1, v2) == Vector3<float>(1.f, 0.f, 0.f));
+            CHECK(project(v1, v3) == Vector3<float>(0.f, 2.f, 0.f));
+            CHECK(project(v1, v4) == Vector3<float>(0.f, 0.f, 3.f));
+        }
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(1.f, 1.f, 1.f);
+            CHECK(project(v1, v2) == Vector3<float>(2.f, 2.f, 2.f));
+        }
+    }
+
+    SECTION("Projection Unit Vector")
+    {
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(1.f, 0.f, 0.f);
+            Vector3<float> v3(0.f, 1.f, 0.f);
+            Vector3<float> v4(0.f, 0.f, 1.f);
+            CHECK(project_unit(v1, v2) == Vector3<float>(1.f, 0.f, 0.f));
+            CHECK(project_unit(v1, v3) == Vector3<float>(0.f, 2.f, 0.f));
+            CHECK(project_unit(v1, v4) == Vector3<float>(0.f, 0.f, 3.f));
+        }
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(std::sqrt(1.f/3.f), std::sqrt(1.f/3.f), std::sqrt(1.f/3.f));
+            Vector3<float> proj = project_unit(v1, v2);
+            CHECK(std::abs(proj.x - 2.f) <= std::numeric_limits<float>::epsilon());
+            CHECK(std::abs(proj.y - 2.f) <= std::numeric_limits<float>::epsilon());
+            CHECK(std::abs(proj.z - 2.f) <= std::numeric_limits<float>::epsilon());
+        }
+    }
+
+    SECTION("Rejection")
+    {
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(5.f, 0.f, 0.f);
+            Vector3<float> v3(0.f, 3.f, 0.f);
+            Vector3<float> v4(0.f, 0.f, 7.f);
+            CHECK(reject(v1, v2) == Vector3<float>(0.f, 2.f, 3.f));
+            CHECK(reject(v1, v3) == Vector3<float>(1.f, 0.f, 3.f));
+            CHECK(reject(v1, v4) == Vector3<float>(1.f, 2.f, 0.f));
+        }
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(1.f, 1.f, 1.f);
+            CHECK(reject(v1, v2) == Vector3<float>(-1.f, 0.f, 1.f));
+        }
+    }
+
+    SECTION("Rejection Unit Vector")
+    {
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(1.f, 0.f, 0.f);
+            Vector3<float> v3(0.f, 1.f, 0.f);
+            Vector3<float> v4(0.f, 0.f, 1.f);
+            CHECK(reject_unit(v1, v2) == Vector3<float>(0.f, 2.f, 3.f));
+            CHECK(reject_unit(v1, v3) == Vector3<float>(1.f, 0.f, 3.f));
+            CHECK(reject_unit(v1, v4) == Vector3<float>(1.f, 2.f, 0.f));
+        }
+        {
+            Vector3<float> v1(1.f, 2.f, 3.f);
+            Vector3<float> v2(std::sqrt(1.f/3.f), std::sqrt(1.f/3.f), std::sqrt(1.f/3.f));
+            Vector3<float> rej = reject_unit(v1, v2);
+            CHECK(std::abs(rej.x + 1.f) <= std::numeric_limits<float>::epsilon());
+            CHECK(std::abs(rej.y) <= std::numeric_limits<float>::epsilon());
+            CHECK(std::abs(rej.z - 1.f) <= std::numeric_limits<float>::epsilon());
+        }
+    }
 }
