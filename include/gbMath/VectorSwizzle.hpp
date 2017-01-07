@@ -9,5 +9,6 @@
 
 #include <gbMath/config.hpp>
 #include <gbMath/Vector2Swizzle.hpp>
+#include <gbMath/Vector3Swizzle.hpp>
 
 #endif
