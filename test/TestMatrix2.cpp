@@ -36,17 +36,21 @@ TEST_CASE("Matrix2")
             3.f, 4.f
         };
 
-        Matrix2<float> m(arr, InputOrder_RowMajor());
-        CHECK(m.m11 == 1.f);
-        CHECK(m.m12 == 2.f);
-        CHECK(m.m21 == 3.f);
-        CHECK(m.m22 == 4.f);
+        {
+            Matrix2<float> m(arr, InputOrder_RowMajor());
+            CHECK(m.m11 == 1.f);
+            CHECK(m.m12 == 2.f);
+            CHECK(m.m21 == 3.f);
+            CHECK(m.m22 == 4.f);
+        }
 
-        Matrix2<float> m_col(arr, InputOrder_ColumnMajor());
-        CHECK(m_col.m11 == 1.f);
-        CHECK(m_col.m12 == 3.f);
-        CHECK(m_col.m21 == 2.f);
-        CHECK(m_col.m22 == 4.f);
+        {
+            Matrix2<float> m_col(arr, InputOrder_ColumnMajor());
+            CHECK(m_col.m11 == 1.f);
+            CHECK(m_col.m12 == 3.f);
+            CHECK(m_col.m21 == 2.f);
+            CHECK(m_col.m22 == 4.f);
+        }
     }
 
     SECTION("Equality and not-equal comparison")
@@ -127,22 +131,6 @@ TEST_CASE("Matrix2")
         CHECK(m_const[1] == 2.f);
         CHECK(m_const[2] == 3.f);
         CHECK(m_const[3] == 4.f);
-    }
-
-    SECTION("Row access")
-    {
-        using GHULBUS_MATH_NAMESPACE::Vector2;
-        Matrix2<float> const m(1.f, 2.f, 3.f, 4.f);
-        CHECK(m.row(0) == Vector2<float>(1.f, 2.f));
-        CHECK(m.row(1) == Vector2<float>(3.f, 4.f));
-    }
-
-    SECTION("Column access")
-    {
-        using GHULBUS_MATH_NAMESPACE::Vector2;
-        Matrix2<float> const m(1.f, 2.f, 3.f, 4.f);
-        CHECK(m.column(0) == Vector2<float>(1.f, 3.f));
-        CHECK(m.column(1) == Vector2<float>(2.f, 4.f));
     }
 
     SECTION("Less-than comparison (lexicographic order)")
@@ -347,6 +335,20 @@ TEST_CASE("Matrix2-Vector2 Interaction")
         CHECK(matrixFromColumnVectors(col1, col2) == Matrix2<float>(1.f, 3.f, 2.f, 4.f));
     }
 
+    SECTION("Row access")
+    {
+        Matrix2<float> const m(1.f, 2.f, 3.f, 4.f);
+        CHECK(m.row(0) == Vector2<float>(1.f, 2.f));
+        CHECK(m.row(1) == Vector2<float>(3.f, 4.f));
+    }
+
+    SECTION("Column access")
+    {
+        Matrix2<float> const m(1.f, 2.f, 3.f, 4.f);
+        CHECK(m.column(0) == Vector2<float>(1.f, 3.f));
+        CHECK(m.column(1) == Vector2<float>(2.f, 4.f));
+    }
+
     SECTION("Matrix-vector multiplication")
     {
         Vector2<float> const v(1.f, 2.f);
@@ -403,6 +405,7 @@ TEST_CASE("ScaledMatrix2")
     }
 }
 
+namespace {
 struct DynType
 {
     float* f;
@@ -427,6 +430,7 @@ struct DynType
     {
     }
 };
+}
 
 namespace GHULBUS_MATH_NAMESPACE {
 namespace traits {
@@ -449,7 +453,7 @@ struct Constants<DynType>
 }
 }
 
-TEST_CASE("MatrixCustomType")
+TEST_CASE("Matrix2CustomType")
 {
     using GHULBUS_MATH_NAMESPACE::Matrix2;
     Matrix2<DynType> m;

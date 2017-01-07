@@ -38,6 +38,7 @@ set(GB_MATH_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
 set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix2.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixPolicies.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/NumberTypeTraits.hpp
@@ -51,6 +52,7 @@ set(GB_MATH_HEADER_FILES
 set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/test_utils/MultiplicationOrderAwareOperand.hpp
     ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
+    ${GB_MATH_TEST_DIR}/TestMatrix3.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2SIMD.cpp
     ${GB_MATH_TEST_DIR}/TestVector3.cpp
