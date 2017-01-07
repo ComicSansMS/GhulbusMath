@@ -47,6 +47,15 @@ TEST_CASE("Vector2")
         CHECK(v2.y == 23.5f);
     }
 
+    SECTION("Construction from array")
+    {
+        float arr[] = { 42.0f, 23.5f };
+        Vector2<float> v(arr);
+
+        CHECK(v.x == 42.0f);
+        CHECK(v.y == 23.5f);
+    }
+
     SECTION("Conversion construction")
     {
         Vector2<float> v(42.f, 23.5f);

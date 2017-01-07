@@ -28,6 +28,10 @@ public:
         :x(vx), y(vy)
     {}
 
+    Vector2(T const* arr)
+        :x(arr[0]), y(arr[1])
+    {}
+
     template<typename U>
     explicit Vector2(Vector2<U> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y))

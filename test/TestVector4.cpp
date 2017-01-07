@@ -56,6 +56,17 @@ TEST_CASE("Vector4")
         CHECK(v2.w == 32.0f);
     }
 
+    SECTION("Construction from array")
+    {
+        float arr[] = { 42.0f, 23.5f, 17.0f, 32.0f };
+        Vector4<float> v(arr);
+
+        CHECK(v.x == 42.0f);
+        CHECK(v.y == 23.5f);
+        CHECK(v.z == 17.0f);
+        CHECK(v.w == 32.0f);
+    }
+
     SECTION("Conversion construction")
     {
         Vector4<float> v(42.f, 23.5f, 17.0f, 32.0f);
@@ -105,11 +116,11 @@ TEST_CASE("Vector4")
         for(int i=0; i<4; ++i) {
             for(int j=0; j<i; ++j) { arr[j] = j + 1; }
             arr[i] = i+2;
-            CHECK(Vector4<int>(1, 2, 3, 4) < Vector4<int>(arr[0], arr[1], arr[2], arr[3]));
+            CHECK(Vector4<int>(1, 2, 3, 4) < Vector4<int>(arr));
             for(int j=0; j<i+1; ++j) { arr[j] = j+1; }
             arr[i] = 0;
             for(int j=i+1; j<4; ++j) { arr[j] = 99; }
-            CHECK_FALSE(Vector4<int>(1, 2, 3, 4) < Vector4<int>(arr[0], arr[1], arr[2], arr[3]));
+            CHECK_FALSE(Vector4<int>(1, 2, 3, 4) < Vector4<int>(arr));
         }
         // not less if both equal
         CHECK_FALSE(Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f) < Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f));
@@ -122,11 +133,11 @@ TEST_CASE("Vector4")
         for(int i=0; i<4; ++i) {
             for(int j=0; j<i; ++j) { arr[j] = j + 1; }
             arr[i] = i+2;
-            CHECK(Vector4<int>(arr[0], arr[1], arr[2], arr[3]) > Vector4<int>(1, 2, 3, 4));
+            CHECK(Vector4<int>(arr) > Vector4<int>(1, 2, 3, 4));
             for(int j=0; j<i+1; ++j) { arr[j] = j+1; }
             arr[i] = 0;
             for(int j=i+1; j<4; ++j) { arr[j] = 99; }
-            CHECK_FALSE(Vector4<int>(arr[0], arr[1], arr[2], arr[3]) > Vector4<int>(1, 2, 3, 4));
+            CHECK_FALSE(Vector4<int>(arr) > Vector4<int>(1, 2, 3, 4));
         }
         // not greater if both equal
         CHECK_FALSE(Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f) > Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f));
@@ -139,11 +150,11 @@ TEST_CASE("Vector4")
         for(int i=0; i<4; ++i) {
             for(int j=0; j<i; ++j) { arr[j] = j + 1; }
             arr[i] = i+2;
-            CHECK(Vector4<int>(1, 2, 3, 4) <= Vector4<int>(arr[0], arr[1], arr[2], arr[3]));
+            CHECK(Vector4<int>(1, 2, 3, 4) <= Vector4<int>(arr));
             for(int j=0; j<i+1; ++j) { arr[j] = j+1; }
             arr[i] = 0;
             for(int j=i+1; j<4; ++j) { arr[j] = 99; }
-            CHECK_FALSE(Vector4<int>(1, 2, 3, 4) <= Vector4<int>(arr[0], arr[1], arr[2], arr[3]));
+            CHECK_FALSE(Vector4<int>(1, 2, 3, 4) <= Vector4<int>(arr));
         }
         // both equal
         CHECK(Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f) <= Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f));
@@ -156,11 +167,11 @@ TEST_CASE("Vector4")
         for(int i=0; i<4; ++i) {
             for(int j=0; j<i; ++j) { arr[j] = j + 1; }
             arr[i] = i+2;
-            CHECK(Vector4<int>(arr[0], arr[1], arr[2], arr[3]) >= Vector4<int>(1, 2, 3, 4));
+            CHECK(Vector4<int>(arr) >= Vector4<int>(1, 2, 3, 4));
             for(int j=0; j<i+1; ++j) { arr[j] = j+1; }
             arr[i] = 0;
             for(int j=i+1; j<4; ++j) { arr[j] = 99; }
-            CHECK_FALSE(Vector4<int>(arr[0], arr[1], arr[2], arr[3]) >= Vector4<int>(1, 2, 3, 4));
+            CHECK_FALSE(Vector4<int>(arr) >= Vector4<int>(1, 2, 3, 4));
         }
         // both equal
         CHECK(Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f) >= Vector4<float>(1.0f, 2.0f, 3.0f, 4.0f));

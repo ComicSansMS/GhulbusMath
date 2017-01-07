@@ -29,6 +29,10 @@ public:
         :x(vx), y(vy), z(vz)
     {}
 
+    Vector3(T const* arr)
+        :x(arr[0]), y(arr[1]), z(arr[2])
+    {}
+
     template<typename U>
     explicit Vector3(Vector3<U> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z))

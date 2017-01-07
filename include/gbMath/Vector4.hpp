@@ -30,6 +30,10 @@ public:
         :x(vx), y(vy), z(vz), w(vw)
     {}
 
+    Vector4(T const* arr)
+        :x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
+    {}
+
     template<typename U>
     explicit Vector4(Vector4<U> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)), w(static_cast<T>(v.w))
