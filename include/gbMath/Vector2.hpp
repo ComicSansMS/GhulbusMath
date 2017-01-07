@@ -185,6 +185,43 @@ inline T perp_dot(Vector2<T> const& lhs, Vector2<T> const& rhs)
 {
     return dot(perp(lhs), rhs);
 }
+
+template<typename T>
+inline T angle_vector(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return std::acos(dot(lhs, rhs) / (length(lhs) * length(rhs)));
+}
+
+template<typename T>
+inline T angle_vector_unit(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return std::acos(dot(lhs, rhs));
+}
+
+template<typename T>
+inline Vector2<T> project(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return rhs * (dot(lhs, rhs) / dot(rhs, rhs));
+}
+
+template<typename T>
+inline Vector2<T> project_unit(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return rhs * dot(lhs, rhs);
+}
+
+template<typename T>
+inline Vector2<T> reject(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return lhs - project(lhs, rhs);
+}
+
+template<typename T>
+inline Vector2<T> reject_unit(Vector2<T> const& lhs, Vector2<T> const& rhs)
+{
+    return lhs - project_unit(lhs, rhs);
+}
+
 }
 
 #endif
