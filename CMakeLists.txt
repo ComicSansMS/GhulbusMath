@@ -46,6 +46,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2Swizzle.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector3Swizzle.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Vector4.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
 )
@@ -56,6 +57,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestMatrix3.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector3.cpp
+    ${GB_MATH_TEST_DIR}/TestVector4.cpp
     ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
     ${GB_MATH_TEST_DIR}/TestMath.cpp
 )
