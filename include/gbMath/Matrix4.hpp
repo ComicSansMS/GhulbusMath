@@ -278,10 +278,22 @@ inline Matrix4<T> transpose(Matrix4<T> const& m)
 template<typename T>
 inline T determinant(Matrix4<T> const& m)
 {
-    return (m.m11 * (m.m22*m.m33*m.m44 + m.m23*m.m34*m.m42 + m.m24*m.m32*m.m43 - m.m42*m.m33*m.m24 - m.m43*m.m34*m.m22 - m.m44*m.m32*m.m23) -
-            m.m12 * (m.m21*m.m33*m.m44 + m.m23*m.m34*m.m41 + m.m24*m.m31*m.m43 - m.m41*m.m33*m.m24 - m.m43*m.m34*m.m21 - m.m44*m.m31*m.m23) +
-            m.m13 * (m.m21*m.m32*m.m44 + m.m22*m.m34*m.m41 + m.m24*m.m31*m.m42 - m.m41*m.m32*m.m24 - m.m42*m.m34*m.m21 - m.m44*m.m31*m.m22) -
-            m.m14 * (m.m21*m.m32*m.m43 + m.m22*m.m33*m.m41 + m.m23*m.m31*m.m42 - m.m41*m.m32*m.m23 - m.m42*m.m33*m.m21 - m.m43*m.m31*m.m22));
+    Vector3<T> const a(m.m11, m.m21, m.m31);
+    Vector3<T> const b(m.m12, m.m22, m.m32);
+    Vector3<T> const c(m.m13, m.m23, m.m33);
+    Vector3<T> const d(m.m14, m.m24, m.m34);
+
+    T const x = m.m41;
+    T const y = m.m42;
+    T const z = m.m43;
+    T const w = m.m44;
+
+    Vector3<T> const s = cross(a, b);
+    Vector3<T> const t = cross(c, d);
+    Vector3<T> const u = a*y - b*x;
+    Vector3<T> const v = c*w - d*z;
+
+    return dot(s, v) + dot(t, u);
 }
 
 /** Represents a matrix together with a 1/n scaling factor.
