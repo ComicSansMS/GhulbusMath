@@ -316,6 +316,14 @@ TEST_CASE("Matrix3")
         CHECK(m1 == Matrix3<float>( 7.75f,  4.75f, 11.25f,
                                    17.5f,  11.5f,  26.25f,
                                    27.25,  18.25f, 41.25f));
+
+        Matrix3<float> m3(1.f, 2.f, 3.f,
+                          4.f, 5.f, 6.f,
+                          7.f, 8.f, 9.f);
+        m3 *= m3;
+        CHECK(m3 == Matrix3<float>( 30.f,  36.f,  42.f,
+                                    66.f,  81.f,  96.f,
+                                   102.f, 126.f, 150.f));
     }
 
     SECTION("Matrix-matrix multiplication non-member")

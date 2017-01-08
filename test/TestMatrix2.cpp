@@ -263,6 +263,12 @@ TEST_CASE("Matrix2")
         m1 *= m2;
         CHECK(m1 == Matrix2<float>(2.f,  2.25f,
                                    4.5f, 4.75f));
+
+        Matrix2<float> m3(1.f, 2.f,
+                          3.f, 4.f);
+        m3 *= m3;
+        CHECK(m3 == Matrix2<float>( 7.f, 10.f,
+                                   15.f, 22.f));
     }
 
     SECTION("Matrix-matrix multiplication non-member")

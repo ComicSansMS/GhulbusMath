@@ -137,23 +137,7 @@ public:
 
     Matrix3<T>& operator*=(Matrix3<T> const& rhs)
     {
-        float const n11 = m11 * rhs.m11 + m12 * rhs.m21 + m13 * rhs.m31;
-        float const n12 = m11 * rhs.m12 + m12 * rhs.m22 + m13 * rhs.m32;
-        m13 = m11 * rhs.m13 + m12 * rhs.m23 + m13 * rhs.m33;
-        m11 = n11;
-        m12 = n12;
-
-        float const n21 = m21 * rhs.m11 + m22 * rhs.m21 + m23 * rhs.m31;
-        float const n22 = m21 * rhs.m12 + m22 * rhs.m22 + m23 * rhs.m32;
-        m23 = m21 * rhs.m13 + m22 * rhs.m23 + m23 * rhs.m33;
-        m21 = n21;
-        m22 = n22;
-
-        float const n31 = m31 * rhs.m11 + m32 * rhs.m21 + m33 * rhs.m31;
-        float const n32 = m31 * rhs.m12 + m32 * rhs.m22 + m33 * rhs.m32;
-        m33 = m31 * rhs.m13 + m32 * rhs.m23 + m33 * rhs.m33;
-        m31 = n31;
-        m32 = n32;
+        *this = (*this) * rhs;
         return *this;
     }
 };

@@ -109,12 +109,7 @@ public:
 
     Matrix2<T>& operator*=(Matrix2<T> const& rhs)
     {
-        float const n11 = m11 * rhs.m11 + m12 * rhs.m21;
-        m12 = m11 * rhs.m12 + m12 * rhs.m22;
-        m11 = n11;
-        float const n21 = m21 * rhs.m11 + m22 * rhs.m21;
-        m22 = m21 * rhs.m12 + m22 * rhs.m22;
-        m21 = n21;
+        *this = (*this) * rhs;
         return *this;
     }
 };
