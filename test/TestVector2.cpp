@@ -169,6 +169,9 @@ TEST_CASE("Vector2")
         CHECK(v1.x == 44.f);
         CHECK(v1.y == 66.f);
         CHECK((v1 += Vector2<float>()) == v1);
+
+        auto const& v_ref = (v1 += Vector2<float>());
+        CHECK(&v_ref == &v1);
     }
 
     SECTION("Vector Addition Non-Member")
@@ -187,6 +190,9 @@ TEST_CASE("Vector2")
         CHECK(v1.x == 6.f);
         CHECK(v1.y == 8.f);
         CHECK((v1 -= Vector2<float>()) == v1);
+
+        auto const& v_ref = (v1 -= Vector2<float>());
+        CHECK(&v_ref == &v1);
     }
 
     SECTION("Vector Subtraction Non-Member")
