@@ -10,6 +10,7 @@
 #include <gbMath/config.hpp>
 #include <gbMath/Matrix2.hpp>
 #include <gbMath/Matrix3.hpp>
+#include <gbMath/Matrix4.hpp>
 
 #include <ostream>
 
@@ -28,6 +29,16 @@ std::ostream& operator<<(std::ostream& os, Matrix3<T> const& rhs)
     os << "[ [" << rhs.m11 << ' ' << rhs.m12 << ' ' << rhs.m13
        << "] [" << rhs.m21 << ' ' << rhs.m22 << ' ' << rhs.m23
        << "] [" << rhs.m31 << ' ' << rhs.m32 << ' ' << rhs.m33 << "] ]";
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, Matrix4<T> const& rhs)
+{
+    os << "[ [" << rhs.m11 << ' ' << rhs.m12 << ' ' << rhs.m13 << ' ' << rhs.m14
+       << "] [" << rhs.m21 << ' ' << rhs.m22 << ' ' << rhs.m23 << ' ' << rhs.m24
+       << "] [" << rhs.m31 << ' ' << rhs.m32 << ' ' << rhs.m33 << ' ' << rhs.m34
+       << "] [" << rhs.m41 << ' ' << rhs.m42 << ' ' << rhs.m43 << ' ' << rhs.m44 << "] ]";
     return os;
 }
 }
