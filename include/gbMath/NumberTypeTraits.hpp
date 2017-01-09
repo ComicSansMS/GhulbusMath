@@ -2,10 +2,10 @@
 #define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_NUMBER_TYPE_TRAITS_HPP
 
 /** @file
-*
-* @brief Type traits used for adapting arbitrary number types as template arguments for math classes.
-* @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
-*/
+ *
+ * @brief Type traits used for adapting arbitrary number types as template arguments for math classes.
+ * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
+ */
 
 #include <gbMath/config.hpp>
 

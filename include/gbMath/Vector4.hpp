@@ -2,10 +2,10 @@
 #define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_VECTOR4_HPP
 
 /** @file
-*
-* @brief 4D Vector.
-* @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
-*/
+ *
+ * @brief 4D Vector.
+ * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
+ */
 
 #include <gbMath/config.hpp>
 

@@ -2,10 +2,10 @@
 #define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_MATRIX3_HPP
 
 /** @file
-*
-* @brief 3D Matrix.
-* @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
-*/
+ *
+ * @brief 3D Matrix.
+ * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
+ */
 
 #include <gbMath/config.hpp>
 
@@ -326,12 +326,12 @@ inline ScaledMatrix3<T> inverse_scaled(Matrix3<T> const& m)
 }
 
 /** Computes the inverse of a matrix.
-* This function is not defined for integral types, as the division by the determinant might mess up
-* the entries of the inverse for integer matrices. Use inverse_scaled() instead.
-* @note This implementation assumes that multiplying by the inverse is more efficient than division, which
-* is true for floating point types, but might not be true for custom types.
-* If this is undesired, inverse_scaled() instead which evaluates by division instead.
-*/
+ * This function is not defined for integral types, as the division by the determinant might mess up
+ * the entries of the inverse for integer matrices. Use inverse_scaled() instead.
+ * @note This implementation assumes that multiplying by the inverse is more efficient than division, which
+ * is true for floating point types, but might not be true for custom types.
+ * If this is undesired, inverse_scaled() instead which evaluates by division instead.
+ */
 template<typename T>
 inline std::enable_if_t<!std::is_integral<T>::value, Matrix3<T>> inverse(Matrix3<T> const& m)
 {

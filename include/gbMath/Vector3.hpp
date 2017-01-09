@@ -2,10 +2,10 @@
 #define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_VECTOR3_HPP
 
 /** @file
-*
-* @brief 3D Vector.
-* @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
-*/
+ *
+ * @brief 3D Vector.
+ * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
+ */
 
 #include <gbMath/config.hpp>
 

@@ -2,10 +2,10 @@
 #define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_VECTOR2_SWIZZLE_HPP
 
 /** @file
-*
-* @brief Vector2 Swizzling.
-* @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
-*/
+ *
+ * @brief Vector2 Swizzling.
+ * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
+ */
 
 #include <gbMath/config.hpp>
 #include <gbMath/Vector2.hpp>
