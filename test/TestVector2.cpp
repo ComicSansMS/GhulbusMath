@@ -5,6 +5,7 @@
 
 #include <catch.hpp>
 
+#include <type_traits>
 #include <vector>
 
 TEST_CASE("Vector2")
@@ -422,6 +423,83 @@ TEST_CASE("Vector2")
             Vector2<float> rej = reject_unit(v1, v2);
             CHECK(std::abs(rej.x + 0.5f) <= std::numeric_limits<float>::epsilon());
             CHECK(std::abs(rej.y - 0.5f) <= std::numeric_limits<float>::epsilon());
+        }
+    }
+
+    SECTION("Mixing Points, Vectors, and Normals")
+    {
+        using GHULBUS_MATH_NAMESPACE::Point2;
+        using GHULBUS_MATH_NAMESPACE::Normal2;
+
+        Point2<float> p(1.f, 2.f);
+        Vector2<float> v(3.f, 4.f);
+        Normal2<float> n(5.f, 6.f);
+
+        p += v;
+        CHECK(p.x == 4.f);
+        CHECK(p.y == 6.f);
+
+        p += n;
+        CHECK(p.x == 9.f);
+        CHECK(p.y == 12.f);
+
+        p -= v;
+        CHECK(p.x == 6.f);
+        CHECK(p.y == 8.f);
+
+        p -= n;
+        CHECK(p.x == 1.f);
+        CHECK(p.y == 2.f);
+
+        {
+            auto p2 = p + v;
+            static_assert(std::is_same<decltype(p2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Point>::value,
+                          "Point + Vector is Point.");
+            CHECK(p2.x == 4.f);
+            CHECK(p2.y == 6.f);
+        }
+        {
+            auto p2 = v + p;
+            static_assert(std::is_same<decltype(p2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Point>::value,
+                          "Vector + Point is Point.");
+            CHECK(p2.x == 4.f);
+            CHECK(p2.y == 6.f);
+        }
+        {
+            auto p2 = p + n;
+            static_assert(std::is_same<decltype(p2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Point>::value,
+                          "Point + Normal is Point.");
+            CHECK(p2.x == 6.f);
+            CHECK(p2.y == 8.f);
+        }
+        {
+            auto p2 = n + p;
+            static_assert(std::is_same<decltype(p2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Point>::value,
+                          "Normal + Point is Point.");
+            CHECK(p2.x == 6.f);
+            CHECK(p2.y == 8.f);
+        }
+        {
+            auto p2 = p - v;
+            static_assert(std::is_same<decltype(p2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Point>::value,
+                          "Point - Vector is Point.");
+            CHECK(p2.x == -2.f);
+            CHECK(p2.y == -2.f);
+        }
+        {
+            auto p2 = p - n;
+            static_assert(std::is_same<decltype(p2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Point>::value,
+                          "Point - Normal is Point.");
+            CHECK(p2.x == -4.f);
+            CHECK(p2.y == -4.f);
+        }
+        {
+            auto p2 = p + v;
+            auto v2 = p2 - p;
+            static_assert(std::is_same<decltype(v2)::Tag, GHULBUS_MATH_NAMESPACE::VectorTag::Vector>::value,
+                          "Point - Point is Vector.");
+            CHECK(v2.x == v.x);
+            CHECK(v2.y == v.y);
         }
     }
 }
