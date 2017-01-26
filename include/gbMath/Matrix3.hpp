@@ -276,6 +276,22 @@ inline T determinant(Matrix3<T> const& m)
            (m.m13 * (m.m21 * m.m32 - m.m22 * m.m31));
 }
 
+template<typename T>
+inline Matrix3<T> adjugate(Matrix3<T> const& m)
+{
+    Vector3<T> const a = m.column(0);
+    Vector3<T> const b = m.column(1);
+    Vector3<T> const c = m.column(2);
+
+    Vector3<T> const r0 = cross(b, c);
+    Vector3<T> const r1 = cross(c, a);
+    Vector3<T> const r2 = cross(a, b);
+
+    return Matrix3<T>(r0.x, r0.y, r0.z,
+                      r1.x, r1.y, r1.z,
+                      r2.x, r2.y, r2.z);
+}
+
 /** Represents a matrix together with a 1/n scaling factor.
  * Use this to model matrices with fractional indices using integral types.
  */
@@ -305,7 +321,9 @@ struct ScaledMatrix3
 /** Computes the inverse of a matrix.
  * To allow lossless computation of the inverse for integral types, the resulting inverse matrix is given
  * as a ScaledMatrix, where the scaling factor is stored separately from the matrix itself.
- * To obtain the true inverse, call ScaledMatrix2::evaluate() on the return value.
+ * To obtain the true inverse, call ScaledMatrix3::evaluate() on the return value.
+ * The matrix portion of the ScaledMatrix is the adjugate of the input matrix.
+ * The inverse scale factor of the ScaledMatrix is the determinant of the input matrix.
  */
 template<typename T>
 inline ScaledMatrix3<T> inverse_scaled(Matrix3<T> const& m)

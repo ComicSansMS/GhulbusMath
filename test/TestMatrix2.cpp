@@ -292,6 +292,12 @@ TEST_CASE("Matrix2")
         CHECK(determinant(Matrix2<int>(1, 2, 4, 8)) == 0);
     }
 
+    SECTION("Adjugate")
+    {
+        CHECK(adjugate(Matrix2<int>(1, 2, 3, 4)) == Matrix2<int>(4, -2, -3, 1));
+        CHECK(adjugate(Matrix2<int>(1, 2, 4, 8)) == Matrix2<int>(8, -2, -4, 1));
+    }
+
     SECTION("Inverse")
     {
         CHECK(inverse(Matrix2<float>(1.f, 2.f, 3.f, 4.f)) == Matrix2<float>(-2.f, 1.f, 1.5f, -0.5f));

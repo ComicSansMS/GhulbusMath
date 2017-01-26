@@ -433,6 +433,23 @@ TEST_CASE("Matrix4")
         CHECK(determinant(Matrix4<int>(10, 2, 3, 4, 25, 6, 7, 8, 12, 9, 16, 22, 7, 10, -3, 5)) == 3289);
     }
 
+    SECTION("Adjugate")
+    {
+        CHECK(adjugate(Matrix4<int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)) ==
+            Matrix4<int>(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+        CHECK(adjugate(Matrix4<int>(10, 2, 3, 4, 25, 6, 7, 8, 12, 9, 16, 22, 7, 10, -3, 5)) ==
+            Matrix4<int>(605, -69, -84, -4, -3124, 1150, 113, 162,
+                         -3355, 1334, 194, -304, 3388, -1403, 8, 157));
+        CHECK(adjugate(Matrix4<int>( 15, -11,  6, -3,
+                                     -6,   4, -2,  2,
+                                      5,  -3,  2, -3,
+                                     -3,   1,  0,  1)) ==
+            Matrix4<int>(4, 16,  4,  -8,
+                         8, 36, 12, -12,
+                         8, 32, 12,  -4,
+                         4, 12,  0,  -4));
+    }
+
     SECTION("Inverse")
     {
         CHECK(inverse(Matrix4<float>(1.f, 4.f, 1.f, -2.f,

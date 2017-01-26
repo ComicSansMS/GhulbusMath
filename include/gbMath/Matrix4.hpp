@@ -296,6 +296,35 @@ inline T determinant(Matrix4<T> const& m)
     return dot(s, v) + dot(t, u);
 }
 
+template<typename T>
+inline Matrix4<T> adjugate(Matrix4<T> const& m)
+{
+    Vector3<T> const a(m.m11, m.m21, m.m31);
+    Vector3<T> const b(m.m12, m.m22, m.m32);
+    Vector3<T> const c(m.m13, m.m23, m.m33);
+    Vector3<T> const d(m.m14, m.m24, m.m34);
+
+    T const x = m.m41;
+    T const y = m.m42;
+    T const z = m.m43;
+    T const w = m.m44;
+
+    Vector3<T> const s = cross(a, b);
+    Vector3<T> const t = cross(c, d);
+    Vector3<T> const u = a*y - b*x;
+    Vector3<T> const v = c*w - d*z;
+
+    Vector3<T> const r0 = cross(b, v) + t*y;
+    Vector3<T> const r1 = cross(v, a) - t*x;
+    Vector3<T> const r2 = cross(d, u) + s*w;
+    Vector3<T> const r3 = cross(u, c) - s*z;
+
+    return Matrix4<T>(r0.x, r0.y, r0.z, -dot(b, t),
+                      r1.x, r1.y, r1.z,  dot(a, t),
+                      r2.x, r2.y, r2.z, -dot(d, s),
+                      r3.x, r3.y, r3.z,  dot(c, s));
+}
+
 /** Represents a matrix together with a 1/n scaling factor.
  * Use this to model matrices with fractional indices using integral types.
  */
@@ -325,7 +354,9 @@ struct ScaledMatrix4
 /** Computes the inverse of a matrix.
  * To allow lossless computation of the inverse for integral types, the resulting inverse matrix is given
  * as a ScaledMatrix, where the scaling factor is stored separately from the matrix itself.
- * To obtain the true inverse, call ScaledMatrix2::evaluate() on the return value.
+ * To obtain the true inverse, call ScaledMatrix4::evaluate() on the return value.
+ * The matrix portion of the ScaledMatrix is the adjugate of the input matrix.
+ * The inverse scale factor of the ScaledMatrix is the determinant of the input matrix.
  */
 template<typename T>
 inline ScaledMatrix4<T> inverse_scaled(Matrix4<T> const& m)

@@ -350,6 +350,12 @@ TEST_CASE("Matrix3")
         CHECK(determinant(Matrix3<int>(10, 2, 3, 4, 25, 6, 7, 8, 12)) == 2079);
     }
 
+    SECTION("Adjugate")
+    {
+        CHECK(adjugate(Matrix3<int>(1, 2, 3, 4, 5, 6, 7, 8, 9)) == Matrix3<int>(-3, 6, -3, 6, -12, 6, -3, 6, -3));
+        CHECK(adjugate(Matrix3<int>(10, 2, 3, 4, 25, 6, 7, 8, 12)) == Matrix3<int>(252, 0, -63, -6, 99, -48, -143, -66, 242));
+    }
+
     SECTION("Inverse")
     {
         CHECK(inverse(Matrix3<float>(-4.f, 6.f, -8.f,
