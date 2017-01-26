@@ -238,8 +238,8 @@ inline Matrix4<T> operator*(Matrix4<T> const& lhs, Matrix4<T> const& rhs)
 }
 
 template<typename T>
-inline Matrix4<T> matrixFromRowVectors(Vector4<T> const& r1, Vector4<T> const& r2,
-                                       Vector4<T> const& r3, Vector4<T> const& r4)
+inline Matrix4<T> matrix_from_row_vectors(Vector4<T> const& r1, Vector4<T> const& r2,
+                                          Vector4<T> const& r3, Vector4<T> const& r4)
 {
     return Matrix4<T>(r1.x, r1.y, r1.z, r1.w,
                       r2.x, r2.y, r2.z, r2.w,
@@ -248,8 +248,8 @@ inline Matrix4<T> matrixFromRowVectors(Vector4<T> const& r1, Vector4<T> const& r
 }
 
 template<typename T>
-inline Matrix4<T> matrixFromColumnVectors(Vector4<T> const& c1, Vector4<T> const& c2,
-                                          Vector4<T> const& c3, Vector4<T> const& c4)
+inline Matrix4<T> matrix_from_column_vectors(Vector4<T> const& c1, Vector4<T> const& c2,
+                                             Vector4<T> const& c3, Vector4<T> const& c4)
 {
     return Matrix4<T>(c1.x, c2.x, c3.x, c4.x,
                       c1.y, c2.y, c3.y, c4.y,

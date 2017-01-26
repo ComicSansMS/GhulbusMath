@@ -195,14 +195,14 @@ inline Matrix2<T> operator*(Matrix2<T> const& lhs, Matrix2<T> const& rhs)
 }
 
 template<typename T>
-inline Matrix2<T> matrixFromRowVectors(Vector2<T> const& r1, Vector2<T> const& r2)
+inline Matrix2<T> matrix_from_row_vectors(Vector2<T> const& r1, Vector2<T> const& r2)
 {
     return Matrix2<T>(r1.x, r1.y,
                       r2.x, r2.y);
 }
 
 template<typename T>
-inline Matrix2<T> matrixFromColumnVectors(Vector2<T> const& c1, Vector2<T> const& c2)
+inline Matrix2<T> matrix_from_column_vectors(Vector2<T> const& c1, Vector2<T> const& c2)
 {
     return Matrix2<T>(c1.x, c2.x,
                       c1.y, c2.y);

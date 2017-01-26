@@ -336,7 +336,7 @@ TEST_CASE("Matrix2-Vector2 Interaction")
         Vector2<float> row1(1.f, 2.f);
         Vector2<float> row2(3.f, 4.f);
 
-        CHECK(matrixFromRowVectors(row1, row2) == Matrix2<float>(1.f, 2.f, 3.f, 4.f));
+        CHECK(matrix_from_row_vectors(row1, row2) == Matrix2<float>(1.f, 2.f, 3.f, 4.f));
     }
 
     SECTION("Matrix from column vectors")
@@ -344,7 +344,7 @@ TEST_CASE("Matrix2-Vector2 Interaction")
         Vector2<float> col1(1.f, 2.f);
         Vector2<float> col2(3.f, 4.f);
 
-        CHECK(matrixFromColumnVectors(col1, col2) == Matrix2<float>(1.f, 3.f, 2.f, 4.f));
+        CHECK(matrix_from_column_vectors(col1, col2) == Matrix2<float>(1.f, 3.f, 2.f, 4.f));
     }
 
     SECTION("Row access")

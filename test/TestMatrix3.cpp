@@ -417,7 +417,7 @@ TEST_CASE("Matrix3-Vector3 Interaction")
         Vector3<float> row2(4.f, 5.f, 6.f);
         Vector3<float> row3(7.f, 8.f, 9.f);
 
-        CHECK(matrixFromRowVectors(row1, row2, row3) ==
+        CHECK(matrix_from_row_vectors(row1, row2, row3) ==
                 Matrix3<float>(1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f));
     }
 
@@ -427,7 +427,7 @@ TEST_CASE("Matrix3-Vector3 Interaction")
         Vector3<float> col2(4.f, 5.f, 6.f);
         Vector3<float> col3(7.f, 8.f, 9.f);
 
-        CHECK(matrixFromColumnVectors(col1, col2, col3) ==
+        CHECK(matrix_from_column_vectors(col1, col2, col3) ==
                 Matrix3<float>(1.f, 4.f, 7.f, 2.f, 5.f, 8.f, 3.f, 6.f, 9.f));
     }
 

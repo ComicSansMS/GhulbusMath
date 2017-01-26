@@ -237,7 +237,7 @@ inline Matrix3<T> operator*(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
 }
 
 template<typename T>
-inline Matrix3<T> matrixFromRowVectors(Vector3<T> const& r1, Vector3<T> const& r2, Vector3<T> const& r3)
+inline Matrix3<T> matrix_from_row_vectors(Vector3<T> const& r1, Vector3<T> const& r2, Vector3<T> const& r3)
 {
     return Matrix3<T>(r1.x, r1.y, r1.z,
                       r2.x, r2.y, r2.z,
@@ -245,7 +245,7 @@ inline Matrix3<T> matrixFromRowVectors(Vector3<T> const& r1, Vector3<T> const& r
 }
 
 template<typename T>
-inline Matrix3<T> matrixFromColumnVectors(Vector3<T> const& c1, Vector3<T> const& c2, Vector3<T> const& c3)
+inline Matrix3<T> matrix_from_column_vectors(Vector3<T> const& c1, Vector3<T> const& c2, Vector3<T> const& c3)
 {
     return Matrix3<T>(c1.x, c2.x, c3.x,
                       c1.y, c2.y, c3.y,
