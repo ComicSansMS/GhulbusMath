@@ -92,7 +92,7 @@ if(GB_BUILD_TESTS)
         elseif(WIN32)
             set(GB_FETCH_EXTERNAL_CATCH
                 URL https://github.com/philsquared/Catch/archive/v1.2.1-develop.12.zip
-                URL_HASH MD5=cda228922a1c9248364c99a3ff9cd9fa)
+                URL_HASH MD5=c916a13a1b9b2fa89ca18a5057bb963e)
         else()
             set(GB_FETCH_EXTERNAL_CATCH
                 URL https://github.com/philsquared/Catch/archive/v1.2.1-develop.12.tar.gz
