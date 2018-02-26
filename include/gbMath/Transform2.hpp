@@ -40,15 +40,15 @@ public:
 template<typename T>
 Vector2<T> operator*(Transform2<T> const& t, Vector2<T> const& v) {
     Matrix3<T> const& m = t.m;
-    return Vector2<T>(v.x*m.m11 + v.y*m.m12,
-                      v.x*m.m21 + v.y*m.m22);
+    return Vector2<T>(m.m11*v.x + m.m12*v.y,
+                      m.m21*v.x + m.m22*v.y);
 }
 
 template<typename T>
 Point2<T> operator*(Transform2<T> const& t, Point2<T> const& p) {
     Matrix3<T> const& m = t.m;
-    return Point2<T>(p.x*m.m11 + p.y*m.m12 + m.m13,
-                     p.x*m.m21 + p.y*m.m22 + m.m23);
+    return Point2<T>(m.m11*p.x + m.m12*p.y + m.m13,
+                     m.m21*p.x + m.m22*p.y + m.m23);
 }
 
 template<typename T>
