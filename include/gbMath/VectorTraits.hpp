@@ -39,7 +39,7 @@ struct Normal {};
 
 namespace VectorTraits
 {
-/** Indicates whether a vector is a point at infinity (homogeneous component = 0).
+/** Indicates whether a vector is a point in regular space (homogeneous component = 1).
  */
 template<typename Tag> struct IsFinitePoint : std::false_type {};
 template<> struct IsFinitePoint<VectorTag::Point> : std::true_type {};

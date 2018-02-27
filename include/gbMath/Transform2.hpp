@@ -13,9 +13,10 @@
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector2.hpp>
 
+#include <type_traits>
+
 namespace GHULBUS_MATH_NAMESPACE
 {
-
 /** A homogeneous 2D transformation.
  */
 template<typename T>
@@ -37,22 +38,26 @@ public:
     {}
 };
 
-template<typename T>
-Vector2<T> operator*(Transform2<T> const& t, Vector2<T> const& v) {
+template<typename T, typename VectorTag_T>
+inline std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
+operator*(Transform2<T> const& t, Vector2Impl<T, VectorTag_T> const& v)
+{
     Matrix3<T> const& m = t.m;
-    return Vector2<T>(m.m11*v.x + m.m12*v.y,
-                      m.m21*v.x + m.m22*v.y);
+    return Vector2Impl<T, VectorTag_T>(m.m11*v.x + m.m12*v.y,
+                                       m.m21*v.x + m.m22*v.y);
+}
+
+template<typename T, typename VectorTag_T>
+inline std::enable_if_t<VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
+operator*(Transform2<T> const& t, Vector2Impl<T, VectorTag_T> const& p)
+{
+    Matrix3<T> const& m = t.m;
+    return Vector2Impl<T, VectorTag_T>(m.m11*p.x + m.m12*p.y + m.m13,
+                                       m.m21*p.x + m.m22*p.y + m.m23);
 }
 
 template<typename T>
-Point2<T> operator*(Transform2<T> const& t, Point2<T> const& p) {
-    Matrix3<T> const& m = t.m;
-    return Point2<T>(m.m11*p.x + m.m12*p.y + m.m13,
-                     m.m21*p.x + m.m22*p.y + m.m23);
-}
-
-template<typename T>
-Transform2<T> make_scale(T scale_x, T scale_y)
+inline Transform2<T> make_scale(T scale_x, T scale_y)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
