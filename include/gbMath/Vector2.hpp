@@ -9,28 +9,14 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/VectorTraits.hpp>
+
 #include <cmath>
 #include <cstdint>
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
-
-namespace VectorTag {
-struct Vector {};
-struct Point {};
-struct Normal {};
-}
-
-namespace VectorTraits
-{
-template<typename Tag> struct IsFinitePoint : std::false_type {};
-template<> struct IsFinitePoint<VectorTag::Point> : std::true_type {};
-
-template<typename Tag> struct IsReciprocal : std::false_type {};
-template<> struct IsReciprocal<VectorTag::Normal> : std::true_type {};
-}
-
 template<typename T, typename VectorTag_T = VectorTag::Vector>
 class Vector2Impl;
 

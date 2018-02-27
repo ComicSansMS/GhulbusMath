@@ -51,6 +51,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector4.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorTraits.hpp
 )
 
 set(GB_MATH_TEST_SOURCES
