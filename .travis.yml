@@ -1,65 +1,67 @@
 
 language: cpp
+os: linux
+dist: trusty
 sudo: false
 
 compiler:
   - gcc
-addons: &clang34
+addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - boost-latest
+      - llvm-toolchain-trusty-4.0
     packages:
     # compiler
-      - clang-3.6
-      - g++-5
-      - gcc-5
+      - clang-4.0
+      - g++-7
+      - gcc-7
       - ninja-build
     # doc tools
       - doxygen
       - graphviz
-      # mscgen is currently not whitelisted :(
-      #- mscgen
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
-      - boost-latest
+      - mscgen
 
 install:
-  - gcc-5 --version
-  - clang-3.6 --version
-  # install CMake 3.3
+  - gcc-7 --version
+  - clang-4.0 --version
+  # install CMake 3.10
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-  - echo "f3546812c11ce7f5d64dc132a566b749 *cmake-3.3.2-Linux-x86_64.tar.gz" > cmake_md5.txt
-  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz
+  - echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
+  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
   - md5sum -c cmake_md5.txt
-  - tar -xvf cmake-3.3.2-Linux-x86_64.tar.gz > /dev/null
-  - mv cmake-3.3.2-Linux-x86_64 cmake-install
+  - tar -xvf cmake-3.10.0-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.10.0-Linux-x86_64 cmake-install
   - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
   - which cmake
 
+
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - mkdir build-gcc5 && mkdir build-coverage-gcc5 && mkdir build-clang36
-  - cd build-gcc5
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release ..
+  - mkdir build-gcc7 && mkdir build-coverage-gcc7 && mkdir build-clang40
+  - cd build-gcc7
+  - cmake -DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=gcc-7 -DCMAKE_BUILD_TYPE=Release ..
   - make
-  - cd ../build-coverage-gcc5
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
+  - cd ../build-coverage-gcc7
+  - cmake -DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=gcc-7 -DCMAKE_BUILD_TYPE=Debug -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-7 ..
   - make
-  - cd ../build-clang36
-  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release ..
+  - cd ../build-clang40
+  - cmake -DCMAKE_CXX_COMPILER=clang++-4.0 -DCMAKE_C_COMPILER=clang-4.0 -DCMAKE_BUILD_TYPE=Release ..
   - make
   - cd ${TRAVIS_BUILD_DIR}
 
 script:
-  - cd build-gcc5
+  - cd build-gcc7
   - make test
-  - cd ../build-coverage-gcc5
+  - cd ../build-coverage-gcc7
   - make test
-  - cd ../build-clang36
+  - cd ../build-clang40
   - make test
   - cd ${TRAVIS_BUILD_DIR}
 
 after_success:
-  - cd ${TRAVIS_BUILD_DIR}/build-coverage-gcc5
+  - cd ${TRAVIS_BUILD_DIR}/build-coverage-gcc7
   - make gbMath_TestCoverage
-  - bash <(curl -s https://codecov.io/bash)  
+  - bash <(curl -s https://codecov.io/bash)
