@@ -61,10 +61,12 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
     ${GB_MATH_TEST_DIR}/TestMatrix3.cpp
     ${GB_MATH_TEST_DIR}/TestMatrix4.cpp
+    ${GB_MATH_TEST_DIR}/TestMatrixIO.cpp
     ${GB_MATH_TEST_DIR}/TestTransform2.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector3.cpp
     ${GB_MATH_TEST_DIR}/TestVector4.cpp
+    ${GB_MATH_TEST_DIR}/TestVectorIO.cpp
     ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
     ${GB_MATH_TEST_DIR}/TestMath.cpp
 )
