@@ -41,13 +41,14 @@ install:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - mkdir build && mkdir build-coverage
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build .
   - |
     if [[ "${CXX}" == "g++-7" ]]; then
-        cd ../build-coverage
+        cd ${TRAVIS_BUILD_DIR}
+        mkdir build-coverage
+        cd build-coverage
         cmake -DCMAKE_BUILD_TYPE=Debug -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-7 ..
         cmake --build .
     fi
