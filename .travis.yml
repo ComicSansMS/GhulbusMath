@@ -11,19 +11,7 @@ matrix:
       addons: { apt: { packages: ["clang-4.0"], sources: ["llvm-toolchain-trusty-4.0", "ubuntu-toolchain-r-test"] } }
 
     - env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-      addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-    # compiler
-      - ninja-build
-    # doc tools
-      - doxygen
-      - graphviz
-      - mscgen
+      addons: { apt: { packages: ["g++-7", "ninja-build", "doxygen", "graphviz", "mscgen"], sources: ["ubuntu-toolchain-r-test"] } }
 
 install:
   - eval "${MATRIX_EVAL}"
