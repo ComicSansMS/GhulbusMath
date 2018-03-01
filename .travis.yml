@@ -27,6 +27,22 @@ addons:
 
 install:
   - eval "${MATRIX_EVAL}"
+
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR}
+
+  # install CMake 3.10
+  - cd ${DEPS_DIR}
+  - echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
+  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
+  - md5sum -c cmake_md5.txt
+  - tar -xvf cmake-3.10.0-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.10.0-Linux-x86_64 cmake-install
+  - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+  - which cmake
+
+  # install libcxx
+  - cd ${DEPS_DIR}
   - |
     if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       if [[ "${CXX%%+*}" == "clang" ]]; then
@@ -47,17 +63,8 @@ install:
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/llvm/install/lib"
       fi
     fi
+
   - ${CXX} --version
-  # install CMake 3.10
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-  - echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
-  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
-  - md5sum -c cmake_md5.txt
-  - tar -xvf cmake-3.10.0-Linux-x86_64.tar.gz > /dev/null
-  - mv cmake-3.10.0-Linux-x86_64 cmake-install
-  - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
-  - which cmake
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
