@@ -65,9 +65,9 @@ script:
   - cd ${TRAVIS_BUILD_DIR}
 
 after_success:
-  - cd ${TRAVIS_BUILD_DIR}/build-coverage
   - |
     if [[ "${CXX}" == "g++-7" ]]; then
+        cd ${TRAVIS_BUILD_DIR}/build-coverage
         cmake --build . --target gbMath_TestCoverage
         bash <(curl -s https://codecov.io/bash)
     fi
