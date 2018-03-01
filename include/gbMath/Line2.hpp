@@ -37,5 +37,31 @@ inline std::enable_if_t<std::is_floating_point<T>::value, Line2<T>> normalized(L
 {
     return Line2<T>(l.p, normalized(l.v));
 }
+
+template<typename T>
+inline T distance_squared(Line2<T> const& l, Point2<T> const& p)
+{
+    auto const r = reject((p - l.p), l.v);
+    return dot(r, r);
+}
+
+template<typename T>
+inline T distance_squared_unit(Line2<T> const& l, Point2<T> const& p)
+{
+    auto const r = reject_unit((p - l.p), l.v);
+    return dot(r, r);
+}
+
+template<typename T>
+inline T distance(Line2<T> const& l, Point2<T> const& p)
+{
+    return length(reject((p - l.p), l.v));
+}
+
+template<typename T>
+inline T distance_unit(Line2<T> const& l, Point2<T> const& p)
+{
+    return length(reject_unit((p - l.p), l.v));
+}
 }
 #endif
