@@ -96,7 +96,7 @@ public:
         return *this;
     }
 
-    Vector3Impl<T, Tag>& operator-=(Vector3Impl<T> const& rhs)
+    Vector3Impl<T, Tag>& operator-=(Vector3Impl<T, Tag> const& rhs)
     {
         static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Compound subtraction of points not allowed.");
         x -= rhs.x;
