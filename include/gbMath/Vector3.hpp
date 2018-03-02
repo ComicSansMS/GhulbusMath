@@ -1,5 +1,5 @@
-#ifndef GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_VECTOR3_HPP
-#define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_VECTOR3_HPP
+#ifndef GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_Vector3Impl_HPP
+#define GHULBUS_LIBRARY_INCLUDE_GUARD_MATH_Vector3Impl_HPP
 
 /** @file
  *
@@ -9,32 +9,60 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/VectorTraits.hpp>
+
 #include <cmath>
+#include <cstdint>
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
+template<typename T, typename VectorTag_T = VectorTag::Vector>
+class Vector3Impl;
+
 template<typename T>
-class Vector3 {
+using Vector3 = Vector3Impl<T, VectorTag::Vector>;
+template<typename T>
+using Point3 = Vector3Impl<T, VectorTag::Point>;
+template<typename T>
+using Normal3 = Vector3Impl<T, VectorTag::Normal>;
+
+using Vector3f = Vector3<float>;
+using Vector3d = Vector3<double>;
+using Vector3i = Vector3<std::int32_t>;
+
+using Point3f = Point3<float>;
+using Point3d = Point3<double>;
+using Point3i = Point3<std::int32_t>;
+
+using Normal3f = Normal3<float>;
+using Normal3d = Normal3<double>;
+using Normal3i = Normal3<std::int32_t>;
+
+
+template<typename T, typename VectorTag_T>
+class Vector3Impl {
 public:
+    using Tag = VectorTag_T;
+
     T x;
     T y;
     T z;
 
-    Vector3() = default;
-    Vector3(Vector3<T> const&) = default;
-    Vector3<T>& operator=(Vector3<T> const&) = default;
+    Vector3Impl() = default;
+    Vector3Impl(Vector3Impl<T, Tag> const&) = default;
+    Vector3Impl<T, Tag>& operator=(Vector3Impl<T, Tag> const&) = default;
 
-    Vector3(T vx, T vy, T vz)
+    Vector3Impl(T vx, T vy, T vz)
         :x(vx), y(vy), z(vz)
     {}
 
-    Vector3(T const* arr)
+    Vector3Impl(T const* arr)
         :x(arr[0]), y(arr[1]), z(arr[2])
     {}
 
     template<typename U>
-    explicit Vector3(Vector3<U> const& v)
+    explicit Vector3Impl(Vector3Impl<U, Tag> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z))
     {}
 
@@ -48,7 +76,19 @@ public:
         return (&x)[idx];
     }
 
-    Vector3<T>& operator+=(Vector3<T> const& rhs)
+    Vector3Impl<T, Tag>& operator+=(Vector3Impl<T, Tag> const& rhs)
+    {
+        static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Addition of points not allowed.");
+        x += rhs.x;
+        y += rhs.y;
+        z += rhs.z;
+        return *this;
+    }
+
+    template<typename TTag = Tag, typename RhsTag>
+    std::enable_if_t<VectorTraits::IsFinitePoint<TTag>::value &&
+                     !VectorTraits::IsFinitePoint<RhsTag>::value , Vector3Impl<T, TTag>>&
+        operator+=(Vector3Impl<T, RhsTag> const& rhs)
     {
         x += rhs.x;
         y += rhs.y;
@@ -56,7 +96,19 @@ public:
         return *this;
     }
 
-    Vector3<T>& operator-=(Vector3<T> const& rhs)
+    Vector3Impl<T, Tag>& operator-=(Vector3Impl<T> const& rhs)
+    {
+        static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Compound subtraction of points not allowed.");
+        x -= rhs.x;
+        y -= rhs.y;
+        z -= rhs.z;
+        return *this;
+    }
+
+    template<typename TTag = Tag, typename RhsTag>
+    std::enable_if_t<VectorTraits::IsFinitePoint<TTag>::value &&
+                     !VectorTraits::IsFinitePoint<RhsTag>::value, Vector3Impl<T, TTag>>&
+        operator-=(Vector3Impl<T, RhsTag> const& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -64,7 +116,7 @@ public:
         return *this;
     }
 
-    Vector3<T>& operator*=(T s)
+    Vector3Impl<T, Tag>& operator*=(T s)
     {
         x *= s;
         y *= s;
@@ -72,7 +124,7 @@ public:
         return *this;
     }
 
-    Vector3<T>& operator/=(T s)
+    Vector3Impl<T, Tag>& operator/=(T s)
     {
         x /= s;
         y /= s;
@@ -81,16 +133,16 @@ public:
     }
 };
 
-template<typename T>
-inline bool operator==(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline bool operator==(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return (lhs.x == rhs.x) &&
            (lhs.y == rhs.y) &&
            (lhs.z == rhs.z);
 }
 
-template<typename T>
-inline bool operator<(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline bool operator<(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     if(lhs.x != rhs.x) {
         return lhs.x < rhs.x;
@@ -101,142 +153,192 @@ inline bool operator<(Vector3<T> const& lhs, Vector3<T> const& rhs)
     }
 }
 
-template<typename T>
-inline bool operator!=(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline bool operator!=(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return !(lhs == rhs);
 }
 
-template<typename T>
-inline bool operator<=(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline bool operator<=(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return !(rhs < lhs);
 }
 
-template<typename T>
-inline bool operator>(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline bool operator>(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return rhs < lhs;
 }
 
-template<typename T>
-inline bool operator>=(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline bool operator>=(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return !(lhs < rhs);
 }
 
-template<typename T>
-inline Vector3<T> operator+(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> operator+(Vector3Impl<T, VectorTag_T> const& lhs,
+                                             Vector3Impl<T, VectorTag_T> const& rhs)
 {
-    return Vector3<T>(lhs.x + rhs.x,
-                      lhs.y + rhs.y,
-                      lhs.z + rhs.z);
+    static_assert(!VectorTraits::IsFinitePoint<VectorTag_T>::value, "Addition of points is not allowed.");
+    return Vector3Impl<T, VectorTag_T>(lhs.x + rhs.x,
+                                       lhs.y + rhs.y,
+                                       lhs.z + rhs.z);
 }
 
-template<typename T>
-inline Vector3<T> operator-(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T> inline
+std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Point3<T>>
+    operator+(Point3<T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
+{
+    return Point3<T>(lhs.x + rhs.x,
+                     lhs.y + rhs.y,
+                     lhs.z + rhs.z);
+}
+
+template<typename T, typename VectorTag_T> inline
+std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Point3<T>>
+    operator+(Vector3Impl<T, VectorTag_T> const& lhs, Point3<T> const& rhs)
+{
+    return Point3<T>(lhs.x + rhs.x,
+                     lhs.y + rhs.y,
+                     lhs.z + rhs.z);
+}
+
+template<typename T, typename VectorTag_T> inline
+std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector3Impl<T, VectorTag_T>>
+    operator-(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
+{
+    return Vector3Impl<T, VectorTag_T>(lhs.x - rhs.x,
+                                       lhs.y - rhs.y,
+                                       lhs.z - rhs.z);
+}
+
+template<typename T, typename VectorTag_T> inline
+std::enable_if_t<VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector3<T>>
+    operator-(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return Vector3<T>(lhs.x - rhs.x,
                       lhs.y - rhs.y,
                       lhs.z - rhs.z);
 }
 
-template<typename T>
-inline Vector3<T> operator*(Vector3<T> const& v, T s)
+template<typename T, typename VectorTag_T> inline
+std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Point3<T>>
+    operator-(Point3<T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
-    return Vector3<T>(v.x * s, v.y * s, v.z * s);
+    return Point3<T>(lhs.x - rhs.x,
+                     lhs.y - rhs.y,
+                     lhs.z - rhs.z);
 }
 
-template<typename T>
-inline Vector3<T> operator*(T s, Vector3<T> const& v)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> operator*(Vector3Impl<T, VectorTag_T> const& v, T s)
 {
-    return Vector3<T>(s * v.x, s * v.y, s * v.z);
+    return Vector3Impl<T, VectorTag_T>(v.x * s, v.y * s, v.z * s);
 }
 
-template<typename T>
-inline Vector3<T> operator/(Vector3<T> const& v, T s)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> operator*(T s, Vector3Impl<T, VectorTag_T> const& v)
 {
-    return Vector3<T>(v.x / s, v.y / s, v.z / s);
+    return Vector3Impl<T, VectorTag_T>(s * v.x, s * v.y, s * v.z);
 }
 
-template<typename T>
-inline T dot(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> operator/(Vector3Impl<T, VectorTag_T> const& v, T s)
+{
+    return Vector3Impl<T, VectorTag_T>(v.x / s, v.y / s, v.z / s);
+}
+
+template<typename T, typename VectorTag_T>
+inline T dot(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
 
-template<typename T>
-inline double length(Vector3<T> const& v)
+template<typename T, typename VectorTag_T>
+inline double length(Vector3Impl<T, VectorTag_T> const& v)
 {
     return std::sqrt(static_cast<double>(dot(v, v)));
 }
 
-inline float length(Vector3<float> const& v)
+template<typename VectorTag_T>
+inline float length(Vector3Impl<float, VectorTag_T> const& v)
 {
     return std::sqrt(dot(v, v));
 }
 
-inline long double length(Vector3<long double> const& v)
+template<typename VectorTag_T>
+inline long double length(Vector3Impl<long double, VectorTag_T> const& v)
 {
     return std::sqrt(dot(v, v));
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point<T>::value, Vector3<T>> normalized(Vector3<T> const& v)
+template<typename T, typename VectorTag_T>
+inline std::enable_if_t<std::is_floating_point<T>::value, Vector3Impl<T, VectorTag_T>>
+normalized(Vector3Impl<T, VectorTag_T> const& v)
 {
     T const len = length(v);
-    return Vector3<T>(v.x / len, v.y / len, v.z / len);
+    return Vector3Impl<T, VectorTag_T>(v.x / len, v.y / len, v.z / len);
 }
 
-template<typename T>
-inline Vector3<T> cross(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> cross(Vector3Impl<T, VectorTag_T> const& lhs,
+                                         Vector3Impl<T, VectorTag_T> const& rhs)
 {
-    return Vector3<T>(lhs.y*rhs.z - lhs.z*rhs.y,
-                      lhs.z*rhs.x - lhs.x*rhs.z,
-                      lhs.x*rhs.y - lhs.y*rhs.x);
+    // @todo
+    return Vector3Impl<T, VectorTag_T>(lhs.y*rhs.z - lhs.z*rhs.y,
+                                       lhs.z*rhs.x - lhs.x*rhs.z,
+                                       lhs.x*rhs.y - lhs.y*rhs.x);
 }
 
 /** Scalar triple product, aka box product.
  */
-template<typename T>
-inline T box(Vector3<T> const& u, Vector3<T> const& v, Vector3<T> const& w)
+template<typename T, typename VectorTag_T>
+inline T box(Vector3Impl<T, VectorTag_T> const& u,
+             Vector3Impl<T, VectorTag_T> const& v,
+             Vector3Impl<T, VectorTag_T> const& w)
 {
     auto const cross_u_v = cross(u, v);
     return dot(cross_u_v, w);
 }
 
-template<typename T>
-inline T angle_vector(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline T angle_vector(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs) / (length(lhs) * length(rhs)));
 }
 
-template<typename T>
-inline T angle_vector_unit(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline T angle_vector_unit(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs));
 }
 
-template<typename T>
-inline Vector3<T> project(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> project(Vector3Impl<T, VectorTag_T> const& lhs,
+                                           Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return rhs * (dot(lhs, rhs) / dot(rhs, rhs));
 }
 
-template<typename T>
-inline Vector3<T> project_unit(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> project_unit(Vector3Impl<T, VectorTag_T> const& lhs,
+                                                Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return rhs * dot(lhs, rhs);
 }
 
-template<typename T>
-inline Vector3<T> reject(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> reject(Vector3Impl<T, VectorTag_T> const& lhs,
+                                          Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return lhs - project(lhs, rhs);
 }
 
-template<typename T>
-inline Vector3<T> reject_unit(Vector3<T> const& lhs, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> reject_unit(Vector3Impl<T, VectorTag_T> const& lhs,
+                                               Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return lhs - project_unit(lhs, rhs);
 }

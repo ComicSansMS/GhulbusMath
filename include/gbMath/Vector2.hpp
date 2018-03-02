@@ -42,7 +42,7 @@ using Normal2i = Normal2<std::int32_t>;
 template<typename T, typename VectorTag_T>
 class Vector2Impl {
 public:
-    typedef VectorTag_T Tag;
+    using Tag = VectorTag_T;
 
     T x;
     T y;
@@ -94,7 +94,7 @@ public:
 
     Vector2Impl<T, Tag>& operator-=(Vector2Impl<T, Tag> const& rhs)
     {
-        static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Subtraction of points not allowed.");
+        static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Compound subtraction of points not allowed.");
         x -= rhs.x;
         y -= rhs.y;
         return *this;
@@ -241,12 +241,14 @@ inline double length(Vector2Impl<T, VectorTag_T> const& v)
     return std::sqrt(static_cast<double>(dot(v, v)));
 }
 
-inline float length(Vector2Impl<float> const& v)
+template<typename VectorTag_T>
+inline float length(Vector2Impl<float, VectorTag_T> const& v)
 {
     return std::sqrt(dot(v, v));
 }
 
-inline long double length(Vector2Impl<long double> const& v)
+template<typename VectorTag_T>
+inline long double length(Vector2Impl<long double, VectorTag_T> const& v)
 {
     return std::sqrt(dot(v, v));
 }
