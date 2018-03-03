@@ -586,4 +586,12 @@ TEST_CASE("Vector3")
         CHECK(min_component(Vector3<int>(10, 5, 11)) == 5);
         CHECK(min_component(Vector3<int>(10, 50, 11)) == 10);
     }
+
+    SECTION("Linear interpolation")
+    {
+        CHECK(lerp(Vector3<float>(0.f, 0.f, 0.f), Vector3<float>(1.f, 2.f, 3.f), 0.5f) ==
+                Vector3<float>(0.5f, 1.f, 1.5f));
+        CHECK(lerp(Vector3<float>(5.f, 2.f, 9.f), Vector3<float>(1.f, 2.f, 3.f), 0.25f) ==
+            Vector3<float>(4.f, 2.f, 7.5f));
+    }
 }

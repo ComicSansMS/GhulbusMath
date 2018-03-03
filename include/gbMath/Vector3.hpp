@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/VectorTraits.hpp>
 
 #include <cmath>
@@ -368,6 +369,17 @@ inline T min_component(Vector3Impl<T, VectorTag_T> const& v)
 {
     auto const min_yz = (v.y < v.z) ? v.y : v.z;
     return (v.x < min_yz) ? v.x : min_yz;
+}
+
+template<typename T, typename VectorTag_T>
+inline Vector3Impl<T, VectorTag_T> lerp(Vector3Impl<T, VectorTag_T> const& v1,
+                                        Vector3Impl<T, VectorTag_T> const& v2,
+                                        T t)
+{
+    auto const one_minus_t = GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One() - t;
+    return Vector3Impl<T, VectorTag_T>(one_minus_t * v1.x + t * v2.x,
+                                       one_minus_t * v1.y + t * v2.y,
+                                       one_minus_t * v1.z + t * v2.z);
 }
 }
 
