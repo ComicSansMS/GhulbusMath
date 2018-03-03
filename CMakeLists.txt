@@ -74,13 +74,12 @@ set(GB_MATH_TEST_SOURCES
 )
 
 add_library(gbMath INTERFACE)
-target_sources(gbMath INTERFACE ${GB_MATH_HEADER_FILES})
-target_include_directories(gbMath INTERFACE ${GB_MATH_INCLUDE_DIR})
-target_compile_features(gbMath INTERFACE cxx_lambdas cxx_override cxx_range_for)
-target_compile_features(gbMath INTERFACE cxx_attributes cxx_func_identifier cxx_noexcept)
-target_compile_options(gbMath INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
+target_sources(gbMath INTERFACE $<BUILD_INTERFACE:${GB_MATH_HEADER_FILES}>)
+target_include_directories(gbMath INTERFACE $<BUILD_INTERFACE:${GB_MATH_INCLUDE_DIR}>)
+target_compile_features(gbMath INTERFACE cxx_std_17)
+target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/W4>>)
 target_compile_options(gbMath INTERFACE
-    $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>)
+    $<BUILD_INTERFACE:$<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>>)
 
 ###############################################################################
 ## Testing gbMath
@@ -134,3 +133,58 @@ if(GB_BUILD_TESTS)
     endif()
 
 endif()
+
+###############################################################################
+## Packaging gbBase
+###############################################################################
+
+set(GB_LIBRARY_NAMESPACE Ghulbus::)
+
+install(TARGETS gbMath EXPORT gbMathTargets
+    RUNTIME DESTINATION bin/$<CONFIG>
+    LIBRARY DESTINATION lib/$<CONFIG>
+    ARCHIVE DESTINATION lib/$<CONFIG>
+    INCLUDES DESTINATION include
+)
+target_include_directories(gbMath INTERFACE $<INSTALL_INTERFACE:include>)
+install(FILES ${GB_MATH_HEADER_FILES} ${GB_MATH_GENERATED_HEADER_FILES} DESTINATION include/gbMath)
+install(FILES LICENSE DESTINATION ".")
+
+if(GB_GENERATE_DOXYGEN_DOCUMENTATION AND DOXYGEN_FOUND)
+    install(DIRECTORY ${GB_LIB_DOC_DIR}/html DESTINATION doc MESSAGE_NEVER)
+endif()
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/gbMathConfig.cmake.in
+    ${PROJECT_BINARY_DIR}/cmake/gbMathConfig.cmake
+    INSTALL_DESTINATION cmake
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+write_basic_package_version_file(
+    ${PROJECT_BINARY_DIR}/cmake/gbMathVersion.cmake
+    VERSION ${GB_MATH_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+configure_file(${PROJECT_SOURCE_DIR}/cmake/gbMathMacros.cmake.in
+    ${PROJECT_BINARY_DIR}/cmake/gbMathMacros.cmake
+    COPYONLY
+)
+
+# installation - build tree specific package config files
+export(EXPORT gbMathTargets FILE ${PROJECT_BINARY_DIR}/cmake/gbMathTargets.cmake NAMESPACE ${GB_LIBRARY_NAMESPACE})
+export(PACKAGE gbMath)
+
+# installation - relocatable package config files
+install(EXPORT gbMathTargets
+    FILE gbMathTargets.cmake
+    NAMESPACE ${GB_LIBRARY_NAMESPACE}
+    DESTINATION cmake
+)
+install(FILES
+    ${PROJECT_BINARY_DIR}/cmake/gbMathConfig.cmake
+    ${PROJECT_BINARY_DIR}/cmake/gbMathMacros.cmake
+    ${PROJECT_BINARY_DIR}/cmake/gbMathVersion.cmake
+    DESTINATION cmake
+)
