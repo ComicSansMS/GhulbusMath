@@ -10,6 +10,8 @@
 
 TEST_CASE("Vector3")
 {
+    using GHULBUS_MATH_NAMESPACE::Point3;
+    using GHULBUS_MATH_NAMESPACE::Normal3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
 
     SECTION("Value initialization initializes to 0")
@@ -343,6 +345,14 @@ TEST_CASE("Vector3")
         CHECK(cross(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(5.f, 10.f, 15.f)) == Vector3<float>());
     }
 
+    SECTION("Normal vector from 2 vectors")
+    {
+        CHECK(perp(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(4.f, 5.f, 6.f)) == Normal3<float>(-3.f, 6.f, -3.f));
+        CHECK(perp(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(0.f, 1.f, 0.f)) == Normal3<float>(0.f, 0.f, 1.f));
+        CHECK(perp(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(0.f, 0.f, 1.f)) == Normal3<float>(0.f, -1.f, 0.f));
+        CHECK(perp(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(5.f, 10.f, 15.f)) == Normal3<float>());
+    }
+
     SECTION("Box product")
     {
         CHECK(box(Vector3<float>(1.f, 2.f, 3.f), Vector3<float>(4.f, 5.f, 6.f), Vector3<float>(7.f, 8.f, 9.f)) == 0.f);
@@ -474,9 +484,6 @@ TEST_CASE("Vector3")
 
     SECTION("Mixing Points, Vectors, and Normals")
     {
-        using GHULBUS_MATH_NAMESPACE::Point3;
-        using GHULBUS_MATH_NAMESPACE::Normal3;
-
         Point3<float> p(1.f, 2.f, 3.f);
         Vector3<float> v(4.f, 5.f, 6.f);
         Normal3<float> n(7.f, 8.f, 9.f);
@@ -558,5 +565,11 @@ TEST_CASE("Vector3")
             CHECK(v2.y == v.y);
             CHECK(v2.z == v.z);
         }
+    }
+
+    SECTION("Points and Normals can be converted to Vectors")
+    {
+        CHECK(Point3<float>(1.f, 2.f, 3.f).to_vector() == Vector3<float>(1.f, 2.f, 3.f));
+        CHECK(Normal3<float>(1.f, 2.f, 3.f).to_vector() == Vector3<float>(1.f, 2.f, 3.f));
     }
 }

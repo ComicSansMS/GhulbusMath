@@ -10,6 +10,8 @@
 
 TEST_CASE("Vector2")
 {
+    using GHULBUS_MATH_NAMESPACE::Normal2;
+    using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
 
     SECTION("Value initialization initializes to 0")
@@ -301,7 +303,7 @@ TEST_CASE("Vector2")
     SECTION("Perp vector")
     {
         Vector2<float> v(1.f, 2.f);
-        CHECK(perp(v) == Vector2<float>(-2.f, 1.f));
+        CHECK(perp(v) == Normal2<float>(-2.f, 1.f));
     }
 
     SECTION("Perp-dot product")
@@ -428,9 +430,6 @@ TEST_CASE("Vector2")
 
     SECTION("Mixing Points, Vectors, and Normals")
     {
-        using GHULBUS_MATH_NAMESPACE::Point2;
-        using GHULBUS_MATH_NAMESPACE::Normal2;
-
         Point2<float> p(1.f, 2.f);
         Vector2<float> v(3.f, 4.f);
         Normal2<float> n(5.f, 6.f);
@@ -501,5 +500,11 @@ TEST_CASE("Vector2")
             CHECK(v2.x == v.x);
             CHECK(v2.y == v.y);
         }
+    }
+
+    SECTION("Points and Normals can be converted to Vectors")
+    {
+        CHECK(Point2<float>(1.f, 2.f).to_vector() == Vector2<float>(1.f, 2.f));
+        CHECK(Normal2<float>(1.f, 2.f).to_vector() == Vector2<float>(1.f, 2.f));
     }
 }

@@ -64,6 +64,11 @@ public:
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y))
     {}
 
+    Vector2<T> to_vector() const
+    {
+        return Vector2<T>(x, y);
+    }
+
     T& operator[](std::size_t idx)
     {
         return (&x)[idx];
@@ -261,20 +266,21 @@ normalized(Vector2Impl<T, VectorTag_T> const& v)
     return Vector2Impl<T, VectorTag_T>(v.x / len, v.y / len);
 }
 
-/** Computes the counter-clockwise perpendicular vector.
+/** Computes the counter-clockwise perpendicular normal.
  */
-template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> perp(Vector2Impl<T, VectorTag_T> const& v)
+template<typename T>
+inline Normal2<T> perp(Vector2<T> const& v)
 {
-    return Vector2Impl<T, VectorTag_T>(-v.y, v.x);
+    return Normal2<T>(-v.y, v.x);
 }
 
 /** The 2D pseudo cross product, aka perp-dot product.
+ * The result corresponds to the 2d bivector in Grassman algebra, ie. the wedge product of the two 2d vectors.
  */
-template<typename T, typename VectorTag_T>
-inline T perp_dot(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<typename T>
+inline T perp_dot(Vector2<T> const& lhs, Vector2<T> const& rhs)
 {
-    return dot(perp(lhs), rhs);
+    return dot(perp(lhs).to_vector(), rhs);
 }
 
 template<typename T, typename VectorTag_T>

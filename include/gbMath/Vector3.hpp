@@ -66,6 +66,11 @@ public:
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z))
     {}
 
+    Vector3<T> to_vector() const
+    {
+        return Vector3<T>(x, y, z);
+    }
+
     T& operator[](std::size_t idx)
     {
         return (&x)[idx];
@@ -286,10 +291,18 @@ template<typename T, typename VectorTag_T>
 inline Vector3Impl<T, VectorTag_T> cross(Vector3Impl<T, VectorTag_T> const& lhs,
                                          Vector3Impl<T, VectorTag_T> const& rhs)
 {
-    // @todo
     return Vector3Impl<T, VectorTag_T>(lhs.y*rhs.z - lhs.z*rhs.y,
                                        lhs.z*rhs.x - lhs.x*rhs.z,
                                        lhs.x*rhs.y - lhs.y*rhs.x);
+}
+
+/** Computes a normal perpendicular to two other vectors, oriented in the natural handedness of the coordinate system.
+ */
+template<typename T>
+inline Normal3<T> perp(Vector3<T> const& lhs, Vector3<T> const& rhs)
+{
+    auto const n = cross(lhs, rhs);
+    return Normal3<T>(n.x, n.y, n.z);
 }
 
 /** Scalar triple product, aka box product.
