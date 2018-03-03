@@ -135,6 +135,26 @@ if(GB_BUILD_TESTS)
 endif()
 
 ###############################################################################
+## Doxygen gbBase
+###############################################################################
+
+option(GB_GENERATE_DOXYGEN_DOCUMENTATION "If checked, API documentation will be generated if Doxygen is available." ON)
+if(GB_GENERATE_DOXYGEN_DOCUMENTATION)
+    find_package(Doxygen)
+    if(DOXYGEN_FOUND)
+        set(GB_LIB_DOC_DIR ${PROJECT_BINARY_DIR}/doc)
+        configure_file(${PROJECT_SOURCE_DIR}/doc/Doxyfile.in ${GB_LIB_DOC_DIR}/Doxyfile @ONLY)
+        add_custom_target(doxygen-doc
+            COMMAND ${DOXYGEN_EXECUTABLE}
+            WORKING_DIRECTORY ${GB_LIB_DOC_DIR}
+            COMMENT "Building doxygen documentation"
+            SOURCES ${PROJECT_SOURCE_DIR}/doc/Doxyfile.in
+        )
+        source_group("" FILES ${PROJECT_SOURCE_DIR}/doc/Doxyfile.in)
+    endif()
+endif()
+
+###############################################################################
 ## Packaging gbBase
 ###############################################################################
 

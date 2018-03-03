@@ -7,7 +7,7 @@
  * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
  */
 
-/** \namespace Ghulbus Math namespace for the Ghulbus library.
+/** \namespace GhulbusMath Namespace for the Ghulbus library.
  * The implementation internally always uses this macro `GHULBUS_MATH_NAMESPACE` to refer to the namespace.
  * When using GhulbusMath yourself, you can globally redefine this macro to move to a different namespace.
  */
