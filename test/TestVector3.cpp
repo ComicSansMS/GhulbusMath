@@ -572,4 +572,18 @@ TEST_CASE("Vector3")
         CHECK(Point3<float>(1.f, 2.f, 3.f).to_vector() == Vector3<float>(1.f, 2.f, 3.f));
         CHECK(Normal3<float>(1.f, 2.f, 3.f).to_vector() == Vector3<float>(1.f, 2.f, 3.f));
     }
+
+    SECTION("Max component")
+    {
+        CHECK(max_component(Vector3<int>(10, 5, -1)) == 10);
+        CHECK(max_component(Vector3<int>(10, 50, -1)) == 50);
+        CHECK(max_component(Vector3<int>(10, 50, 51)) == 51);
+    }
+
+    SECTION("Min component")
+    {
+        CHECK(min_component(Vector3<int>(10, 5, -1)) == -1);
+        CHECK(min_component(Vector3<int>(10, 5, 11)) == 5);
+        CHECK(min_component(Vector3<int>(10, 50, 11)) == 10);
+    }
 }

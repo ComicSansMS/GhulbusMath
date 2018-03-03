@@ -507,4 +507,16 @@ TEST_CASE("Vector2")
         CHECK(Point2<float>(1.f, 2.f).to_vector() == Vector2<float>(1.f, 2.f));
         CHECK(Normal2<float>(1.f, 2.f).to_vector() == Vector2<float>(1.f, 2.f));
     }
+
+    SECTION("Max component")
+    {
+        CHECK(max_component(Vector2<int>(10, 5)) == 10);
+        CHECK(max_component(Vector2<int>(10, 50)) == 50);
+    }
+
+    SECTION("Min component")
+    {
+        CHECK(min_component(Vector2<int>(10, 5)) == 5);
+        CHECK(min_component(Vector2<int>(10, 50)) == 10);
+    }
 }

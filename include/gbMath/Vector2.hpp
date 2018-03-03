@@ -322,6 +322,18 @@ inline Vector2Impl<T, VectorTag_T> reject_unit(Vector2Impl<T, VectorTag_T> const
 {
     return lhs - project_unit(lhs, rhs);
 }
+
+template<typename T, typename VectorTag_T>
+inline T max_component(Vector2Impl<T, VectorTag_T> const& v)
+{
+    return (v.x < v.y) ? v.y : v.x;
+}
+
+template<typename T, typename VectorTag_T>
+inline T min_component(Vector2Impl<T, VectorTag_T> const& v)
+{
+    return (v.x < v.y) ? v.x : v.y;
+}
 }
 
 #endif

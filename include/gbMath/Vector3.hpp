@@ -355,6 +355,20 @@ inline Vector3Impl<T, VectorTag_T> reject_unit(Vector3Impl<T, VectorTag_T> const
 {
     return lhs - project_unit(lhs, rhs);
 }
+
+template<typename T, typename VectorTag_T>
+inline T max_component(Vector3Impl<T, VectorTag_T> const& v)
+{
+    auto const max_yz = (v.y < v.z) ? v.z : v.y;
+    return (v.x < max_yz) ? max_yz : v.x;
+}
+
+template<typename T, typename VectorTag_T>
+inline T min_component(Vector3Impl<T, VectorTag_T> const& v)
+{
+    auto const min_yz = (v.y < v.z) ? v.y : v.z;
+    return (v.x < min_yz) ? v.x : min_yz;
+}
 }
 
 #endif
