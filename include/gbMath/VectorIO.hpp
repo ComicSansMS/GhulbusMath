@@ -23,8 +23,8 @@ std::ostream& operator<<(std::ostream& os, Vector2Impl<T, VectorTag_T> const& rh
     return os;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, Vector3<T> const& rhs)
+template<typename T, typename VectorTag_T>
+std::ostream& operator<<(std::ostream& os, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     os << '[' << rhs.x << ' ' << rhs.y << ' ' << rhs.z << ']';
     return os;

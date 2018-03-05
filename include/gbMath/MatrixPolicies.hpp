@@ -27,5 +27,8 @@ struct InputOrder_T {
 using InputOrder_RowMajor = InputOrder_T<Order::RowMajor>;
 using InputOrder_ColumnMajor = InputOrder_T<Order::ColumnMajor>;
 }
+
+struct assume_orthogonal_t {};
+//inline assume_orthogonal_t assume_orthogonal;
 }
 #endif

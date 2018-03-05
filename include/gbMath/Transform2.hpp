@@ -35,9 +35,6 @@ public:
     Matrix2<T> m;
 };
 
-struct assume_orthogonal_t {};
-//inline assume_orthogonal_t assume_orthogonal;
-
 /** A homogeneous 2D transformation.
  */
 template<typename T>
