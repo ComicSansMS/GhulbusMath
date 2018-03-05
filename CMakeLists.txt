@@ -37,6 +37,7 @@ set(GB_MATH_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
 
 set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/AABB3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix2.hpp
@@ -59,6 +60,7 @@ set(GB_MATH_HEADER_FILES
 
 set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/test_utils/MultiplicationOrderAwareOperand.hpp
+    ${GB_MATH_TEST_DIR}/TestAABB3.cpp
     ${GB_MATH_TEST_DIR}/TestLine2.cpp
     ${GB_MATH_TEST_DIR}/TestLine3.cpp
     ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
