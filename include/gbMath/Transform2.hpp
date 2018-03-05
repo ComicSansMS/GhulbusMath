@@ -103,12 +103,33 @@ operator*(Transform2<T> const& t, Vector2Impl<T, VectorTag_T> const& p)
 }
 
 template<typename T, typename VectorTag_T>
-inline std::enable_if_t<VectorTraits::IsReciprocal<VectorTag_T>::value && !VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
+inline std::enable_if_t<VectorTraits::IsReciprocal<VectorTag_T>::value &&
+                        !VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
 operator*(Vector2Impl<T, VectorTag_T> const& n, TransformReciprocal2<T> const& rt)
 {
     Matrix2<T> const& m = rt.m;
     return Vector2Impl<T, VectorTag_T>(n.x*m.m11 + n.y*m.m21,
                                        n.x*m.m12 + n.y*m.m22);
+}
+
+template<typename T>
+std::enable_if_t<std::is_floating_point_v<T>, Point2<T>>
+project(Transform2<T> const& t, Point2<T> const& p)
+{
+    Matrix3<T> const& m = t.m;
+    T const w = m.m31*p.x + m.m32*p.y + m.m33;
+    return Point2<T>((m.m11*p.x + m.m12*p.y + m.m13) / w,
+                     (m.m21*p.x + m.m22*p.y + m.m23) / w);
+}
+
+template<typename T>
+Point2<T> project(Transform2<T> const& t, Point2<T> const& p, T& w)
+{
+    Matrix3<T> const& m = t.m;
+    T const p_w = w;
+    w = m.m31*p.x + m.m32*p.y + m.m33*w;
+    return Point2<T>((m.m11*p.x + m.m12*p.y + m.m13*p_w),
+                     (m.m21*p.x + m.m22*p.y + m.m23*p_w));
 }
 
 template<typename T>

@@ -82,4 +82,56 @@ TEST_CASE("Transform2")
         Transform2<float> t = GHULBUS_MATH_NAMESPACE::make_scale(2.f, 1.f);
         CHECK(n*t.reciprocal() == Normal2<float>(1.f, 2.f));
     }
+
+    SECTION("Projective point transform with perspective divide")
+    {
+        CHECK(project(Transform2<float>(1.f, 0.f, 0.f,
+                                        0.f, 1.f, 0.f,
+                                       42.f, 0.f, 1.f),
+                      Point2<float>(1.f, 2.f)) == Point2<float>(1.f/43.f, 2.f/43.f));
+        CHECK(project(Transform2<float>(1.f, 0.f, 0.f,
+                                        0.f, 1.f, 0.f,
+                                        0.f,42.f, 1.f),
+                      Point2<float>(1.f, 2.f)) == Point2<float>(1.f/85.f, 2.f/85.f));
+        CHECK(project(Transform2<float>(0.f, 1.f, 0.f,
+                                       -1.f, 0.f, 0.f,
+                                        0.f,42.f, 1.f),
+                      Point2<float>(1.f, 2.f)) == Point2<float>(2.f/85.f, -1.f/85.f));
+    }
+
+    SECTION("Projective point transform with explicit w")
+    {
+        int w = 1;
+        CHECK(project(Transform2<int>(1, 0, 0,
+                                      0, 1, 0,
+                                     42, 0, 1),
+                      Point2<int>(1, 2), w) == Point2<int>(1, 2));
+        CHECK(w == 43);
+        w = 1;
+        CHECK(project(Transform2<int>(1, 0, 0,
+                                      0, 1, 0,
+                                      0,42, 1),
+                      Point2<int>(1, 2), w) == Point2<int>(1, 2));
+        CHECK(w == 85);
+        w = 1;
+        CHECK(project(Transform2<int>(0, 1, 0,
+                                     -1, 0, 0,
+                                      0,42, 1),
+                      Point2<int>(1, 2), w) == Point2<int>(2, -1));
+        CHECK(w == 85);
+
+        w = 2;
+        CHECK(project(Transform2<int>(1, 0, 0,
+                                      0, 1, 0,
+                                     42, 0, 1),
+                      Point2<int>(1, 2), w) == Point2<int>(1, 2));
+        CHECK(w == 44);
+
+        w = 2;
+        CHECK(project(Transform2<int>(1, 0, 4,
+                                      0, 1, 5,
+                                     42, 0, 1),
+                      Point2<int>(1, 2), w) == Point2<int>(9, 12));
+        CHECK(w == 44);
+    }
 }
