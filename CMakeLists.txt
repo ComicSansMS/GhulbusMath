@@ -46,6 +46,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixPolicies.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/NumberTypeTraits.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Sphere3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Transform2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Transform3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
@@ -67,6 +68,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestMatrix3.cpp
     ${GB_MATH_TEST_DIR}/TestMatrix4.cpp
     ${GB_MATH_TEST_DIR}/TestMatrixIO.cpp
+    ${GB_MATH_TEST_DIR}/TestSphere3.cpp
     ${GB_MATH_TEST_DIR}/TestTransform2.cpp
     ${GB_MATH_TEST_DIR}/TestTransform3.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
