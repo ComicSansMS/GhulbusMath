@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Line3.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector3.hpp>
 
@@ -53,6 +54,25 @@ bool intersects(Sphere3<T> const& s1, Sphere3<T> const& s2)
     T const squared_dist = dot(dist, dist);
     T const radii_sum = s1.radius + s2.radius;
     if(radii_sum*radii_sum < squared_dist) {
+        return false;
+    }
+    return true;
+}
+
+template<typename T>
+bool intersects(Sphere3<T> const& s, Line3<T> const& l)
+{
+    Vector3<T> const m = l.p - s.center;
+    T const c = dot(m, m) - (s.radius * s.radius);
+    if(c <= traits::Constants<T>::Zero()) {
+        return true;
+    }
+    T const b = dot(m, normalized(l.v));
+    if(b > traits::Constants<T>::Zero()) {
+        return false;
+    }
+    T const disc = b*b - c;
+    if(disc < traits::Constants<T>::Zero()) {
         return false;
     }
     return true;

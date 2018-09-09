@@ -9,6 +9,8 @@ TEST_CASE("Sphere3")
 {
     using GHULBUS_MATH_NAMESPACE::Sphere3;
     using GHULBUS_MATH_NAMESPACE::Point3;
+    using GHULBUS_MATH_NAMESPACE::Line3;
+    using GHULBUS_MATH_NAMESPACE::Vector3;
 
     SECTION("Value initialization initializes to 0")
     {
@@ -60,5 +62,35 @@ TEST_CASE("Sphere3")
                          Sphere3<float>(Point3<float>(1.f, 2.f + std::sqrt(2.f), 3.f + std::sqrt(2.f)), 1.f)));
         CHECK(!intersects(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f),
                           Sphere3<float>(Point3<float>(1.f + std::sqrt(2.f), 2.f + std::sqrt(2.f), 3.f), 1.f)));
+    }
+
+    SECTION("Ray-sphere intersection")
+    {
+        // ray intersects sphere twice (common case)
+        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                         Line3<float>(Point3<float>(-5.f, 0.f, 0.f),
+                                      Vector3<float>(1.f, 0.f, 0.f))));
+        // "false" intersection with sphere behind the ray
+        CHECK(!intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                          Line3<float>(Point3<float>(5.f, 0.f, 0.f),
+                                       Vector3<float>(1.f, 0.f, 0.f))));
+        // tangential intersection
+        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                         Line3<float>(Point3<float>(-5.f, 3.f, 1.f),
+                                      Vector3<float>(1.f, 0.f, 0.f))));
+        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                         Line3<float>(Point3<float>(-5.f, 1.f, 3.f),
+                                      Vector3<float>(1.f, 0.f, 0.f))));
+        // ray origin inside sphere
+        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                         Line3<float>(Point3<float>(1.f, 1.f, 1.f),
+                                      Vector3<float>(1.f, 0.f, 0.f))));
+        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                         Line3<float>(Point3<float>(1.f, 1.f, 1.f),
+                         Vector3<float>(-1.f, 0.f, 0.f))));
+        // no intersection
+        CHECK(!intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                          Line3<float>(Point3<float>(-5.f, -1.f, 0.f),
+                                       Vector3<float>(1.f, 2.f, 3.f))));
     }
 }
