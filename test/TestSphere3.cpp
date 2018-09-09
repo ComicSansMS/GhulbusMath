@@ -93,4 +93,46 @@ TEST_CASE("Sphere3")
                           Line3<float>(Point3<float>(-5.f, -1.f, 0.f),
                                        Vector3<float>(1.f, 2.f, 3.f))));
     }
+
+    SECTION("Ray-sphere intersection point")
+    {
+        // ray intersects sphere twice (common case)
+        auto p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                              Line3<float>(Point3<float>(-5.f, 1.f, 1.f),
+                                           Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p);
+        CHECK(*p == 4.f);
+        // "false" intersection with sphere behind the ray
+        p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                        Line3<float>(Point3<float>(5.f, 0.f, 0.f),
+                                     Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(!p);
+        // tangential intersection
+        p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                        Line3<float>(Point3<float>(-5.f, 3.f, 1.f),
+                                     Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p);
+        CHECK(*p == 6.f);
+        p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                        Line3<float>(Point3<float>(-5.f, 1.f, 3.f),
+                                     Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p);
+        CHECK(*p == 6.f);
+        // ray origin inside sphere
+        p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                        Line3<float>(Point3<float>(1.f, 1.f, 1.f),
+                                     Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p);
+        CHECK(*p == 0.f);
+        p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                        Line3<float>(Point3<float>(1.f, 1.f, 1.f),
+                        Vector3<float>(-1.f, 0.f, 0.f)));
+        CHECK(p);
+        CHECK(*p == 0.f);
+        // no intersection
+        p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                        Line3<float>(Point3<float>(-5.f, -1.f, 0.f),
+                                     Vector3<float>(1.f, 2.f, 3.f)));
+        CHECK(!p);
+    }
 }

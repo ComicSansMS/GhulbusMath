@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <optional>
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
@@ -76,6 +77,30 @@ bool intersects(Sphere3<T> const& s, Line3<T> const& l)
         return false;
     }
     return true;
+}
+
+template<typename T>
+std::optional<T> intersect_p(Sphere3<T> const& s, Line3<T> const& l)
+{
+    Vector3<T> const m = l.p - s.center;
+    T const b = dot(m, normalized(l.v));
+    T const c = dot(m, m) - (s.radius * s.radius);
+    if(c > traits::Constants<T>::Zero() && b > traits::Constants<T>::Zero()) {
+        // ray origin is outside of sphere and ray is pointing away from sphere: no intersection
+        return std::nullopt;
+    }
+    T const discr = b*b - c;
+    if(discr < traits::Constants<T>::Zero()) {
+        // negative discriminant: ray is not hitting sphere
+        return std::nullopt;
+    }
+    T t = -b - std::sqrt(discr);
+    if(t < traits::Constants<T>::Zero()) {
+        // ray origin is inside sphere; clamp t to 0
+        // this means we consider spheres solid; rays starting inside the sphere intersect at the ray origin
+        t = 0.f;
+    }
+    return t;
 }
 }
 #endif
