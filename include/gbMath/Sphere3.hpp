@@ -20,7 +20,7 @@
 #include <optional>
 #else
 #include <experimental/optional>
-namespace std { using std::experimental::optional; }
+namespace std { using std::experimental::optional; using std::experimental::nullopt; }
 #endif
 #include <type_traits>
 
