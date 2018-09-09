@@ -14,7 +14,7 @@ matrix:
       addons: { apt: { packages: ["g++-7", "ninja-build", "doxygen", "graphviz", "mscgen"], sources: ["ubuntu-toolchain-r-test"] } }
 
     - os: osx
-      osx_image: xcode9.2
+      osx_image: xcode9.4
       env: MATRIX_EVAL="CC=clang && CXX=clang++"
 
 install:
