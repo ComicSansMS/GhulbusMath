@@ -16,7 +16,12 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#ifndef  __APPLE__
 #include <optional>
+#else
+#include <experimental/optional>
+namespace std { using std::experimental::optional; }
+#endif
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
