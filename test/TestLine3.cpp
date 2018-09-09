@@ -68,6 +68,15 @@ TEST_CASE("Line3")
         CHECK(l.v == Vector3<float>(-5.f, 3.f, -9.f));
     }
 
+    SECTION("Evaluate line equation at a specific parameter")
+    {
+        Line3<float> l(Point3<float>(1.f, 2.f, 3.f), Point3<float>(-4.f, 5.f, -6.f));
+        CHECK(l.evaluate_at_parameter(0.f) == l.p);
+        CHECK(l.evaluate_at_parameter(1.f) == l.p + l.v);
+        CHECK(l.evaluate_at_parameter(0.5f) == l.p + (l.v / 2.f));
+        CHECK(l.evaluate_at_parameter(2.5f) == l.p + (l.v * 2.5f));
+    }
+
     SECTION("Normalization")
     {
         Line3<float> l = normalized(Line3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(-4.f, 5.f, -6.f)));

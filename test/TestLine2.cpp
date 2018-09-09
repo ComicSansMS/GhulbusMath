@@ -30,6 +30,15 @@ TEST_CASE("Line2")
         CHECK(l.v == Vector2<float>(-4.f, 3.f));
     }
 
+    SECTION("Evaluate line equation at a specific parameter")
+    {
+        Line2<float> l(Point2<float>(1.f, 2.f), Point2<float>(-3.f, 5.f));
+        CHECK(l.evaluate_at_parameter(0.f) == l.p);
+        CHECK(l.evaluate_at_parameter(1.f) == l.p + l.v);
+        CHECK(l.evaluate_at_parameter(0.5f) == l.p + (l.v / 2.f));
+        CHECK(l.evaluate_at_parameter(2.5f) == l.p + (l.v * 2.5f));
+    }
+
     SECTION("Normalization")
     {
         Line2<float> l = normalized(Line2<float>(Point2<float>(1.f, 2.f), Point2<float>(-3.f, 5.f)));

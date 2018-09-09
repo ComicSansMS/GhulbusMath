@@ -30,6 +30,11 @@ public:
     Line2(Point2<T> const& p1, Point2<T> const& p2)
         :p(p1), v(p2 - p1)
     {}
+
+    Point2<T> evaluate_at_parameter(T t) const
+    {
+        return p + v * t;
+    }
 };
 
 template<typename T>
