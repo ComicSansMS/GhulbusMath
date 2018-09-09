@@ -508,6 +508,13 @@ TEST_CASE("Vector2")
         CHECK(Normal2<float>(1.f, 2.f).to_vector() == Vector2<float>(1.f, 2.f));
     }
 
+    SECTION("Points and Normals can be constructed from Vectors")
+    {
+        CHECK(Point2<float>::from_vector(Vector2<float>(1.f, 2.f)) == Point2<float>(1.f, 2.f));
+        CHECK(Normal2<float>::from_vector(Vector2<float>(1.f, 2.f)) == Normal2<float>(1.f, 2.f));
+        CHECK(Normal2<float>::from_vector(Point2<float>(1.f, 2.f).to_vector()) == Normal2<float>(1.f, 2.f));
+    }
+
     SECTION("Max component")
     {
         CHECK(max_component(Vector2<int>(10, 5)) == 10);

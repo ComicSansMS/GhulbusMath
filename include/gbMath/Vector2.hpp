@@ -70,6 +70,11 @@ public:
         return Vector2<T>(x, y);
     }
 
+    static Vector2Impl<T, Tag> from_vector(Vector2<T> const& v)
+    {
+        return Vector2Impl<T, Tag>(v.x, v.y);
+    }
+
     T& operator[](std::size_t idx)
     {
         return (&x)[idx];

@@ -72,6 +72,11 @@ public:
         return Vector3<T>(x, y, z);
     }
 
+    static Vector3Impl<T, Tag> from_vector(Vector3<T> const& v)
+    {
+        return Vector3Impl<T, Tag>(v.x, v.y, v.z);
+    }
+
     T& operator[](std::size_t idx)
     {
         return (&x)[idx];
