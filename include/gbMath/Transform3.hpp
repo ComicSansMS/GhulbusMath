@@ -223,6 +223,77 @@ inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotatio
                           z,
                           z, z, z, o);
 }
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
+make_perspective_projection(T width, T height, T z_near, T z_far)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform3<T>(2*z_near/width,               z,                    z,                            z,
+                                      z, 2*z_near/height,                    z,                            z,
+                                      z,               z, z_far/(z_far-z_near), z_near*z_far/(z_near-z_far),
+                                      z,               z,                    o,                            z);
+}
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
+make_perspective_projection_fov(T fov, T aspect_ratio, T z_near, T z_far)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const yscale = o / std::tan(fov / T{ 2 });
+    T const xscale = yscale / aspect_ratio;
+    return Transform3<T>(xscale,      z,                    z,                           z,
+                              z, yscale,                    z,                           z,
+                              z,      z, z_far/(z_far-z_near), z_near*z_far/(z_near-z_far),
+                              z,      z,                    o,                           z);
+}
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
+make_perspective_projection_frustum(T left, T right, T top, T bottom, T z_near, T z_far)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const width = right - left;
+    T const height = top - bottom;
+    T const lr = left + right;
+    T const tb = top + bottom;
+    return Transform3<T>(2*z_near/width,               z,                    z,                           z,
+                                      z, 2*z_near/height,                    z,                           z,
+                            lr/(-width),    tb/(-height), z_far/(z_far-z_near), z_near*z_far/(z_near-z_far),
+                                      z,               z,                    o,                           z);
+}
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
+make_perspective_projection_orthographic(T width, T height, T z_near, T z_far)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform3<T>(2/width,        z,                z,                     z,
+                               z, 2/height,                z,                     z,
+                               z,        z, o/(z_far-z_near), z_near/(z_near-z_far),
+                               z,        z,                z,                     o);
+}
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
+make_perspective_projection_orthographic_frustum(T left, T right, T top, T bottom, T z_near, T z_far)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const width = right - left;
+    T const height = top - bottom;
+    T const lr = left + right;
+    T const tb = top + bottom;
+    return Transform3<T>(2/width,        z,                z,           lr/(-width),
+                               z, 2/height,                z,          tb/(-height),
+                               z,        z, o/(z_far-z_near), z_near/(z_near-z_far),
+                               z,        z,                z,                     o);
+}
+
 }
 
 #endif

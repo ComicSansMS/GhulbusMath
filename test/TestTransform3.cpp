@@ -187,6 +187,53 @@ TEST_CASE("Transform3")
         for (int i = 0; i < 3; ++i) { CHECK(v[i] == Approx(1.f)); }
     }
 
+    SECTION("Perspective Projection")
+    {
+        auto proj = GHULBUS_MATH_NAMESPACE::make_perspective_projection(10.f, 20.f, 1.f, 2.f);
+        CHECK(proj.m == Matrix4<float>(0.2f,  0.f, 0.f,  0.f,
+                                        0.f, 0.1f, 0.f,  0.f,
+                                        0.f,  0.f, 2.f, -2.f,
+                                        0.f,  0.f, 1.f,  0.f));
+    }
+
+    SECTION("Perspective Projection FoV")
+    {
+        float const pi_1_2 = GHULBUS_MATH_NAMESPACE::traits::Pi<float>::value / 2.f;
+        auto proj = GHULBUS_MATH_NAMESPACE::make_perspective_projection_fov(pi_1_2, 2.f, 1.f, 2.f);
+        CHECK(proj.m == Matrix4<float>(0.5f, 0.f, 0.f,  0.f,
+                                        0.f, 1.f, 0.f,  0.f,
+                                        0.f, 0.f, 2.f, -2.f,
+                                        0.f, 0.f, 1.f,  0.f));
+    }
+
+    SECTION("Perspective Projection Frustum")
+    {
+        auto proj = GHULBUS_MATH_NAMESPACE::make_perspective_projection_frustum(5.f, 10.f, 40.f, 20.f, 1.f, 2.f);
+        CHECK(proj.m == Matrix4<float>(0.4f,  0.f, 0.f,  0.f,
+                                        0.f, 0.1f, 0.f,  0.f,
+                                       -3.f, -3.f, 2.f, -2.f,
+                                        0.f,  0.f, 1.f,  0.f));
+    }
+
+    SECTION("Perspective Projection Orthographic")
+    {
+        auto proj = GHULBUS_MATH_NAMESPACE::make_perspective_projection_orthographic(10.f, 20.f, 1.f, 2.f);
+        CHECK(proj.m == Matrix4<float>(0.2f, 0.f, 0.f,  0.f,
+                                       0.f, 0.1f, 0.f,  0.f,
+                                       0.f,  0.f, 1.f, -1.f,
+                                       0.f,  0.f, 0.f,  1.f));
+    }
+
+    SECTION("Perspective Projection Orthographic Frustum")
+    {
+        auto proj =
+            GHULBUS_MATH_NAMESPACE::make_perspective_projection_orthographic_frustum(5.f, 10.f, 40.f, 20.f, 1.f, 2.f);
+        CHECK(proj.m == Matrix4<float>(0.4f, 0.f, 0.f, -3.f,
+                                       0.f, 0.1f, 0.f, -3.f,
+                                       0.f,  0.f, 1.f, -1.f,
+                                       0.f,  0.f, 0.f,  1.f));
+    }
+
     SECTION("Normal transformation")
     {
         Normal3<float> n(1.f, 1.f, 1.f);
