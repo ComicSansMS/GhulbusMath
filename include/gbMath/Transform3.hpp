@@ -252,7 +252,7 @@ make_perspective_projection_fov(T fov, T aspect_ratio, T z_near, T z_far)
 
 template<typename T>
 inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection_frustum(T left, T right, T top, T bottom, T z_near, T z_far)
+make_perspective_projection_frustum(T left, T right, T bottom, T top, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -280,7 +280,7 @@ make_perspective_projection_orthographic(T width, T height, T z_near, T z_far)
 
 template<typename T>
 inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection_orthographic_frustum(T left, T right, T top, T bottom, T z_near, T z_far)
+make_perspective_projection_orthographic_frustum(T left, T right, T bottom, T top, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -292,6 +292,22 @@ make_perspective_projection_orthographic_frustum(T left, T right, T top, T botto
                                z, 2/height,                z,          tb/(-height),
                                z,        z, o/(z_far-z_near), z_near/(z_near-z_far),
                                z,        z,                z,                     o);
+}
+
+template<typename T>
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
+make_view_look_at(Vector3<T> position_eye, Vector3<T> target_center, Vector3<T> up)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    Vector3<T> const v_view = normalized(target_center - position_eye);
+    Vector3<T> const v_right = normalized(cross(up, v_view));
+    Vector3<T> const v_up = cross(v_view, v_right);
+
+    return Transform3<T>(v_right.x, v_right.y, v_right.z, -dot(v_right, position_eye),
+                            v_up.x,    v_up.y,    v_up.z,    -dot(v_up, position_eye),
+                          v_view.x,  v_view.y,  v_view.z,  -dot(v_view, position_eye),
+                                 z,         z,         z,                           o);
 }
 
 }

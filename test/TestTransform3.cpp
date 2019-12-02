@@ -208,7 +208,7 @@ TEST_CASE("Transform3")
 
     SECTION("Perspective Projection Frustum")
     {
-        auto proj = GHULBUS_MATH_NAMESPACE::make_perspective_projection_frustum(5.f, 10.f, 40.f, 20.f, 1.f, 2.f);
+        auto proj = GHULBUS_MATH_NAMESPACE::make_perspective_projection_frustum(5.f, 10.f, 20.f, 40.f, 1.f, 2.f);
         CHECK(proj.m == Matrix4<float>(0.4f,  0.f, 0.f,  0.f,
                                         0.f, 0.1f, 0.f,  0.f,
                                        -3.f, -3.f, 2.f, -2.f,
@@ -227,11 +227,27 @@ TEST_CASE("Transform3")
     SECTION("Perspective Projection Orthographic Frustum")
     {
         auto proj =
-            GHULBUS_MATH_NAMESPACE::make_perspective_projection_orthographic_frustum(5.f, 10.f, 40.f, 20.f, 1.f, 2.f);
+            GHULBUS_MATH_NAMESPACE::make_perspective_projection_orthographic_frustum(5.f, 10.f, 20.f, 40.f, 1.f, 2.f);
         CHECK(proj.m == Matrix4<float>(0.4f, 0.f, 0.f, -3.f,
                                        0.f, 0.1f, 0.f, -3.f,
                                        0.f,  0.f, 1.f, -1.f,
                                        0.f,  0.f, 0.f,  1.f));
+    }
+
+    SECTION("View Transformation Look At")
+    {
+        Vector3<float> eye(1.f, 1.f, 1.f);
+        Vector3<float> target(0.f, 0.f, 0.f);
+        Vector3<float> up(0.f, 1.f, 0.f);
+        auto view = GHULBUS_MATH_NAMESPACE::make_view_look_at(eye, target, up);
+        auto const sqrt2 = std::sqrt(2.f);
+        auto const sqrt3 = std::sqrt(3.f);
+        auto const sqrt6 = std::sqrt(6.f);
+        Matrix4<float> reference(-1.f/sqrt2,                0.f,  1.f/sqrt2,   0.f,
+                                 -1.f/sqrt6, std::sqrt(2.f/3.f), -1.f/sqrt6,   0.f,
+                                 -1.f/sqrt3,         -1.f/sqrt3, -1.f/sqrt3, sqrt3,
+                                        0.f,                0.f,        0.f,   1.f);
+        for (int i = 0; i < 16; ++i) { CHECK(view.m[i] == Approx(reference[i])); }
     }
 
     SECTION("Normal transformation")
