@@ -162,7 +162,7 @@ inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_
 }
 
 template<typename T>
-inline Transform3<T> make_rotation_x(T angle)
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation_x(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -175,7 +175,7 @@ inline Transform3<T> make_rotation_x(T angle)
 }
 
 template<typename T>
-inline Transform3<T> make_rotation_y(T angle)
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation_y(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -188,7 +188,7 @@ inline Transform3<T> make_rotation_y(T angle)
 }
 
 template<typename T>
-inline Transform3<T> make_rotation_z(T angle)
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation_z(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -201,7 +201,7 @@ inline Transform3<T> make_rotation_z(T angle)
 }
 
 template<typename T>
-inline Transform3<T> make_rotation(T angle, Vector3<T> axis)
+inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation(T angle, Vector3<T> axis)
 {
     axis = normalized(axis);
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
