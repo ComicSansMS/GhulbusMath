@@ -30,6 +30,21 @@ namespace traits
             return 1;
         }
     };
+
+    template<typename T>
+    struct Pi;
+
+    template<>
+    struct Pi<float>
+    {
+        static constexpr float value = 3.1415926535897932384626433832795f;
+    };
+
+    template<>
+    struct Pi<double>
+    {
+        static constexpr double value = 3.1415926535897932384626433832795;
+    };
 }
 }
 #endif

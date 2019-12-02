@@ -14,6 +14,7 @@
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector3.hpp>
 
+#include <cmath>
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
@@ -147,6 +148,80 @@ inline Transform3<T> make_scale(T scale_x, T scale_y, T scale_z)
                          z,       scale_y, z,       z,
                          z,       z,       scale_z, z,
                          z,       z,       z,       o);
+}
+
+template<typename T>
+inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_z)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform3<T>(o, z, z, translate_x,
+                         z, o, z, translate_y,
+                         z, z, o, translate_z,
+                         z, z, z, o);
+}
+
+template<typename T>
+inline Transform3<T> make_rotation_x(T angle)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const sin = std::sin(angle);
+    T const cos = std::cos(angle);
+    return Transform3<T>(o,   z,    z, z,
+                         z, cos, -sin, z,
+                         z, sin,  cos, z,
+                         z,   z,    z, o);
+}
+
+template<typename T>
+inline Transform3<T> make_rotation_y(T angle)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const sin = std::sin(angle);
+    T const cos = std::cos(angle);
+    return Transform3<T>( cos, z, sin, z,
+                            z, o,   z, z,
+                         -sin, z, cos, z,
+                            z, z,   z, o);
+}
+
+template<typename T>
+inline Transform3<T> make_rotation_z(T angle)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const sin = std::sin(angle);
+    T const cos = std::cos(angle);
+    return Transform3<T>(cos, -sin, z, z,
+                         sin,  cos, z, z,
+                           z,    z, o, z,
+                           z,    z, z, o);
+}
+
+template<typename T>
+inline Transform3<T> make_rotation(T angle, Vector3<T> axis)
+{
+    axis = normalized(axis);
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const cos = std::cos(angle);
+    T const one_cos = o - cos;
+    T const sin = std::sin(angle);
+    return Transform3<T>( cos + one_cos*axis.x*axis.x,
+                          one_cos*axis.x*axis.y - sin*axis.z,
+                          one_cos*axis.x*axis.z + sin*axis.y,
+                          z,
+                          one_cos*axis.x*axis.y + sin*axis.z,
+                          cos + one_cos*axis.y*axis.y,
+                          one_cos*axis.y*axis.z - sin*axis.x,
+                          z,
+                          one_cos*axis.x*axis.z - sin*axis.y,
+                          one_cos*axis.y*axis.z + sin*axis.x,
+                          cos + one_cos*axis.z*axis.z,
+                          z,
+                          z, z, z, o);
 }
 }
 

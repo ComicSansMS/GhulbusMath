@@ -86,6 +86,107 @@ TEST_CASE("Transform3")
                                         0.f, 0.f, 0.f, 1.f));
     }
 
+    SECTION("Translation matrix")
+    {
+        auto scale = GHULBUS_MATH_NAMESPACE::make_translation(9.f, 5.f, -2.f);
+        CHECK(scale.m == Matrix4<float>(1.f, 0.f, 0.f, 9.f,
+                                        0.f, 1.f, 0.f, 5.f,
+                                        0.f, 0.f, 1.f,-2.f,
+                                        0.f, 0.f, 0.f, 1.f));
+    }
+
+    SECTION("X-Rotation matrix")
+    {
+        auto rotation1 = GHULBUS_MATH_NAMESPACE::make_rotation_x(0.f);
+        CHECK(rotation1.m == Matrix4<float>(1.f,           0.f,            0.f, 0.f,
+                                            0.f, std::cos(0.f), -std::sin(0.f), 0.f,
+                                            0.f, std::sin(0.f),  std::cos(0.f), 0.f,
+                                            0.f,           0.f,            0.f, 1.f));
+        float const pi = GHULBUS_MATH_NAMESPACE::traits::Pi<float>::value;
+        auto rotation2 = GHULBUS_MATH_NAMESPACE::make_rotation_x(pi);
+        CHECK(rotation2.m == Matrix4<float>(1.f,          0.f,           0.f, 0.f,
+                                            0.f, std::cos(pi), -std::sin(pi), 0.f,
+                                            0.f, std::sin(pi),  std::cos(pi), 0.f,
+                                            0.f,          0.f,           0.f, 1.f));
+        float const pi_1_2 = pi / 2.f;
+        auto rotation3 = GHULBUS_MATH_NAMESPACE::make_rotation_x(pi_1_2);
+        CHECK(rotation3.m == Matrix4<float>(1.f,              0.f,               0.f, 0.f,
+                                            0.f, std::cos(pi_1_2), -std::sin(pi_1_2), 0.f,
+                                            0.f, std::sin(pi_1_2),  std::cos(pi_1_2), 0.f,
+                                            0.f,              0.f,               0.f, 1.f));
+    }
+
+    SECTION("Y-Rotation matrix")
+    {
+        auto rotation1 = GHULBUS_MATH_NAMESPACE::make_rotation_y(0.f);
+        CHECK(rotation1.m == Matrix4<float>( std::cos(0.f), 0.f, std::sin(0.f), 0.f,
+                                                       0.f, 1.f,           0.f, 0.f,
+                                            -std::sin(0.f), 0.f, std::cos(0.f), 0.f,
+                                                       0.f, 0.f,           0.f, 1.f));
+        float const pi = GHULBUS_MATH_NAMESPACE::traits::Pi<float>::value;
+        auto rotation2 = GHULBUS_MATH_NAMESPACE::make_rotation_y(pi);
+        CHECK(rotation2.m == Matrix4<float>( std::cos(pi), 0.f, std::sin(pi), 0.f,
+                                                      0.f, 1.f,          0.f, 0.f,
+                                            -std::sin(pi), 0.f, std::cos(pi), 0.f,
+                                                      0.f, 0.f,          0.f, 1.f));
+        float const pi_1_2 = pi / 2.f;
+        auto rotation3 = GHULBUS_MATH_NAMESPACE::make_rotation_y(pi_1_2);
+        CHECK(rotation3.m == Matrix4<float>( std::cos(pi_1_2), 0.f, std::sin(pi_1_2), 0.f,
+                                                          0.f, 1.f,              0.f, 0.f,
+                                            -std::sin(pi_1_2), 0.f, std::cos(pi_1_2), 0.f,
+                                                          0.f, 0.f,              0.f, 1.f));
+    }
+
+    SECTION("Z-Rotation matrix")
+    {
+        auto rotation1 = GHULBUS_MATH_NAMESPACE::make_rotation_z(0.f);
+        CHECK(rotation1.m == Matrix4<float>(std::cos(0.f), -std::sin(0.f), 0.f, 0.f,
+                                            std::sin(0.f),  std::cos(0.f), 0.f, 0.f,
+                                                      0.f,            0.f, 1.f, 0.f,
+                                                      0.f,            0.f, 0.f, 1.f));
+        float const pi = GHULBUS_MATH_NAMESPACE::traits::Pi<float>::value;
+        auto rotation2 = GHULBUS_MATH_NAMESPACE::make_rotation_z(pi);
+        CHECK(rotation2.m == Matrix4<float>(std::cos(pi), -std::sin(pi), 0.f, 0.f,
+                                            std::sin(pi),  std::cos(pi), 0.f, 0.f,
+                                                     0.f,           0.f, 1.f, 0.f,
+                                                     0.f,           0.f, 0.f, 1.f));
+        float const pi_1_2 = pi / 2.f;
+        auto rotation3 = GHULBUS_MATH_NAMESPACE::make_rotation_z(pi_1_2);
+        CHECK(rotation3.m == Matrix4<float>(std::cos(pi_1_2), -std::sin(pi_1_2), 0.f, 0.f,
+                                            std::sin(pi_1_2),  std::cos(pi_1_2), 0.f, 0.f,
+                                                         0.f,               0.f, 1.f, 0.f,
+                                                         0.f,               0.f, 0.f, 1.f));
+    }
+
+    SECTION("Angle-Axis-Rotation matrix")
+    {
+        float const pi_1_2 = GHULBUS_MATH_NAMESPACE::traits::Pi<float>::value / 2.f;
+        auto rotation1 = GHULBUS_MATH_NAMESPACE::make_rotation(pi_1_2, Vector3<float>(1.f, 0.f, 0.f));
+        Matrix4<float> reference1(1.f,              0.f,               0.f, 0.f,
+                                  0.f, std::cos(pi_1_2), -std::sin(pi_1_2), 0.f,
+                                  0.f, std::sin(pi_1_2),  std::cos(pi_1_2), 0.f,
+                                  0.f,              0.f,               0.f, 1.f);
+        for (int i = 0; i < 16; ++i) { CHECK(rotation1.m[i] == Approx(reference1[i])); }
+
+        auto rotation2 = GHULBUS_MATH_NAMESPACE::make_rotation(pi_1_2, Vector3<float>(0.f, 1.f, 0.f));
+        Matrix4<float> reference2( std::cos(pi_1_2), 0.f, std::sin(pi_1_2), 0.f,
+                                                0.f, 1.f,              0.f, 0.f,
+                                  -std::sin(pi_1_2), 0.f, std::cos(pi_1_2), 0.f,
+                                                0.f, 0.f,              0.f, 1.f);
+        for (int i = 0; i < 16; ++i) { CHECK(rotation2.m[i] == Approx(reference2[i])); }
+
+        auto rotation3 = GHULBUS_MATH_NAMESPACE::make_rotation(pi_1_2, Vector3<float>(0.f, 0.f, 1.f));
+        Matrix4<float> reference3(std::cos(pi_1_2), -std::sin(pi_1_2), 0.f, 0.f,
+                                  std::sin(pi_1_2),  std::cos(pi_1_2), 0.f, 0.f,
+                                               0.f,               0.f, 1.f, 0.f,
+                                               0.f,               0.f, 0.f, 1.f);
+        for (int i = 0; i < 16; ++i) { CHECK(rotation3.m[i] == Approx(reference3[i])); }
+
+        auto rotation4 = GHULBUS_MATH_NAMESPACE::make_rotation(pi_1_2, Vector3<float>(1.f, 1.f, 1.f));
+        auto const v = rotation4 * Vector3<float>(1.f, 1.f, 1.f);
+        for (int i = 0; i < 3; ++i) { CHECK(v[i] == Approx(1.f)); }
+    }
+
     SECTION("Normal transformation")
     {
         Normal3<float> n(1.f, 1.f, 1.f);

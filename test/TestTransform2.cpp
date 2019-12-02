@@ -76,6 +76,32 @@ TEST_CASE("Transform2")
                                         0.f, 0.f, 1.f));
     }
 
+    SECTION("Translation matrix")
+    {
+        auto translation = GHULBUS_MATH_NAMESPACE::make_translation(9.f, 5.f);
+        CHECK(translation.m == Matrix3<float>(1.f, 0.f, 9.f,
+                                              0.f, 1.f, 5.f,
+                                              0.f, 0.f, 1.f));
+    }
+
+    SECTION("Rotation matrix")
+    {
+        auto rotation1 = GHULBUS_MATH_NAMESPACE::make_rotation(0.f);
+        CHECK(rotation1.m == Matrix3<float>(std::cos(0.f), -std::sin(0.f), 0.f,
+                                            std::sin(0.f),  std::cos(0.f), 0.f,
+                                                     0.f,           0.f, 1.f));
+        float const pi = GHULBUS_MATH_NAMESPACE::traits::Pi<float>::value;
+        auto rotation2 = GHULBUS_MATH_NAMESPACE::make_rotation(pi);
+        CHECK(rotation2.m == Matrix3<float>(std::cos(pi), -std::sin(pi), 0.f,
+                                            std::sin(pi),  std::cos(pi), 0.f,
+                                                     0.f,           0.f, 1.f));
+        float const pi_1_2 = pi / 2.f;
+        auto rotation3 = GHULBUS_MATH_NAMESPACE::make_rotation(pi_1_2);
+        CHECK(rotation3.m == Matrix3<float>( std::cos(pi_1_2), -std::sin(pi_1_2), 0.f,
+                                             std::sin(pi_1_2),  std::cos(pi_1_2), 0.f,
+                                                          0.f,               0.f, 1.f));
+    }
+
     SECTION("Normal transformation")
     {
         Normal2<float> n(1.f, 1.f);
