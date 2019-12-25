@@ -21,6 +21,13 @@ namespace GHULBUS_MATH_NAMESPACE
 template<typename T, typename VectorTag_T = VectorTag::Vector>
 class Vector3Impl;
 
+namespace VectorTraits {
+template<typename V>
+struct IsVector3 : public std::false_type {};
+template<typename T, typename VectorTag_T>
+struct IsVector3<Vector3Impl<T, VectorTag_T>> : public std::true_type {};
+}
+
 template<typename T>
 using Vector3 = Vector3Impl<T, VectorTag::Vector>;
 template<typename T>

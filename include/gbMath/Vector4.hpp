@@ -15,6 +15,16 @@
 namespace GHULBUS_MATH_NAMESPACE
 {
 template<typename T>
+class Vector4;
+
+namespace VectorTraits {
+template<typename V>
+struct IsVector4 : public std::false_type {};
+template<typename T>
+struct IsVector4<Vector4<T>> : public std::true_type {};
+}
+
+template<typename T>
 class Vector4 {
 public:
     using ValueType = T;
