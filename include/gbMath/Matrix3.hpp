@@ -22,6 +22,8 @@ template<typename T>
 class Matrix3
 {
 public:
+    using ValueType = T;
+
     T m11, m12, m13;
     T m21, m22, m23;
     T m31, m32, m33;

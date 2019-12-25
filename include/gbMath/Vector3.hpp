@@ -44,6 +44,7 @@ using Normal3i = Normal3<std::int32_t>;
 template<typename T, typename VectorTag_T>
 class Vector3Impl {
 public:
+    using ValueType = T;
     using Tag = VectorTag_T;
 
     T x;

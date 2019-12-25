@@ -43,6 +43,7 @@ using Normal2i = Normal2<std::int32_t>;
 template<typename T, typename VectorTag_T>
 class Vector2Impl {
 public:
+    using ValueType = T;
     using Tag = VectorTag_T;
 
     T x;

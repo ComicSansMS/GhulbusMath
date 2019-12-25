@@ -17,6 +17,8 @@ namespace GHULBUS_MATH_NAMESPACE
 template<typename T>
 class Vector4 {
 public:
+    using ValueType = T;
+
     T x;
     T y;
     T z;

@@ -23,6 +23,8 @@ template<typename T>
 class Matrix4
 {
 public:
+    using ValueType = T;
+
     T m11, m12, m13, m14;
     T m21, m22, m23, m24;
     T m31, m32, m33, m34;
