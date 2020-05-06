@@ -42,7 +42,7 @@ public:
         :x(vx), y(vy), z(vz), w(vw)
     {}
 
-    Vector4(T const* arr)
+    explicit Vector4(T const* arr)
         :x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
     {}
 

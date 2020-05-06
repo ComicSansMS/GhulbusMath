@@ -64,7 +64,7 @@ public:
         :x(vx), y(vy)
     {}
 
-    Vector2Impl(T const* arr)
+    explicit Vector2Impl(T const* arr)
         :x(arr[0]), y(arr[1])
     {}
 

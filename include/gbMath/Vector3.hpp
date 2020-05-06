@@ -66,7 +66,7 @@ public:
         :x(vx), y(vy), z(vz)
     {}
 
-    Vector3Impl(T const* arr)
+    explicit Vector3Impl(T const* arr)
         :x(arr[0]), y(arr[1]), z(arr[2])
     {}
 
