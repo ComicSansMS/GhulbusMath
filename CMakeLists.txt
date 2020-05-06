@@ -84,7 +84,9 @@ set(GB_MATH_TEST_SOURCES
 )
 
 add_library(gbMath INTERFACE)
-target_sources(gbMath INTERFACE $<BUILD_INTERFACE:${GB_MATH_HEADER_FILES}>)
+# apply build interface generator expression per element and not to the whole list, to avoid triggering CMP0076
+list(TRANSFORM GB_MATH_HEADER_FILES REPLACE .+ $<BUILD_INTERFACE:\\0> OUTPUT_VARIABLE GB_MATH_BUILD_INTERFACE_HEADER_FILES)
+target_sources(gbMath INTERFACE ${GB_MATH_BUILD_INTERFACE_HEADER_FILES})
 target_include_directories(gbMath INTERFACE $<BUILD_INTERFACE:${GB_MATH_INCLUDE_DIR}>)
 target_compile_features(gbMath INTERFACE cxx_std_17)
 target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/W4>>)
