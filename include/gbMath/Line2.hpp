@@ -137,7 +137,7 @@ template<typename T>
     Vector2<T> const dp = l2.p - l1.p;
     T const t1_scaled = dot(dp, Vector2<T>(-l2.v.y, l2.v.x));
     T const t2_scaled = dot(dp, Vector2<T>(-l1.v.y, l1.v.x));
-    return ScaledLine2Intersection(t1_scaled, t2_scaled, det);
+    return ScaledLine2Intersection<T>(t1_scaled, t2_scaled, det);
 }
 
 /** Computes the intersection point of two lines @p l1 and @p l2.
