@@ -257,19 +257,19 @@ inline T dot(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T>
 template<typename T, typename VectorTag_T>
 inline double length(Vector2Impl<T, VectorTag_T> const& v)
 {
-    return std::sqrt(static_cast<double>(dot(v, v)));
+    return std::hypot(static_cast<double>(v.x), static_cast<double>(v.y));
 }
 
 template<typename VectorTag_T>
 inline float length(Vector2Impl<float, VectorTag_T> const& v)
 {
-    return std::sqrt(dot(v, v));
+    return std::hypot(v.x, v.y);
 }
 
 template<typename VectorTag_T>
 inline long double length(Vector2Impl<long double, VectorTag_T> const& v)
 {
-    return std::sqrt(dot(v, v));
+    return std::hypot(v.x, v.y);
 }
 
 template<typename T, typename VectorTag_T>
