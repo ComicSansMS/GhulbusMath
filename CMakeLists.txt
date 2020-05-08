@@ -23,6 +23,13 @@ if(GB_GENERATE_COVERAGE_INFO)
     endif()
 endif()
 
+if(MSVC)
+    option(GB_PARALLEL_BUILD "If set, uses multiple build processes in parallel." ON)
+    if(GB_PARALLEL_BUILD)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+    endif()
+endif()
+
 ###############################################################################
 ## Library gbMath
 ###############################################################################
