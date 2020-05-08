@@ -43,7 +43,7 @@ public:
 };
 
 template<typename T>
-inline bool contains(Sphere3<T> const& s, Point3<T> const& p)
+inline bool collides(Sphere3<T> const& s, Point3<T> const& p)
 {
     Vector3<T> const dist = s.center - p;
     T const squared_dist = dot(dist, dist);
@@ -54,7 +54,7 @@ inline bool contains(Sphere3<T> const& s, Point3<T> const& p)
 }
 
 template<typename T>
-inline bool intersects(Sphere3<T> const& s1, Sphere3<T> const& s2)
+inline bool collides(Sphere3<T> const& s1, Sphere3<T> const& s2)
 {
     Vector3<T> const dist = s1.center - s2.center;
     T const squared_dist = dot(dist, dist);

@@ -26,41 +26,41 @@ TEST_CASE("Sphere3")
         CHECK(s.radius == 4.f);
     }
 
-    SECTION("Point-sphere containment")
+    SECTION("Point-sphere collision")
     {
-        CHECK(contains(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                          Point3<float>(2.f, 1.f, 1.f)));
-        CHECK(contains(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                          Point3<float>(3.f, 1.f, 1.f)));
-        CHECK(!contains(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(!collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                           Point3<float>(3.f + 1.e-6f, 1.f, 1.f)));
-        CHECK(contains(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f + 1e-6f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f + 1e-6f),
                          Point3<float>(1.f + std::sqrt(2.f), 2.f + std::sqrt(2.f), 3.f)));
-        CHECK(contains(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f + 1e-6f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f + 1e-6f),
                          Point3<float>(1.f + std::sqrt(2.f), 2.f, 3.f + std::sqrt(2.f))));
-        CHECK(contains(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f + 1e-6f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f + 1e-6f),
                          Point3<float>(1.f, 2.f + std::sqrt(2.f), 3.f + std::sqrt(2.f))));
-        CHECK(!contains(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f),
+        CHECK(!collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 2.f),
                           Point3<float>(1.f + std::sqrt(2.f), 2.f + std::sqrt(2.f), 3.f)));
     }
 
-    SECTION("Sphere-sphere intersection")
+    SECTION("Sphere-sphere collision")
     {
-        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                          Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f)));
-        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                          Sphere3<float>(Point3<float>(5.f, 1.f, 1.f), 2.f)));
-        CHECK(!intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(!collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                           Sphere3<float>(Point3<float>(5.f + 1.e-6f, 1.f, 1.f), 2.f)));
-        CHECK(!intersects(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+        CHECK(!collides(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                           Sphere3<float>(Point3<float>(5.f + 1.e-6f, 1.f, 1.f), 2.f)));
-        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f + 1e-6f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f + 1e-6f),
                          Sphere3<float>(Point3<float>(1.f + std::sqrt(2.f), 2.f + std::sqrt(2.f), 3.f), 1.f)));
-        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f + 1e-6f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f + 1e-6f),
                          Sphere3<float>(Point3<float>(1.f + std::sqrt(2.f), 2.f, 3.f + std::sqrt(2.f)), 1.f)));
-        CHECK(intersects(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f + 1e-6f),
+        CHECK(collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f + 1e-6f),
                          Sphere3<float>(Point3<float>(1.f, 2.f + std::sqrt(2.f), 3.f + std::sqrt(2.f)), 1.f)));
-        CHECK(!intersects(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f),
+        CHECK(!collides(Sphere3<float>(Point3<float>(1.f, 2.f, 3.f), 1.f),
                           Sphere3<float>(Point3<float>(1.f + std::sqrt(2.f), 2.f + std::sqrt(2.f), 3.f), 1.f)));
     }
 
