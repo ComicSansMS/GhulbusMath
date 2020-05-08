@@ -13,15 +13,7 @@
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector2.hpp>
 
-#include <algorithm>
 #include <cmath>
-#include <limits>
-#ifndef  __APPLE__
-#include <optional>
-#else
-#include <experimental/optional>
-namespace std { using std::experimental::optional; using std::experimental::nullopt; }
-#endif
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
