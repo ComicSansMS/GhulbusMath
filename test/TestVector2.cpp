@@ -287,9 +287,9 @@ TEST_CASE("Vector2")
 
     SECTION("Vector length")
     {
-        CHECK(length(Vector2<int>(3, -5)) == std::sqrt(34.0));
-        CHECK(length(Vector2<float>(3.f, -5.f)) == std::sqrt(34.f));
-        CHECK(length(Vector2<long double>(3.0, -5.0)) == std::sqrt(static_cast<long double>(34.0)));
+        CHECK(length(Vector2<int>(3, -5)) == Approx(std::sqrt(34.0)));
+        CHECK(length(Vector2<float>(3.f, -5.f)) == Approx(std::sqrt(34.f)));
+        CHECK(length(Vector2<long double>(3.0, -5.0)) == Approx(std::sqrt(static_cast<long double>(34.0))));
     }
 
     SECTION("Vector normalization")
@@ -322,19 +322,19 @@ TEST_CASE("Vector2")
         {
             Vector2<float> v1(5.f, 0.f);
             Vector2<float> v2(0.f, 20.f);
-            CHECK(angle_vector(v1, v2) == std::acos(0.f));
+            CHECK(angle_vector(v1, v2) == Approx(std::acos(0.f)));
         }
         // 45 degrees
         {
             Vector2<float> v1(1.f, 1.f);
             Vector2<float> v2(0.f, 20.f);
-            CHECK(angle_vector(v1, v2) == std::acos(std::sqrt(0.5f)));
+            CHECK(angle_vector(v1, v2) == Approx(std::acos(std::sqrt(0.5f))));
         }
         // 180 degrees
         {
             Vector2<float> v1(1.f, 1.f);
             Vector2<float> v2(-10.f, -10.f);
-            CHECK(angle_vector(v1, v2) == std::acos(-1.f));
+            CHECK(angle_vector(v1, v2) == Approx(std::acos(-1.f)));
         }
     }
 
