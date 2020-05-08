@@ -82,11 +82,11 @@ before_script:
 
 script:
   - cd build
-  - ctest -C Release
+  - ctest -C Release -V
   - |
     if [[ "${CXX}" == "g++-7" ]]; then
         cd ../build-coverage
-        ctest -C Debug
+        ctest -C Debug -V
     fi
   - cd ${TRAVIS_BUILD_DIR}
 
