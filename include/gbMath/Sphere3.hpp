@@ -43,7 +43,7 @@ public:
 };
 
 template<typename T>
-bool intersects(Sphere3<T> const& s, Point3<T> const& p)
+inline bool contains(Sphere3<T> const& s, Point3<T> const& p)
 {
     Vector3<T> const dist = s.center - p;
     T const squared_dist = dot(dist, dist);
@@ -54,7 +54,7 @@ bool intersects(Sphere3<T> const& s, Point3<T> const& p)
 }
 
 template<typename T>
-bool intersects(Sphere3<T> const& s1, Sphere3<T> const& s2)
+inline bool intersects(Sphere3<T> const& s1, Sphere3<T> const& s2)
 {
     Vector3<T> const dist = s1.center - s2.center;
     T const squared_dist = dot(dist, dist);
@@ -66,7 +66,7 @@ bool intersects(Sphere3<T> const& s1, Sphere3<T> const& s2)
 }
 
 template<typename T>
-bool intersects(Sphere3<T> const& s, Line3<T> const& l)
+inline bool intersects(Sphere3<T> const& s, Line3<T> const& l)
 {
     Vector3<T> const m = l.p - s.center;
     T const c = dot(m, m) - (s.radius * s.radius);
@@ -85,7 +85,7 @@ bool intersects(Sphere3<T> const& s, Line3<T> const& l)
 }
 
 template<typename T>
-std::optional<T> intersect_p(Sphere3<T> const& s, Line3<T> const& l)
+inline std::optional<T> intersect_p(Sphere3<T> const& s, Line3<T> const& l)
 {
     Vector3<T> const m = l.p - s.center;
     T const b = dot(m, normalized(l.v));
