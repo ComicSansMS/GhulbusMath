@@ -123,12 +123,17 @@ template<typename T>
 {
     Vector2<T> const v_dist = c2.center - c1.center;
     auto const d = length(v_dist);
-    auto const a = (c1.radius*c1.radius - c2.radius*c2.radius + d*d) / (2*d);
-    Point2<T> midpoint = c1.center + v_dist * (a / d);
+    auto const inv_d = decltype(d){1} / d;
+    // midpoint is the point where the line connecting the intersection points crosses v_dist at a right angle
+    // a is the distance from the c1.center to the midpoint
+    auto const a = (c1.radius*c1.radius - c2.radius*c2.radius + d*d) * (decltype(d){0.5} * inv_d);
+    Point2<T> midpoint = c1.center + v_dist * (a * inv_d);
+    // h is the distance of each intersection point from the midpoint
     auto const h = std::sqrt(c1.radius*c1.radius - a*a);
-    Vector2<T> const v_offset = v_dist * (h / d);
-    Point2<T> const intersection1(midpoint.x + v_offset.y, midpoint.y - v_offset.x);
-    Point2<T> const intersection2(midpoint.x - v_offset.y, midpoint.y + v_offset.x);
+    // we reach the intersection points by walking length h from midpoint in direction perpendicular to v_dist
+    Normal2<T> const v_offset = perp(v_dist) * (h * inv_d);
+    Point2<T> const intersection1 = midpoint - v_offset;
+    Point2<T> const intersection2 = midpoint + v_offset;
     return Circle2Circle2IntersectionPoints<T>{intersection1, intersection2};
 }
 }
