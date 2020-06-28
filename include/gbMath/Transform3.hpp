@@ -151,6 +151,17 @@ inline Transform3<T> make_scale(T scale_x, T scale_y, T scale_z)
 }
 
 template<typename T>
+inline Transform3<T> make_scale(Vector3<T> const& scale_v)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform3<T>(scale_v.x, z,         z,         z,
+                         z,         scale_v.y, z,         z,
+                         z,         z,         scale_v.z, z,
+                         z,         z,         z,         o);
+}
+
+template<typename T>
 inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_z)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
@@ -158,6 +169,17 @@ inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_
     return Transform3<T>(o, z, z, translate_x,
                          z, o, z, translate_y,
                          z, z, o, translate_z,
+                         z, z, z, o);
+}
+
+template<typename T>
+inline Transform3<T> make_translation(Vector3<T> const& translate_v)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform3<T>(o, z, z, translate_v.x,
+                         z, o, z, translate_v.y,
+                         z, z, o, translate_v.z,
                          z, z, z, o);
 }
 

@@ -141,12 +141,32 @@ inline Transform2<T> make_scale(T scale_x, T scale_y)
 }
 
 template<typename T>
+inline Transform2<T> make_scale(Vector2<T> const& scale_v)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform2<T>(scale_v.x, z,         z,
+                         z,         scale_v.y, z,
+                         z,         z,         o);
+}
+
+template<typename T>
 inline Transform2<T> make_translation(T translate_x, T translate_y)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
     return Transform2<T>(o, z, translate_x,
                          z, o, translate_y,
+                         z, z, o);
+}
+
+template<typename T>
+inline Transform2<T> make_translation(Vector2<T> const& translate_v)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform2<T>(o, z, translate_v.x,
+                         z, o, translate_v.y,
                          z, z, o);
 }
 

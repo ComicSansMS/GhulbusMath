@@ -68,7 +68,7 @@ TEST_CASE("Transform2")
                                                      1.f, 0.f));
     }
 
-    SECTION("Scale matrix")
+    SECTION("Scale matrix from components")
     {
         auto scale = GHULBUS_MATH_NAMESPACE::make_scale(4.f, 2.f);
         CHECK(scale.m == Matrix3<float>(4.f, 0.f, 0.f,
@@ -76,9 +76,25 @@ TEST_CASE("Transform2")
                                         0.f, 0.f, 1.f));
     }
 
-    SECTION("Translation matrix")
+    SECTION("Scale matrix from Vector2")
+    {
+        auto scale = GHULBUS_MATH_NAMESPACE::make_scale(Vector2<float>(4.f, 2.f));
+        CHECK(scale.m == Matrix3<float>(4.f, 0.f, 0.f,
+                                        0.f, 2.f, 0.f,
+                                        0.f, 0.f, 1.f));
+    }
+
+    SECTION("Translation matrix from components")
     {
         auto translation = GHULBUS_MATH_NAMESPACE::make_translation(9.f, 5.f);
+        CHECK(translation.m == Matrix3<float>(1.f, 0.f, 9.f,
+                                              0.f, 1.f, 5.f,
+                                              0.f, 0.f, 1.f));
+    }
+
+    SECTION("Translation matrix from Vector2")
+    {
+        auto translation = GHULBUS_MATH_NAMESPACE::make_translation(Vector2<float>(9.f, 5.f));
         CHECK(translation.m == Matrix3<float>(1.f, 0.f, 9.f,
                                               0.f, 1.f, 5.f,
                                               0.f, 0.f, 1.f));
