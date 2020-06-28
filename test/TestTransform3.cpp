@@ -18,11 +18,52 @@ TEST_CASE("Transform3")
         CHECK(t.m == GHULBUS_MATH_NAMESPACE::identity4<float>());
     }
 
+    SECTION("Construction from Matrix4")
+    {
+        Transform3<float> t(Matrix4<float>(1.f,  2.f,  3.f,  4.f,  5.f,  6.f,  7.f,  8.f,
+                                           9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f));
+        CHECK(t.m == Matrix4<float>(1.f,  2.f,  3.f,  4.f,  5.f,  6.f,  7.f,  8.f,
+                                    9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f));
+    }
+
     SECTION("Construction from values")
     {
         Transform3<float> t(1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f);
-        CHECK(t.m == Matrix4<float>(1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f,
+        CHECK(t.m == Matrix4<float>(1.f,  2.f,  3.f,  4.f,  5.f,  6.f,  7.f,  8.f,
                                     9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f));
+    }
+
+    SECTION("Transform concatenation")
+    {
+        Transform3<float> t1(Matrix4<float>(  1.f,  2.f,  3.f,  4.f,
+                                              5.f,  6.f,  7.f,  8.f,
+                                              9.f, 10.f, 11.f, 12.f,
+                                             13.f, 14.f, 15.f, 16.f));
+        Transform3<float> const t2(Matrix4<float>(0.5f,    0.25f,  0.75f,   0.125f,
+                                                  1.f,     1.5f,   2.25f,   0.625f,
+                                                  1.75f,   0.5f,   2.0f,    0.875f,
+                                                  0.0625f, 1.125f, 1.625f,  1.875f));
+        CHECK(&(t1 *= t2) == &t1);
+        CHECK(t1.m == Matrix4<float>(  8.f,  9.25f,  17.75f, 11.5f,
+                                      21.25f, 22.75f, 44.25f, 25.5f,
+                                      34.5f,  36.25f, 70.75f, 39.5f,
+                                      47.75f, 49.75f, 97.25f, 53.5f));
+    }
+
+    SECTION("Transform concatenation non-member")
+    {
+        Transform3<float> const t1(Matrix4<float>(  1.f,  2.f,  3.f,  4.f,
+                                                    5.f,  6.f,  7.f,  8.f,
+                                                    9.f, 10.f, 11.f, 12.f,
+                                                   13.f, 14.f, 15.f, 16.f));
+        Transform3<float> const t2(Matrix4<float>(0.5f,    0.25f,  0.75f,   0.125f,
+                                                  1.f,     1.5f,   2.25f,   0.625f,
+                                                  1.75f,   0.5f,   2.0f,    0.875f,
+                                                  0.0625f, 1.125f, 1.625f,  1.875f));
+        CHECK((t1 * t2).m == Matrix4<float>(  8.f,  9.25f,  17.75f, 11.5f,
+                                            21.25f, 22.75f, 44.25f, 25.5f,
+                                            34.5f,  36.25f, 70.75f, 39.5f,
+                                            47.75f, 49.75f, 97.25f, 53.5f));
     }
 
     SECTION("Vector transformation")

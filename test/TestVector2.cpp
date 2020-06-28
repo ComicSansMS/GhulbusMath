@@ -210,7 +210,7 @@ TEST_CASE("Vector2")
     {
         Vector2<float> v1(5.5f, 11.f);
 
-        v1 *= 2.f;
+        CHECK(&(v1 *= 2.f) == &v1);
         CHECK(v1.x == 11.f);
         CHECK(v1.y == 22.f);
     }

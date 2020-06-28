@@ -340,7 +340,7 @@ TEST_CASE("Matrix4")
     SECTION("Scalar multiplication")
     {
         Matrix4<float> m(1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f);
-        m *= 5.f;
+        CHECK(&(m *= 5.f) == &m);
         CHECK(m == Matrix4<float>( 5.f, 10.f, 15.f, 20.f, 25.f, 30.f, 35.f, 40.f,
                                   45.f, 50.f, 55.f, 60.f, 65.f, 70.f, 75.f, 80.f));
     }
@@ -379,7 +379,7 @@ TEST_CASE("Matrix4")
                                 1.f,     1.5f,   2.25f,   0.625f,
                                 1.75f,   0.5f,   2.0f,    0.875f,
                                 0.0625f, 1.125f, 1.625f,  1.875f);
-        m1 *= m2;
+        CHECK(&(m1 *= m2) == &m1);
         CHECK(m1 == Matrix4<float>(  8.f,  9.25f,  17.75f, 11.5f,
                                    21.25f, 22.75f, 44.25f, 25.5f,
                                    34.5f,  36.25f, 70.75f, 39.5f,
@@ -389,7 +389,7 @@ TEST_CASE("Matrix4")
                             5.f,  6.f,  7.f,  8.f,
                             9.f, 10.f, 11.f, 12.f,
                            13.f, 14.f, 15.f, 16.f);
-        m3 *= m3;
+        CHECK(&(m3 *= m3) == &m3);
         CHECK(m3 == Matrix4<float>( 90.f, 100.f, 110.f, 120.f,
                                    202.f, 228.f, 254.f, 280.f,
                                    314.f, 356.f, 398.f, 440.f,

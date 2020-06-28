@@ -48,6 +48,10 @@ public:
         :m(identity4<T>())
     {}
 
+    explicit Transform3(Matrix4<T> const& transform_matrix)
+        :m(transform_matrix)
+    {}
+
     Transform3(T n11, T n12, T n13, T n14,
                T n21, T n22, T n23, T n24,
                T n31, T n32, T n33, T n34,
@@ -84,7 +88,17 @@ public:
                                     m.m31, m.m32, m.m33);
         return TransformReciprocal3<T>{ transpose(upper_left) };
     }
+
+    Transform3<T>& operator*=(Transform3<T> const& rhs) {
+        m *= rhs.m;
+        return *this;
+    }
 };
+
+template<typename T>
+Transform3<T> operator*(Transform3<T> const& lhs, Transform3<T> const& rhs) {
+    return Transform3<T>(lhs.m * rhs.m);
+}
 
 template<typename T, typename VectorTag_T>
 inline std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector3Impl<T, VectorTag_T>>

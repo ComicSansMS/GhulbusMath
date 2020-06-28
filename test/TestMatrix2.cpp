@@ -230,7 +230,7 @@ TEST_CASE("Matrix2")
     SECTION("Scalar multiplication")
     {
         Matrix2<float> m(1.f, 2.f, 3.f, 4.f);
-        m *= 5.f;
+        CHECK(&(m *= 5.f) == &m);
         CHECK(m == Matrix2<float>(5.f, 10.f, 15.f, 20.f));
     }
 
@@ -260,13 +260,13 @@ TEST_CASE("Matrix2")
                           3.f, 4.f);
         Matrix2<float> const m2(0.5f,  0.25f,
                                 0.75f, 1.f);
-        m1 *= m2;
+        CHECK(&(m1 *= m2) == &m1);
         CHECK(m1 == Matrix2<float>(2.f,  2.25f,
                                    4.5f, 4.75f));
 
         Matrix2<float> m3(1.f, 2.f,
                           3.f, 4.f);
-        m3 *= m3;
+        CHECK(&(m3 *= m3) == &m3);
         CHECK(m3 == Matrix2<float>( 7.f, 10.f,
                                    15.f, 22.f));
     }
