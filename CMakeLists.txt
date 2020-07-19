@@ -44,6 +44,7 @@ set(GB_MATH_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
 
 set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/AABB2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/AABB3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Circle2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Color4.hpp
@@ -71,6 +72,7 @@ set(GB_MATH_HEADER_FILES
 
 set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/test_utils/MultiplicationOrderAwareOperand.hpp
+    ${GB_MATH_TEST_DIR}/TestAABB2.cpp
     ${GB_MATH_TEST_DIR}/TestAABB3.cpp
     ${GB_MATH_TEST_DIR}/TestCircle2.cpp
     ${GB_MATH_TEST_DIR}/TestColor4.cpp
