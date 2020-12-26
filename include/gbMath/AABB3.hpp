@@ -47,6 +47,12 @@ AABB3<T> empty_aabb3()
     return AABB3<T>(Point3<T>(tmax, tmax, tmax), Point3<T>(tmin, tmin, tmin));
 }
 
+template<typename T>
+Vector3<T> diagonal(AABB3<T> const& b)
+{
+    return b.max - b.min;
+}
+
 /** Grow the bounding volume to enclose an additional point.
  */
 template<typename T>

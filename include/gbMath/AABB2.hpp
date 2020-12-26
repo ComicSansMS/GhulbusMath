@@ -47,6 +47,12 @@ AABB2<T> empty_aabb2()
     return AABB2<T>(Point2<T>(tmax, tmax), Point2<T>(tmin, tmin));
 }
 
+template<typename T>
+Vector2<T> diagonal(AABB2<T> const& b)
+{
+    return b.max - b.min;
+}
+
 /** Grow the bounding volume to enclose an additional point.
  */
 template<typename T>

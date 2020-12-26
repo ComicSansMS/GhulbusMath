@@ -7,6 +7,7 @@ TEST_CASE("AABB2")
 {
     using GHULBUS_MATH_NAMESPACE::AABB2;
     using GHULBUS_MATH_NAMESPACE::Point2;
+    using GHULBUS_MATH_NAMESPACE::Vector2;
 
     SECTION("Value initialization initializes to 0")
     {
@@ -39,6 +40,14 @@ TEST_CASE("AABB2")
                                         std::numeric_limits<float>::max()));
         CHECK(aabb.max == Point2<float>(std::numeric_limits<float>::lowest(),
                                         std::numeric_limits<float>::lowest()));
+    }
+
+    SECTION("Diagonal is the vector from min to max")
+    {
+        CHECK(diagonal(AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(3.f, 4.f))) ==
+            Vector2<float>(2.f, 2.f));
+        CHECK(diagonal(AABB2<float>(Point2<float>(5.f, 12.f), Point2<float>(15.f, 20.f))) ==
+            Vector2<float>(10.f, 8.f));
     }
 
     SECTION("Enclose encloses additional points into the bounding volume")
