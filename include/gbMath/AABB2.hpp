@@ -37,10 +37,20 @@ public:
     AABB2(Point2<T> const& n_min, Point2<T> const& n_max)
         :min(n_min), max(n_max)
     {}
+
+    friend bool operator==(AABB2<T> const& lhs, AABB2<T> const& rhs)
+    {
+        return (lhs.min == rhs.min) && (lhs.max == rhs.max);
+    }
+
+    friend bool operator!=(AABB2<T> const& lhs, AABB2<T> const& rhs)
+    {
+        return !(lhs == rhs);
+    }
 };
 
 template<typename T>
-AABB2<T> empty_aabb2()
+inline AABB2<T> empty_aabb2()
 {
     T const tmin = std::numeric_limits<T>::lowest();
     T const tmax = std::numeric_limits<T>::max();
@@ -48,7 +58,7 @@ AABB2<T> empty_aabb2()
 }
 
 template<typename T>
-Vector2<T> diagonal(AABB2<T> const& b)
+inline Vector2<T> diagonal(AABB2<T> const& b)
 {
     return b.max - b.min;
 }
@@ -56,7 +66,7 @@ Vector2<T> diagonal(AABB2<T> const& b)
 /** Grow the bounding volume to enclose an additional point.
  */
 template<typename T>
-AABB2<T> enclose(AABB2<T> const& b, Point2<T> const& p)
+inline AABB2<T> enclose(AABB2<T> const& b, Point2<T> const& p)
 {
     return AABB2<T>(Point2<T>(std::min(b.min.x, p.x), std::min(b.min.y, p.y)),
                     Point2<T>(std::max(b.max.x, p.x), std::max(b.max.y, p.y)));
@@ -65,7 +75,7 @@ AABB2<T> enclose(AABB2<T> const& b, Point2<T> const& p)
 /** Grow the bounding volume to enclose another bounding volume.
  */
 template<typename T>
-AABB2<T> enclose(AABB2<T> const& b1, AABB2<T> const& b2)
+inline AABB2<T> enclose(AABB2<T> const& b1, AABB2<T> const& b2)
 {
     return AABB2<T>(Point2<T>(std::min(b1.min.x, b2.min.x),
                               std::min(b1.min.y, b2.min.y)),
@@ -76,7 +86,7 @@ AABB2<T> enclose(AABB2<T> const& b1, AABB2<T> const& b2)
 /** Checks whether a point intersects with the volume.
  */
 template<typename T>
-bool intersects(AABB2<T> const& b, Point2<T> const& p)
+inline bool intersects(AABB2<T> const& b, Point2<T> const& p)
 {
     if((p.x < b.min.x) || (p.x > b.max.x) ||
        (p.y < b.min.y) || (p.y > b.max.y))
@@ -89,7 +99,7 @@ bool intersects(AABB2<T> const& b, Point2<T> const& p)
 /** Checks whether two volumes intersect.
  */
 template<typename T>
-bool intersects(AABB2<T> const& b1, AABB2<T> const& b2)
+inline bool intersects(AABB2<T> const& b1, AABB2<T> const& b2)
 {
     // intersects only if there is an overlap on all axes
     if((b1.max.x < b2.min.x) || (b1.min.x > b2.max.x) ||
@@ -98,6 +108,24 @@ bool intersects(AABB2<T> const& b1, AABB2<T> const& b2)
         return false;
     }
     return true;
+}
+
+template<typename T>
+inline AABB2<T> union_aabb(AABB2<T> const& b1, AABB2<T> const& b2)
+{
+    return AABB2<T>(Point2<T>(std::min(b1.min.x, b2.min.x),
+                              std::min(b1.min.y, b2.min.y)),
+                    Point2<T>(std::max(b1.max.x, b2.max.x),
+                              std::max(b1.max.y, b2.max.y)));
+}
+
+template<typename T>
+inline AABB2<T> intersect_aabb(AABB2<T> const& b1, AABB2<T> const& b2)
+{
+    return AABB2<T>(Point2<T>(std::max(b1.min.x, b2.min.x),
+                              std::max(b1.min.y, b2.min.y)),
+                    Point2<T>(std::min(b1.max.x, b2.max.x),
+                              std::min(b1.max.y, b2.max.y)));
 }
 }
 #endif

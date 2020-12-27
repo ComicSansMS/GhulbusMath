@@ -33,6 +33,44 @@ TEST_CASE("AABB3")
         CHECK(aabb.max == pmax);
     }
 
+    SECTION("Equality and not-equal comparisons")
+    {
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+              AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+                    AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)));
+
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(2, 2, 3), Point3<int>(4, 5, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(2, 1, 3), Point3<int>(4, 5, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(1, 1, 3), Point3<int>(4, 5, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(1, 2, 1), Point3<int>(4, 5, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(1, 5, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 1, 6)));
+        CHECK_FALSE(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) ==
+                    AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 1)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(2, 2, 3), Point3<int>(4, 5, 6)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(2, 1, 3), Point3<int>(4, 5, 6)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(1, 1, 3), Point3<int>(4, 5, 6)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(1, 2, 1), Point3<int>(4, 5, 6)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(1, 5, 6)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 1, 6)));
+        CHECK(AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 6)) !=
+              AABB3<int>(Point3<int>(1, 2, 3), Point3<int>(4, 5, 1)));
+    }
+
+
     SECTION("Empty box has min bigger and max smaller than any valid number")
     {
         AABB3<float> aabb = GHULBUS_MATH_NAMESPACE::empty_aabb3<float>();
@@ -111,5 +149,30 @@ TEST_CASE("AABB3")
                           AABB3<float>(Point3<float>(-1.f, -2.f, -3.f), Point3<float>(4.f, 6.f, -2.f))));
         CHECK(intersects(AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)),
                          AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f))));
+    }
+
+    SECTION("AABB-AABB Union")
+    {
+        CHECK(union_aabb(AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)),
+                         AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f))) ==
+              AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)));
+        CHECK(union_aabb(AABB3<float>(Point3<float>( 1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)),
+                         AABB3<float>(Point3<float>(-1.f, 1.f, 5.f), Point3<float>(4.f, 2.f, 6.f))) ==
+              AABB3<float>(Point3<float>(-1.f, 1.f, 3.f), Point3<float>(4.f, 3.f, 6.f)));
+    }
+
+    SECTION("AABB-AABB Intersect")
+    {
+        CHECK(intersect_aabb(AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)),
+                             AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f))) ==
+              AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)));
+
+        CHECK(intersect_aabb(AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)),
+                             AABB3<float>(Point3<float>(-1.f, -2.f, -3.f), Point3<float>(0.f, 0.f, 0.f))) ==
+              AABB3<float>(Point3<float>(1.f, 2.f, 3.f), Point3<float>(0.f, 0.f, 0.f)));
+
+        CHECK(intersect_aabb(AABB3<float>(Point3<float>( 1.f, 2.f, 3.f), Point3<float>(2.f, 3.f, 4.f)),
+                             AABB3<float>(Point3<float>(-1.f, 1.f, 5.f), Point3<float>(4.f, 2.f, 6.f))) ==
+              AABB3<float>(Point3<float>(1.f, 2.f, 5.f), Point3<float>(2.f, 2.f, 4.f)));
     }
 }

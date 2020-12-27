@@ -33,6 +33,35 @@ TEST_CASE("AABB2")
         CHECK(aabb.max == pmax);
     }
 
+    SECTION("Equality and not-equal comparisons")
+    {
+        CHECK(AABB2<int>(Point2<int>(1, 2), Point2<int>(3, 4)) ==
+              AABB2<int>(Point2<int>(1, 2), Point2<int>(3, 4)));
+        CHECK_FALSE(AABB2<int>(Point2<int>(1, 2), Point2<int>(3, 4)) !=
+                    AABB2<int>(Point2<int>(1, 2), Point2<int>(3, 4)));
+
+        CHECK_FALSE(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) ==
+                    AABB2<int>(Point2<int>(2, 2), Point2<int>(4, 5)));
+        CHECK_FALSE(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) ==
+                    AABB2<int>(Point2<int>(2, 1), Point2<int>(4, 5)));
+        CHECK_FALSE(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) ==
+                    AABB2<int>(Point2<int>(1, 1), Point2<int>(4, 5)));
+        CHECK_FALSE(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) ==
+                    AABB2<int>(Point2<int>(1, 2), Point2<int>(1, 5)));
+        CHECK_FALSE(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) ==
+                    AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 1)));
+        CHECK(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) !=
+              AABB2<int>(Point2<int>(2, 2), Point2<int>(4, 5)));
+        CHECK(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) !=
+              AABB2<int>(Point2<int>(2, 1), Point2<int>(4, 5)));
+        CHECK(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) !=
+              AABB2<int>(Point2<int>(1, 1), Point2<int>(4, 5)));
+        CHECK(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) !=
+              AABB2<int>(Point2<int>(1, 2), Point2<int>(1, 5)));
+        CHECK(AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 5)) !=
+              AABB2<int>(Point2<int>(1, 2), Point2<int>(4, 1)));
+    }
+
     SECTION("Empty box has min bigger and max smaller than any valid number")
     {
         AABB2<float> aabb = GHULBUS_MATH_NAMESPACE::empty_aabb2<float>();
@@ -101,5 +130,30 @@ TEST_CASE("AABB2")
                           AABB2<float>(Point2<float>(-1.f, -2.f), Point2<float>(4.f, -1.f))));
         CHECK(intersects(AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f)),
                          AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f))));
+    }
+
+    SECTION("AABB-AABB Union")
+    {
+        CHECK(union_aabb(AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f)),
+                         AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f))) ==
+              AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f)));
+        CHECK(union_aabb(AABB2<float>(Point2<float>( 1.f, 2.f), Point2<float>(2.f, 3.f)),
+                         AABB2<float>(Point2<float>(-1.f, 3.f), Point2<float>(4.f, 2.f))) ==
+              AABB2<float>(Point2<float>(-1.f, 2.f), Point2<float>(4.f, 3.f)));
+    }
+
+    SECTION("AABB-AABB Intersect")
+    {
+        CHECK(intersect_aabb(AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f)),
+                             AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f))) ==
+              AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f)));
+
+        CHECK(intersect_aabb(AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 3.f)),
+                             AABB2<float>(Point2<float>(-1.f, -2.f), Point2<float>(0.f, 0.f))) ==
+              AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(0.f, 0.f)));
+
+        CHECK(intersect_aabb(AABB2<float>(Point2<float>( 1.f, 2.f), Point2<float>(2.f, 3.f)),
+                             AABB2<float>(Point2<float>(-1.f, 1.f), Point2<float>(4.f, 2.f))) ==
+              AABB2<float>(Point2<float>(1.f, 2.f), Point2<float>(2.f, 2.f)));
     }
 }
