@@ -46,8 +46,10 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/AABB2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/AABB3.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Basis3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Circle2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Color4.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/ComponentVector3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix2.hpp
@@ -58,6 +60,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/NumberTypeTraits.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/OBB3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Sphere3.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Tensor3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Transform2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Transform3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
@@ -74,8 +77,10 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/test_utils/MultiplicationOrderAwareOperand.hpp
     ${GB_MATH_TEST_DIR}/TestAABB2.cpp
     ${GB_MATH_TEST_DIR}/TestAABB3.cpp
+    ${GB_MATH_TEST_DIR}/TestBasis3.cpp
     ${GB_MATH_TEST_DIR}/TestCircle2.cpp
     ${GB_MATH_TEST_DIR}/TestColor4.cpp
+    ${GB_MATH_TEST_DIR}/TestComponentVector3.cpp
     ${GB_MATH_TEST_DIR}/TestLine2.cpp
     ${GB_MATH_TEST_DIR}/TestLine3.cpp
     ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
@@ -84,6 +89,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestMatrixIO.cpp
     ${GB_MATH_TEST_DIR}/TestOBB3.cpp
     ${GB_MATH_TEST_DIR}/TestSphere3.cpp
+    ${GB_MATH_TEST_DIR}/TestTensor3.cpp
     ${GB_MATH_TEST_DIR}/TestTransform2.cpp
     ${GB_MATH_TEST_DIR}/TestTransform3.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
