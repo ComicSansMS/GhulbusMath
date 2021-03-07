@@ -53,9 +53,9 @@ public:
         return (cv.x * x() + cv.y * y() + cv.z * z());
     }
 
-    template <typename T>
-    friend inline Basis3<T> contravariant(Basis3<T> const& b) {
-        Basis3<T> ret;
+    template <typename TT>
+    friend inline Basis3<TT> contravariant(Basis3<TT> const& b) {
+        Basis3<TT> ret;
         ret.m_rowMatrix = inverse(b.m_rowMatrix);
         return ret;
     }
