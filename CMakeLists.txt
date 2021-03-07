@@ -101,6 +101,7 @@ target_sources(gbMath INTERFACE ${GB_MATH_BUILD_INTERFACE_HEADER_FILES})
 target_include_directories(gbMath INTERFACE $<BUILD_INTERFACE:${GB_MATH_INCLUDE_DIR}>)
 target_compile_features(gbMath INTERFACE cxx_std_17)
 target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/W4>>)
+target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/permissive->>)
 target_compile_options(gbMath INTERFACE
     $<BUILD_INTERFACE:$<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>>)
 
