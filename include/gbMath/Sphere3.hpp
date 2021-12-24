@@ -107,5 +107,76 @@ inline std::optional<T> intersect_p(Sphere3<T> const& s, Line3<T> const& l)
     }
     return t;
 }
+
+template<typename T>
+struct Sphere3Line3IntersectionParameters
+{
+    T t1;
+    T t2;
+};
+
+template<typename T>
+struct Sphere3Line3Intersection
+{
+    T b;
+    T c;
+    T discr;
+
+    Sphere3Line3Intersection(T n_b, T n_c)
+        :b(n_b), c(n_c), discr(b*b - c)
+    {}
+
+    Sphere3Line3Intersection() = default;
+    Sphere3Line3Intersection(Sphere3Line3Intersection const&) = default;
+    Sphere3Line3Intersection& operator=(Sphere3Line3Intersection const&) = default;
+
+    /** Returns true if an intersection point was found.
+     */
+    bool doesHitSphere() const {
+        // negative discriminant: ray is not hitting sphere
+        return (discr >= traits::Constants<T>::Zero());
+    }
+
+    /** Returns true if all intersection points lie behind the ray origin, that is,
+     * all values returned by evaluateT() will be negative. The return value is unspecified
+     * if there is no intersection.
+     */
+    bool allIntersectionsBehindRayOrigin() const {
+        // returns true iff ray origin is outside of sphere and ray is pointing away from sphere
+        return (c > traits::Constants<T>::Zero() && b > traits::Constants<T>::Zero());
+    }
+
+    /** Evaluates to true if an intersection point was found and at least one intersection point
+     * lies along the direction of the ray.
+     */
+    operator bool() const
+    {
+        return (!allIntersectionsBehindRayOrigin()) && doesHitSphere();
+    }
+
+    /** Evaluates the t value at which the ray reaches the intersection point.
+     * \pre doesHitSphere() - The behavior is undefined if no intersection points exist.
+     */
+    template<typename U = T>
+    Sphere3Line3IntersectionParameters<U> evaluateT() const
+    {
+        auto const sqr_discr = std::sqrt(static_cast<U>(discr));
+        U const neg_b = static_cast<U>(-b);
+        return Sphere3Line3IntersectionParameters<U>{
+                neg_b - static_cast<U>(sqr_discr),
+                neg_b + static_cast<U>(sqr_discr)
+        };
+    }
+};
+
+template<typename T>
+inline Sphere3Line3Intersection<T> intersect(Sphere3<T> const& s, Line3<T> const& l)
+{
+    Vector3<T> const m = l.p - s.center;
+    T const b = dot(m, normalized(l.v));
+    T const c = dot(m, m) - (s.radius * s.radius);
+    return Sphere3Line3Intersection(b, c);
+}
+
 }
 #endif

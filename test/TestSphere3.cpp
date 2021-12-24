@@ -100,7 +100,7 @@ TEST_CASE("Sphere3")
         auto p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                               Line3<float>(Point3<float>(-5.f, 1.f, 1.f),
                                            Vector3<float>(1.f, 0.f, 0.f)));
-        CHECK(p);
+        REQUIRE(p);
         CHECK(*p == 4.f);
         // "false" intersection with sphere behind the ray
         p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
@@ -111,28 +111,98 @@ TEST_CASE("Sphere3")
         p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                         Line3<float>(Point3<float>(-5.f, 3.f, 1.f),
                                      Vector3<float>(1.f, 0.f, 0.f)));
-        CHECK(p);
+        REQUIRE(p);
         CHECK(*p == 6.f);
         p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                         Line3<float>(Point3<float>(-5.f, 1.f, 3.f),
                                      Vector3<float>(1.f, 0.f, 0.f)));
-        CHECK(p);
+        REQUIRE(p);
         CHECK(*p == 6.f);
         // ray origin inside sphere
         p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                         Line3<float>(Point3<float>(1.f, 1.f, 1.f),
                                      Vector3<float>(1.f, 0.f, 0.f)));
-        CHECK(p);
+        REQUIRE(p);
         CHECK(*p == 0.f);
         p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                         Line3<float>(Point3<float>(1.f, 1.f, 1.f),
                         Vector3<float>(-1.f, 0.f, 0.f)));
-        CHECK(p);
+        REQUIRE(p);
         CHECK(*p == 0.f);
         // no intersection
         p = intersect_p(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
                         Line3<float>(Point3<float>(-5.f, -1.f, 0.f),
                                      Vector3<float>(1.f, 2.f, 3.f)));
+        CHECK(!p);
+    }
+
+    SECTION("Ray-sphere intersection general case")
+    {
+        // ray intersects sphere twice (common case)
+        auto p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                           Line3<float>(Point3<float>(-5.f, 1.f, 1.f),
+                                        Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(!p.allIntersectionsBehindRayOrigin());
+        CHECK(p);
+        CHECK(p.evaluateT<float>().t1 == 4.f);
+        CHECK(p.evaluateT<float>().t2 == 8.f);
+        // "false" intersection with sphere behind the ray
+        p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                      Line3<float>(Point3<float>(5.f, 0.f, 0.f),
+                                   Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(p.allIntersectionsBehindRayOrigin());
+        CHECK(!p);
+        CHECK(p.evaluateT<float>().t1 == (-4.f - std::sqrt(2.f)));
+        CHECK(p.evaluateT<float>().t2 == (std::sqrt(2.f) - 4.f));
+        // tangential intersection
+        p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                      Line3<float>(Point3<float>(-5.f, 3.f, 1.f),
+                                   Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(!p.allIntersectionsBehindRayOrigin());
+        CHECK(p);
+        CHECK(p.evaluateT<float>().t1 == 6.f);
+        CHECK(p.evaluateT<float>().t2 == 6.f);
+        p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                      Line3<float>(Point3<float>(-5.f, 1.f, 3.f),
+                                   Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(!p.allIntersectionsBehindRayOrigin());
+        CHECK(p);
+        CHECK(p.evaluateT<float>().t1 == 6.f);
+        CHECK(p.evaluateT<float>().t2 == 6.f);
+        p = intersect(Sphere3<float>(Point3<float>(0.f, 0.f, 0.f), 2.f),
+                                     Line3<float>(Point3<float>(-5.f, 0.f, 2.f),
+                                                  Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(!p.allIntersectionsBehindRayOrigin());
+        CHECK(p);
+        CHECK(p.evaluateT<float>().t1 == 5.f);
+        CHECK(p.evaluateT<float>().t2 == 5.f);
+        // ray origin inside sphere
+        p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                      Line3<float>(Point3<float>(1.f, 1.f, 1.f),
+                                   Vector3<float>(1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(!p.allIntersectionsBehindRayOrigin());
+        CHECK(p);
+        CHECK(p.evaluateT<float>().t1 == -2.f);
+        CHECK(p.evaluateT<float>().t2 == 2.f);
+        p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                      Line3<float>(Point3<float>(1.f, 1.f, 1.f),
+                                   Vector3<float>(-1.f, 0.f, 0.f)));
+        CHECK(p.doesHitSphere());
+        CHECK(!p.allIntersectionsBehindRayOrigin());
+        CHECK(p);
+        CHECK(p.evaluateT<float>().t1 == -2.f);
+        CHECK(p.evaluateT<float>().t2 == 2.f);
+        // no intersection
+        p = intersect(Sphere3<float>(Point3<float>(1.f, 1.f, 1.f), 2.f),
+                      Line3<float>(Point3<float>(-5.f, -1.f, 0.f),
+                                   Vector3<float>(1.f, 2.f, 3.f)));
+        CHECK(!p.doesHitSphere());
         CHECK(!p);
     }
 }
