@@ -63,6 +63,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Tensor3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Transform2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Transform3.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/TransformLine3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector2Swizzle.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector3.hpp
@@ -92,6 +93,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestTensor3.cpp
     ${GB_MATH_TEST_DIR}/TestTransform2.cpp
     ${GB_MATH_TEST_DIR}/TestTransform3.cpp
+    ${GB_MATH_TEST_DIR}/TestTransformLine3.cpp
     ${GB_MATH_TEST_DIR}/TestVector2.cpp
     ${GB_MATH_TEST_DIR}/TestVector3.cpp
     ${GB_MATH_TEST_DIR}/TestVector4.cpp
