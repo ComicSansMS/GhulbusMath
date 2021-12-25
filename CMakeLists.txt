@@ -120,31 +120,15 @@ if(GB_BUILD_TESTS)
     enable_testing()
 
     if(NOT TARGET Catch)
-        include(ExternalProject)
-        if(IS_TRAVIS_BUILD)     # on travis, use git for fetching instead of wget
-            set(GB_FETCH_EXTERNAL_CATCH
-                GIT_REPOSITORY https://github.com/philsquared/Catch.git
-                GIT_TAG v2.1.2)
-        elseif(WIN32)
-            set(GB_FETCH_EXTERNAL_CATCH
-                URL https://github.com/catchorg/Catch2/archive/v2.1.2.zip
-                URL_HASH MD5=54d2785d7e5549907421e8db5c1b3817)
-        else()
-            set(GB_FETCH_EXTERNAL_CATCH
-                URL https://github.com/catchorg/Catch2/archive/v2.1.2.tar.gz
-                URL_HASH MD5=4c5740d7446d9b4e3735dcff0951aaca)
+        if(NOT EXISTS ${PROJECT_BINARY_DIR}/external/catch2/catch.hpp)
+            file(
+                DOWNLOAD https://github.com/catchorg/Catch2/releases/download/v2.13.7/catch.hpp
+                ${PROJECT_BINARY_DIR}/external/catch2/catch.hpp
+                EXPECTED_MD5 afc1a3a08d753ec1bef9a449ff418e07
+            )
         endif()
-        ExternalProject_Add(Catch-External
-            PREFIX ${CMAKE_BINARY_DIR}/external/Catch
-            ${GB_FETCH_EXTERNAL_CATCH}
-            CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/external/Catch/src/Catch-External/single_include/catch.hpp
-                                                     ${CMAKE_BINARY_DIR}/external/Catch/include/catch.hpp
-        )
         add_library(Catch INTERFACE)
-        add_dependencies(Catch Catch-External)
-        target_include_directories(Catch INTERFACE ${CMAKE_BINARY_DIR}/external/Catch/include)
+        target_include_directories(Catch INTERFACE ${CMAKE_BINARY_DIR}/external/catch2)
     endif()
 
     add_executable(gbMath_Test ${GB_MATH_TEST_SOURCES})
