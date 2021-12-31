@@ -78,6 +78,21 @@ public:
         return (lhs.numerator() * rhs.denominator()) < (rhs.numerator() * lhs.denominator());
     }
 
+    friend constexpr bool operator<=(Rational<T> const& lhs, Rational<T> const& rhs) noexcept
+    {
+        return !(rhs < lhs);
+    }
+
+    friend constexpr bool operator>(Rational<T> const& lhs, Rational<T> const& rhs) noexcept
+    {
+        return rhs < lhs;
+    }
+
+    friend constexpr bool operator>=(Rational<T> const& lhs, Rational<T> const& rhs) noexcept
+    {
+        return !(lhs < rhs);
+    }
+
     friend constexpr bool operator<(Rational<T> const& lhs, T const& i) noexcept
     {
         return lhs.numerator() < (i * lhs.denominator());
@@ -87,6 +102,37 @@ public:
     {
         return (i * rhs.denominator()) < rhs.numerator();
     }
+
+    friend constexpr bool operator<=(Rational<T> const& lhs, T const& i) noexcept
+    {
+        return !(i < lhs);
+    }
+
+    friend constexpr bool operator<=(T const& i, Rational<T> const& rhs) noexcept
+    {
+        return !(rhs < i);
+    }
+
+    friend constexpr bool operator>(Rational<T> const& lhs, T const& i) noexcept
+    {
+        return i < lhs;
+    }
+
+    friend constexpr bool operator>(T const& i, Rational<T> const& rhs) noexcept
+    {
+        return rhs < i;
+    }
+
+    friend constexpr bool operator>=(Rational<T> const& lhs, T const& i) noexcept
+    {
+        return !(lhs < i);
+    }
+
+    friend constexpr bool operator>=(T const& i, Rational<T> const& rhs) noexcept
+    {
+        return !(i < rhs);
+    }
+
 
     friend constexpr Rational<T> operator-(Rational<T> const& r) noexcept
     {

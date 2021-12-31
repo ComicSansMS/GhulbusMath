@@ -118,6 +118,33 @@ TEST_CASE("Rational")
         CHECK_FALSE(Rational<int>(2, 5) < Rational<int>(1, 4));
     }
 
+    SECTION("Less or equal")
+    {
+        CHECK(Rational<int>(1, 2) <= Rational<int>(1, 2));
+        CHECK(Rational<int>(1, 3) <= Rational<int>(1, 2));
+        CHECK(Rational<int>(1, 2) <= Rational<int>(2, 3));
+        CHECK(Rational<int>(5, 2) <= Rational<int>(21, 8));
+        CHECK_FALSE(Rational<int>(2, 5) <= Rational<int>(1, 4));
+    }
+
+    SECTION("Greater than")
+    {
+        CHECK_FALSE(Rational<int>(1, 2) > Rational<int>(1, 2));
+        CHECK(Rational<int>(1, 2) > Rational<int>(1, 3));
+        CHECK(Rational<int>(2, 3) > Rational<int>(1, 2));
+        CHECK(Rational<int>(21, 8) > Rational<int>(5, 2));
+        CHECK_FALSE(Rational<int>(1, 4) > Rational<int>(2, 5));
+    }
+
+    SECTION("Greater or equal")
+    {
+        CHECK(Rational<int>(1, 2) >= Rational<int>(1, 2));
+        CHECK(Rational<int>(1, 2) >= Rational<int>(1, 3));
+        CHECK(Rational<int>(2, 3) >= Rational<int>(1, 2));
+        CHECK(Rational<int>(21, 8) >= Rational<int>(5, 2));
+        CHECK_FALSE(Rational<int>(1, 4) >= Rational<int>(2, 5));
+    }
+
     SECTION("Less than integer")
     {
         CHECK(Rational<int>(1, 2) < 1);
@@ -139,6 +166,75 @@ TEST_CASE("Rational")
         CHECK(2 < Rational<int>(9, 4));
         CHECK_FALSE(52 < Rational<int>(4121, 128));
         CHECK(52 < Rational<int>(6657, 128));
+    }
+
+    SECTION("Less or equal with integer")
+    {
+        CHECK(Rational<int>(1, 2) <= 1);
+        CHECK(Rational<int>(3, 4) <= 1);
+        CHECK(Rational<int>(8, 8) <= 1);
+        CHECK_FALSE(Rational<int>(17, 16) <= 1);
+        CHECK(Rational<int>(17, 16) <= 2);
+        CHECK(Rational<int>(3, 2) <= 2);
+        CHECK_FALSE(Rational<int>(9, 4) <= 2);
+        CHECK(Rational<int>(4121, 128) <= 52);
+        CHECK_FALSE(Rational<int>(6657, 128) <= 52);
+
+        CHECK_FALSE(1 <= Rational<int>(1, 2));
+        CHECK_FALSE(1 <= Rational<int>(3, 4));
+        CHECK(1 <= Rational<int>(8, 8));
+        CHECK(1 <= Rational<int>(17, 16));
+        CHECK_FALSE(2 <= Rational<int>(17, 16));
+        CHECK_FALSE(2 <= Rational<int>(3, 2));
+        CHECK(2 <= Rational<int>(9, 4));
+        CHECK_FALSE(52 <= Rational<int>(4121, 128));
+        CHECK(52 <= Rational<int>(6657, 128));
+    }
+
+    SECTION("Greater than integer")
+    {
+        CHECK(1 > Rational<int>(1, 2));
+        CHECK(1 > Rational<int>(3, 4));
+        CHECK_FALSE(1 > Rational<int>(8, 8));
+        CHECK_FALSE(1 > Rational<int>(17, 16));
+        CHECK(2 > Rational<int>(17, 16));
+        CHECK(2 > Rational<int>(3, 2));
+        CHECK_FALSE(2 > Rational<int>(9, 4));
+        CHECK(52 > Rational<int>(4121, 128));
+        CHECK_FALSE(52 > Rational<int>(6657, 128));
+
+        CHECK_FALSE(Rational<int>(1, 2) > 1);
+        CHECK_FALSE(Rational<int>(3, 4) > 1);
+        CHECK_FALSE(Rational<int>(8, 8) > 1);
+        CHECK(Rational<int>(17, 16) > 1);
+        CHECK_FALSE(Rational<int>(17, 16) > 2);
+        CHECK_FALSE(Rational<int>(3, 2) > 2);
+        CHECK(Rational<int>(9, 4) > 2);
+        CHECK_FALSE(Rational<int>(4121, 128) > 52);
+        CHECK(Rational<int>(6657, 128) > 52);
+    }
+
+    SECTION("Greater or equal")
+    {
+        CHECK(1 >= Rational<int>(1, 2));
+        CHECK(1 >= Rational<int>(3, 4));
+        CHECK(1 >= Rational<int>(8, 8));
+        CHECK_FALSE(1 >= Rational<int>(17, 16));
+        CHECK(2 >= Rational<int>(17, 16));
+        CHECK(2 >= Rational<int>(3, 2));
+        CHECK_FALSE(2 >= Rational<int>(9, 4));
+        CHECK(52 >= Rational<int>(4121, 128));
+        CHECK_FALSE(52 >= Rational<int>(6657, 128));
+
+        CHECK_FALSE(Rational<int>(1, 2) >= 1);
+        CHECK_FALSE(Rational<int>(3, 4) >= 1);
+        CHECK(Rational<int>(8, 8) >= 1);
+        CHECK(Rational<int>(17, 16) >= 1);
+        CHECK_FALSE(Rational<int>(17, 16) >= 2);
+        CHECK_FALSE(Rational<int>(3, 2) >= 2);
+        CHECK(Rational<int>(9, 4) >= 2);
+        CHECK_FALSE(Rational<int>(4121, 128) >= 52);
+        CHECK(Rational<int>(6657, 128) >= 52);
     }
 
     SECTION("Negation")
