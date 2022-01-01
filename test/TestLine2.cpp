@@ -143,10 +143,9 @@ TEST_CASE("Line2")
             CHECK(sli.t1 == -1);
             CHECK(sli.t2 == -1);
             CHECK(sli.inverse_scale_factor == -2);
-            auto p1 = l1.evaluate_at_parameter(sli.evaluate_t1<float>());
-            auto p2 = l2.evaluate_at_parameter(sli.evaluate_t2<float>());
-            CHECK(l1.evaluate_at_parameter(sli.evaluate_t1<float>()) ==
-                  l2.evaluate_at_parameter(sli.evaluate_t2<float>()));
+            auto const p1 = l1.evaluate_at_parameter(sli.evaluate_t1<float>());
+            auto const p2 = l2.evaluate_at_parameter(sli.evaluate_t2<float>());
+            CHECK(p1 == p2);
         }
         {
             Line2<int> l1(Point2<int>(0, 0), Vector2<int>(10, 1));
