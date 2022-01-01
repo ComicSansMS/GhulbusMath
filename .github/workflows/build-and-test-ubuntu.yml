@@ -43,7 +43,7 @@ jobs:
       - name: 🔍 Test
         run: |
             cd build
-            ctest -C Debug
+            ctest -C ${{matrix.build_type}}
       - name: 👮‍♂️ Code Coverage
         if: matrix.config.cc == 'gcc-10' && matrix.build_type == 'Debug'
         run: |
