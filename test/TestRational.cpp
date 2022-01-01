@@ -118,6 +118,21 @@ TEST_CASE("Rational")
         CHECK_FALSE(Rational<int>(2, 5) < Rational<int>(1, 4));
     }
 
+    SECTION("Less than overflow")
+    {
+        // p        a
+        // ----  < --- 
+        // c*q     c*b
+        //
+        // c = 149
+        // q = 59   --> c*q = 8791
+        // b = 31   --> c*b = 4619
+        CHECK(Rational<int16_t>(8293, 8791) < Rational<int16_t>(7879, 4619));
+        //
+        // 2'099'743'297 = 70'289 * 29'873
+        CHECK(Rational<int32_t>(29'300, 2'099'743'297) < Rational<int32_t>(28'900, 29'873));
+    }
+
     SECTION("Less or equal")
     {
         CHECK(Rational<int>(1, 2) <= Rational<int>(1, 2));
@@ -254,6 +269,12 @@ TEST_CASE("Rational")
         CHECK(Rational<int>(1, 2) + Rational<int>(-2, 3) == Rational<int>(-1, 6));
     }
 
+    SECTION("Addition overflow")
+    {
+        CHECK(Rational<int16_t>(31393, 32) + Rational<int16_t>(2399, 32) == Rational<int16_t>(1056, 1));
+        CHECK(Rational<int16_t>(21179, 25) + Rational<int16_t>(20428, 50) == Rational<int16_t>(31393, 25));
+    }
+
     SECTION("Addition with integer")
     {
         CHECK(Rational<int>(1, 2) + 0 == Rational<int>(1, 2));
@@ -308,6 +329,13 @@ TEST_CASE("Rational")
         CHECK(Rational<int>(12, 5) * Rational<int>(2, 5) == Rational<int>(24, 25));
     }
 
+    SECTION("Multiplication overflow")
+    {
+        // 499 * 47 = 23453
+        // 29 * 307 = 8903
+        CHECK(Rational<int16_t>(23453, 307) * Rational<int16_t>(8903, 47) == Rational<int16_t>(14471, 1));
+    }
+
     SECTION("Multiplication with integer")
     {
         CHECK(Rational<int>(1, 2) * 0 == Rational<int>(0, 1));
@@ -339,6 +367,11 @@ TEST_CASE("Rational")
         CHECK(Rational<int>(-1, 3) / Rational<int>(1, 2) == Rational<int>(-2, 3));
         CHECK(Rational<int>(1, 3) / Rational<int>(-1, 2) == Rational<int>(-2, 3));
         CHECK(Rational<int>(-1, 3) / Rational<int>(-1, 2) == Rational<int>(2, 3));
+    }
+
+    SECTION("Division overflow")
+    {
+        CHECK(Rational<int16_t>(23453, 307) / Rational<int16_t>(47, 8903) == Rational<int16_t>(14471, 1));
     }
 
     SECTION("Division with integer")
