@@ -155,7 +155,7 @@ if(GB_BUILD_TESTS)
 endif()
 
 ###############################################################################
-## Doxygen gbBase
+## Doxygen gbMath
 ###############################################################################
 
 option(GB_GENERATE_DOXYGEN_DOCUMENTATION "If checked, API documentation will be generated if Doxygen is available." ON)
@@ -175,7 +175,7 @@ if(GB_GENERATE_DOXYGEN_DOCUMENTATION)
 endif()
 
 ###############################################################################
-## Packaging gbBase
+## Packaging gbMath
 ###############################################################################
 
 set(GB_LIBRARY_NAMESPACE Ghulbus::)
