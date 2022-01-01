@@ -24,4 +24,22 @@ TEST_CASE("RationalIO")
         sstr << Rational<int>(-1, -2);
         CHECK(sstr.str() == "1/2");
     }
+
+    SECTION("Rational ostream insertion char")
+    {
+        sstr << Rational<char>(42, 5);
+        CHECK(sstr.str() == "42/5");
+    }
+
+    SECTION("Rational ostream insertion signed char")
+    {
+        sstr << Rational<signed char>(-42, 5);
+        CHECK(sstr.str() == "-42/5");
+    }
+
+    SECTION("Rational ostream insertion unsigned char")
+    {
+        sstr << Rational<unsigned char>(42, 5);
+        CHECK(sstr.str() == "42/5");
+    }
 }

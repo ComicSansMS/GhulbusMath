@@ -15,10 +15,24 @@
 namespace GHULBUS_MATH_NAMESPACE
 {
 template<typename T>
-std::ostream& operator<<(std::ostream& os, Rational<T> const& rhs)
+inline std::ostream& operator<<(std::ostream& os, Rational<T> const& rhs)
 {
-    os << rhs.numerator() << '/' << rhs.denominator();
-    return os;
+    return os << rhs.numerator() << '/' << rhs.denominator();
+}
+
+inline std::ostream& operator<<(std::ostream& os, Rational<char> const& rhs)
+{
+    return os << static_cast<int>(rhs.numerator()) << '/' << static_cast<int>(rhs.denominator());
+}
+
+inline std::ostream& operator<<(std::ostream& os, Rational<signed char> const& rhs)
+{
+    return os << static_cast<int>(rhs.numerator()) << '/' << static_cast<int>(rhs.denominator());
+}
+
+inline std::ostream& operator<<(std::ostream& os, Rational<unsigned char> const& rhs)
+{
+    return os << static_cast<int>(rhs.numerator()) << '/' << static_cast<int>(rhs.denominator());
 }
 }
 
