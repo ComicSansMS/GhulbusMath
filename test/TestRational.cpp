@@ -275,6 +275,36 @@ TEST_CASE("Rational")
         CHECK(Rational<int16_t>(21179, 25) + Rational<int16_t>(20428, 50) == Rational<int16_t>(31393, 25));
     }
 
+    SECTION("Member Addition")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r += Rational<int>(1, 4));
+            CHECK(r  == Rational<int>(3, 4));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r += Rational<int>(1, 3);
+            CHECK(r  == Rational<int>(5, 6));
+        }
+        {
+            Rational<int> r(1, 2);
+            r += r;
+            CHECK(r == Rational<int>(1, 1));
+        }
+        {
+            Rational<int> r(6, 5);
+            r += Rational<int>(4, 5);
+            CHECK(r == Rational<int>(2, 1));
+        }
+        {
+            Rational<int> r(1, 2);
+            r += Rational<int>(-2, 3);
+            CHECK(r == Rational<int>(-1, 6));
+        }
+    }
+
     SECTION("Addition with integer")
     {
         CHECK(Rational<int>(1, 2) + 0 == Rational<int>(1, 2));
@@ -293,13 +323,83 @@ TEST_CASE("Rational")
         CHECK(2 + Rational<int>(1, 2) + 1 == Rational<int>(7, 2));
     }
 
+    SECTION("Member Addition with integer")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r += 0);
+            CHECK(r == Rational<int>(1, 2));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r += 1;
+            CHECK(r == Rational<int>(3, 2));
+        }
+        {
+            Rational<int> r(1, 2);
+            r += 10;
+            CHECK(r == Rational<int>(21, 2));
+        }
+        {
+            Rational<int> r(2, 3);
+            r += 2;
+            CHECK(r == Rational<int>(8, 3));
+        }
+        {
+            Rational<int> r(25, 5);
+            r += 3;
+            CHECK(r == Rational<int>(8, 1));
+        } {
+            Rational<int> r(25, 5);
+            r += -3;
+            CHECK(r == Rational<int>(2, 1));
+        }
+    }
+
     SECTION("Subtraction")
     {
+        CHECK(Rational<int>(1, 2) - Rational<int>(1, 8) == Rational<int>(3, 8));
         CHECK(Rational<int>(1, 2) - Rational<int>(1, 2) == Rational<int>(0, 1));
         CHECK(Rational<int>(1, 2) - Rational<int>(1, 4) == Rational<int>(1, 4));
         CHECK(Rational<int>(1, 2) - Rational<int>(2, 3) == Rational<int>(-1, 6));
         CHECK(Rational<int>(5, 2) - Rational<int>(5, 3) == Rational<int>(5, 6));
         CHECK(Rational<int>(1, 2) - Rational<int>(-2, 3) == Rational<int>(7, 6));
+    }
+
+    SECTION("Member Subtraction")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r -= Rational<int>(1, 8));
+            CHECK(r == Rational<int>(3, 8));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r -= r;
+            CHECK(r == Rational<int>(0, 1));
+        }
+        {
+            Rational<int> r(1, 2);
+            r -= Rational<int>(1, 4);
+            CHECK(r == Rational<int>(1, 4));
+        }
+        {
+            Rational<int> r(1, 2);
+            r -= Rational<int>(2, 3);
+            CHECK(r == Rational<int>(-1, 6));
+        }
+        {
+            Rational<int> r(5, 2);
+            r -= Rational<int>(5, 3);
+            CHECK(r  == Rational<int>(5, 6));
+        }
+        {
+            Rational<int> r(1, 2);
+            r -= Rational<int>(-2, 3);
+            CHECK(r == Rational<int>(7, 6));
+        }
     }
 
     SECTION("Subtraction with integer")
@@ -319,6 +419,36 @@ TEST_CASE("Rational")
         CHECK(10 - Rational<int>(5, 2) - 7 == Rational<int>(1, 2));
     }
 
+    SECTION("Member Subtraction with integer")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r -= 0);
+            CHECK(r == Rational<int>(1, 2));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r -= 1;
+            CHECK(r == Rational<int>(-1, 2));
+        }
+        {
+            Rational<int> r(1, 2);
+            r -= 2;
+            CHECK(r == Rational<int>(-3, 2));
+        }
+        {
+            Rational<int> r(5, 2);
+            r -= 2;
+            CHECK(r == Rational<int>(1, 2));
+        }
+        {
+            Rational<int> r(5, 3);
+            r -= 2;
+            CHECK(r == Rational<int>(-1, 3));
+        }
+    }
+
     SECTION("Multiplication")
     {
         CHECK(Rational<int>(1, 2) * Rational<int>(2, 3) == Rational<int>(1, 3));
@@ -336,6 +466,41 @@ TEST_CASE("Rational")
         CHECK(Rational<int16_t>(23453, 307) * Rational<int16_t>(8903, 47) == Rational<int16_t>(14471, 1));
     }
 
+    SECTION("Member Multiplication")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r *= Rational<int>(2, 3));
+            CHECK(r == Rational<int>(1, 3));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r *= r;
+            CHECK(r == Rational<int>(1, 4));
+        }
+        {
+            Rational<int> r(1, 2);
+            r *= Rational<int>(-1, 2);
+            CHECK(r == Rational<int>(-1, 4));
+        }
+        {
+            Rational<int> r(-1, 2);
+            r *= Rational<int>(-1, 2);
+            CHECK(r == Rational<int>(1, 4));
+        }
+        {
+            Rational<int> r(2, 5);
+            r *= Rational<int>(5, 2);
+            CHECK(r == Rational<int>(1, 1));
+        }
+        {
+            Rational<int> r(12, 5);
+            r *= Rational<int>(2, 5);
+            CHECK(r == Rational<int>(24, 25));
+        }
+    }
+
     SECTION("Multiplication with integer")
     {
         CHECK(Rational<int>(1, 2) * 0 == Rational<int>(0, 1));
@@ -344,6 +509,7 @@ TEST_CASE("Rational")
         CHECK(Rational<int>(1, 2) * 3 == Rational<int>(3, 2));
         CHECK(Rational<int>(1, 4) * 4 == Rational<int>(1, 1));
         CHECK(Rational<int>(2, 5) * 2 == Rational<int>(4, 5));
+        CHECK(Rational<int>(-2, 5) * 2 == Rational<int>(-4, 5));
         CHECK(Rational<int>(-2, 5) * -2 == Rational<int>(4, 5));
         CHECK(Rational<int>(2, 5) * -2 == Rational<int>(-4, 5));
 
@@ -353,10 +519,61 @@ TEST_CASE("Rational")
         CHECK(3 * Rational<int>(1, 2) == Rational<int>(3, 2));
         CHECK(4 * Rational<int>(1, 4) == Rational<int>(1, 1));
         CHECK(2 * Rational<int>(2, 5) == Rational<int>(4, 5));
+        CHECK(2 * Rational<int>(-2, 5) == Rational<int>(-4, 5));
         CHECK(-2 * Rational<int>(-2, 5) == Rational<int>(4, 5));
         CHECK(-2 * Rational<int>(2, 5) == Rational<int>(-4, 5));
 
         CHECK(-2 * Rational<int>(2, 6) * -3 == Rational<int>(2, 1));
+    }
+
+    SECTION("Member Multiplication with integer")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r *= 0);
+            CHECK(r == Rational<int>(0, 1));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r *= 1;
+            CHECK(r == Rational<int>(1, 2));
+        }
+        {
+            Rational<int> r(1, 2);
+            r *= 2;
+            CHECK(r == Rational<int>(1, 1));
+        }
+        {
+            Rational<int> r(1, 2);
+            r *= 3;
+            CHECK(r == Rational<int>(3, 2));
+        }
+        {
+            Rational<int> r(1, 4);
+            r *= 4;
+            CHECK(r == Rational<int>(1, 1));
+        }
+        {
+            Rational<int> r(2, 5);
+            r *= 2;
+            CHECK(r == Rational<int>(4, 5));
+        }
+        {
+            Rational<int> r(-2, 5);
+            r *= 2;
+            CHECK(r == Rational<int>(-4, 5));
+        }
+        {
+            Rational<int> r(-2, 5);
+            r *= -2;
+            CHECK(r == Rational<int>(4, 5));
+        }
+        {
+            Rational<int> r(2, 5);
+            r *= -2;
+            CHECK(r == Rational<int>(-4, 5));
+        }
     }
 
     SECTION("Division")
@@ -372,6 +589,41 @@ TEST_CASE("Rational")
     SECTION("Division overflow")
     {
         CHECK(Rational<int16_t>(23453, 307) / Rational<int16_t>(47, 8903) == Rational<int16_t>(14471, 1));
+    }
+
+    SECTION("Member Division")
+    {
+        {
+            Rational<int> r(1, 2);
+            r /= r;
+            CHECK(r == Rational<int>(1, 1));
+        }
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r /= Rational<int>(2, 1));
+            CHECK(r == Rational<int>(1, 4));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 3);
+            r /= Rational<int>(1, 2);
+            CHECK(r == Rational<int>(2, 3));
+        }
+        {
+            Rational<int> r(-1, 3);
+            r /= Rational<int>(1, 2);
+            CHECK(r == Rational<int>(-2, 3));
+        }
+        {
+            Rational<int> r(1, 3);
+            r /= Rational<int>(-1, 2);
+            CHECK(r == Rational<int>(-2, 3));
+        }
+        {
+            Rational<int> r(-1, 3);
+            r /= Rational<int>(-1, 2);
+            CHECK(r == Rational<int>(2, 3));
+        }
     }
 
     SECTION("Division with integer")
@@ -394,5 +646,50 @@ TEST_CASE("Rational")
         CHECK(-2 / Rational<int>(-3, 4) == Rational<int>(8, 3));
 
         CHECK(4 / Rational<int>(1, 2) / 6 == Rational<int>(4, 3));
+    }
+
+    SECTION("Member Division with integer")
+    {
+        {
+            Rational<int> r(1, 2);
+            Rational<int>& ret = (r /= 4);
+            CHECK(r == Rational<int>(1, 8));
+            CHECK(&ret == &r);
+        }
+        {
+            Rational<int> r(1, 2);
+            r /= 1;
+            CHECK(r == Rational<int>(1, 2));
+        }
+        {
+            Rational<int> r(1, 2);
+            r /= 2;
+            CHECK(r == Rational<int>(1, 4));
+        }
+        {
+            Rational<int> r(5, 5);
+            r /= 5;
+            CHECK(r == Rational<int>(1, 5));
+        }
+        {
+            Rational<int> r(3, 4);
+            r /= 2;
+            CHECK(r == Rational<int>(3, 8));
+        }
+        {
+            Rational<int> r(-3, 4);
+            r /= 2;
+            CHECK(r == Rational<int>(-3, 8));
+        }
+        {
+            Rational<int> r(3, 4);
+            r /= -2;
+            CHECK(r == Rational<int>(-3, 8));
+        }
+        {
+            Rational<int> r(-3, 4);
+            r /= -2;
+            CHECK(r == Rational<int>(3, 8));
+        }
     }
 }

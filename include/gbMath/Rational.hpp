@@ -160,12 +160,33 @@ public:
         return ret;
     }
 
+    constexpr Rational<T>& operator+=(Rational<T> const& rhs) noexcept
+    {
+        auto const d1 = std::gcd(denominator(), rhs.denominator());
+        if (d1 == 1) {
+            num = numerator() * rhs.denominator() + denominator() * rhs.numerator();
+            denom = denominator() * rhs.denominator();
+        } else {
+            auto const t = numerator() * (rhs.denominator() / d1) + rhs.numerator() * (denominator() / d1);
+            auto const d2 = std::gcd(t, d1);
+            num = static_cast<T>(t / d2);
+            denom = static_cast<T>((denominator() / d1) * (rhs.denominator() / d2));
+        }
+        return *this;
+    }
+
     friend constexpr Rational<T> operator+(Rational<T> const& lhs, T const& i) noexcept
     {
         Rational<T> ret;
         ret.num = lhs.numerator() + (i * lhs.denominator());
         ret.denom = lhs.denominator();
         return ret;
+    }
+
+    constexpr Rational<T>& operator+=(T const& i) noexcept
+    {
+        num += (i * denominator());
+        return *this;
     }
 
     friend constexpr Rational<T> operator+(T const& i, Rational<T> const& rhs) noexcept
@@ -192,12 +213,33 @@ public:
         return ret;
     }
 
+    constexpr Rational<T>& operator-=(Rational<T> const& rhs) noexcept
+    {
+        auto const d1 = std::gcd(denominator(), rhs.denominator());
+        if (d1 == 1) {
+            num = numerator() * rhs.denominator() - denominator() * rhs.numerator();
+            denom = denominator() * rhs.denominator();
+        } else {
+            auto const t = numerator() * (rhs.denominator() / d1) - rhs.numerator() * (denominator() / d1);
+            auto const d2 = std::gcd(t, d1);
+            num = static_cast<T>(t / d2);
+            denom = static_cast<T>((denominator() / d1) * (rhs.denominator() / d2));
+        }
+        return *this;
+    }
+
     friend constexpr Rational<T> operator-(Rational<T> const& lhs, T const& i) noexcept
     {
         Rational<T> ret;
         ret.num = lhs.numerator() - (i * lhs.denominator());
         ret.denom = lhs.denominator();
         return ret;
+    }
+
+    constexpr Rational<T>& operator-=(T const& i) noexcept
+    {
+        num -= (i * denominator());
+        return *this;
     }
 
     friend constexpr Rational<T> operator-(T const& i, Rational<T> const& rhs) noexcept
@@ -218,6 +260,15 @@ public:
         return ret;
     }
 
+    constexpr Rational<T>& operator*=(Rational<T> const& rhs) noexcept
+    {
+        auto const d1 = std::gcd(numerator(), rhs.denominator());
+        auto const d2 = std::gcd(denominator(), rhs.numerator());
+        num = static_cast<T>((numerator() / d1) * (rhs.numerator() / d2));
+        denom = static_cast<T>((denominator() / d2) * (rhs.denominator() / d1));
+        return *this;
+    }
+
     friend constexpr Rational<T> operator*(Rational<T> const& lhs, T const& i) noexcept
     {
         auto const d2 = std::gcd(lhs.denominator(), i);
@@ -225,6 +276,14 @@ public:
         ret.num = static_cast<T>(lhs.numerator() * (i / d2));
         ret.denom = static_cast<T>(lhs.denominator() / d2);
         return ret;
+    }
+
+    constexpr Rational<T>& operator*=(T const& i) noexcept
+    {
+        auto const d2 = std::gcd(denominator(), i);
+        num *= (i / d2);
+        denom /= d2;
+        return *this;
     }
 
     friend constexpr Rational<T> operator*(T const& i, Rational<T> const& rhs) noexcept
@@ -246,6 +305,15 @@ public:
         return ret;
     }
 
+    constexpr Rational<T>& operator/=(Rational<T> const& rhs) noexcept
+    {
+        auto const d1 = std::gcd(numerator(), rhs.numerator()) * ((rhs.numerator() < 0) ? -1 : 1);
+        auto const d2 = std::gcd(denominator(), rhs.denominator());
+        num = static_cast<T>((numerator() / d1) * (rhs.denominator() / d2));
+        denom = static_cast<T>((denominator() / d2) * (rhs.numerator() / d1));
+        return *this;
+    }
+
     friend constexpr Rational<T> operator/(Rational<T> const& lhs, T const& i) noexcept
     {
         auto const d1 = std::gcd(lhs.numerator(), i) * ((i < 0) ? -1 : 1);
@@ -253,6 +321,14 @@ public:
         ret.num = static_cast<T>((lhs.numerator() / d1));
         ret.denom = static_cast<T>(lhs.denominator() * (i / d1));
         return ret;
+    }
+
+    constexpr Rational<T>& operator/=(T const& i) noexcept
+    {
+        auto const d1 = std::gcd(numerator(), i) * ((i < 0) ? -1 : 1);
+        num /= d1;
+        denom *= (i / d1);
+        return *this;
     }
 
     friend constexpr Rational<T> operator/(T const& i, Rational<T> const& rhs) noexcept
