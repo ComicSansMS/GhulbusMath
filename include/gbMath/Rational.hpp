@@ -33,14 +33,12 @@ public:
     {}
 
     constexpr Rational(T numerator, T denominator) noexcept
+        :num(0), denom(0)
     {
         auto const gcd = std::gcd(numerator, denominator);
         if (gcd != 0) {
             num = numerator / gcd;
             denom = denominator / gcd;
-        } else {
-            num = 0;
-            denom = 0;
         }
         if constexpr (std::is_signed_v<T>) {
             if (denom < 0) {
