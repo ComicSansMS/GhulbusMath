@@ -59,6 +59,16 @@ public:
         return denom;
     }
 
+    template<typename F, typename = std::enable_if_t<std::is_floating_point_v<F>>>
+    explicit constexpr operator F() const noexcept {
+        return static_cast<F>(numerator()) / static_cast<F>(denominator());
+    }
+
+    friend constexpr bool isValid(Rational<T> const& r) noexcept
+    {
+        return r.denominator() != 0;
+    }
+
     friend constexpr bool isInteger(Rational<T> const& r) noexcept
     {
         return r.denominator() == 1;
