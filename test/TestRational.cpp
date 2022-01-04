@@ -15,6 +15,11 @@ TEST_CASE("Rational")
     static_assert(std::is_same_v<Rational<int16_t>::ValueType, int16_t>);
     static_assert(std::is_same_v<Rational<int64_t>::ValueType, int64_t>);
 
+    static_assert(std::is_same_v<Rational<int>::PolicyType,
+                                 GHULBUS_MATH_NAMESPACE::RationalPolicies::Permissive>);
+    static_assert(std::is_same_v<GHULBUS_MATH_NAMESPACE::StrictRational<int>::PolicyType,
+                                 GHULBUS_MATH_NAMESPACE::RationalPolicies::AbortOnDivByZero>);
+
     SECTION("Default Construction constructs to 0")
     {
         Rational<int> r;
@@ -1565,6 +1570,101 @@ TEST_CASE("Rational")
             r = divzz;
             r /= (-1000);
             CHECK(r == divzz);
+        }
+    }
+
+    SECTION("Div-by-0 Policy")
+    {
+        struct DivBy0 {};
+        struct TestPolicy {
+            [[noreturn]] inline static void divByZeroHandler() {
+                throw DivBy0{};
+            }
+        };
+        using TestRational = GHULBUS_MATH_NAMESPACE::RationalImpl<int, TestPolicy>;
+
+        static_assert(std::is_nothrow_default_constructible_v<TestRational>);
+        static_assert(std::is_nothrow_constructible_v<TestRational, int>);
+        static_assert(!std::is_nothrow_constructible_v<TestRational, int, int>);
+        static_assert(std::is_nothrow_constructible_v<Rational<int>, int, int>);
+        static_assert(noexcept(std::declval<Rational<int>>() / std::declval<Rational<int>>()));
+        static_assert(!noexcept(std::declval<TestRational>() / std::declval<TestRational>()));
+        static_assert(noexcept(std::declval<Rational<int>>() / std::declval<int>()));
+        static_assert(!noexcept(std::declval<TestRational>() / std::declval<int>()));
+        static_assert(noexcept(std::declval<int>() / std::declval<Rational<int>>()));
+        static_assert(!noexcept(std::declval<int>() / std::declval<TestRational>()));
+        static_assert(noexcept(std::declval<Rational<int>>() /= std::declval<Rational<int>>()));
+        static_assert(!noexcept(std::declval<TestRational>() /= std::declval<TestRational>()));
+        static_assert(noexcept(std::declval<Rational<int>>() /= std::declval<int>()));
+        static_assert(!noexcept(std::declval<TestRational>() /= std::declval<int>()));
+
+        SECTION("Construction")
+        {
+            CHECK(TestRational(1, 2) == TestRational(1, 2));
+            CHECK(TestRational(0) == TestRational(0, 1));
+            CHECK_THROWS_AS(TestRational(1, 0), DivBy0);
+            CHECK_THROWS_AS(TestRational(255, 0), DivBy0);
+            CHECK_THROWS_AS(TestRational(-255, 0), DivBy0);
+            CHECK_THROWS_AS(TestRational(0, 0), DivBy0);
+        }
+        SECTION("Division")
+        {
+            CHECK(TestRational(1, 2) / TestRational(1, 2) == TestRational(1, 1));
+            CHECK(TestRational(0, 1) / TestRational(1, 2) == TestRational(0, 1));
+            CHECK_THROWS_AS(TestRational(1, 2) / TestRational(0, 1), DivBy0);
+            CHECK_THROWS_AS(TestRational(3, 4) / TestRational(0, 1), DivBy0);
+            CHECK_THROWS_AS(TestRational(-3, 4) / TestRational(0, 1), DivBy0);
+            CHECK_THROWS_AS(TestRational(0, 1) / TestRational(0, 1), DivBy0);
+        }
+        SECTION("Division Member")
+        {
+            TestRational r(1, 2);
+            r /= TestRational(1, 2);
+            CHECK(r  == TestRational(1, 1));
+            r = TestRational(0, 1);
+            r /= TestRational(1, 2);
+            CHECK(r == TestRational(0, 1));
+            r = TestRational(1, 2);
+            CHECK_THROWS_AS(r /= TestRational(0, 1), DivBy0);
+            r = TestRational(3, 4);
+            CHECK_THROWS_AS(r /= TestRational(0, 1), DivBy0);
+            r = TestRational(-3, 4);
+            CHECK_THROWS_AS(r /= TestRational(0, 1), DivBy0);
+            r = TestRational(0, 1);
+            CHECK_THROWS_AS(r /= TestRational(0, 1), DivBy0);
+        }
+        SECTION("Integer Division")
+        {
+            CHECK(TestRational(1, 2) / 2 == TestRational(1, 4));
+            CHECK(TestRational(4, 3) / 2 == TestRational(2, 3));
+            CHECK_THROWS_AS(TestRational(1, 2) / 0, DivBy0);
+            CHECK_THROWS_AS(TestRational(3, 4) / 0, DivBy0);
+            CHECK_THROWS_AS(TestRational(-3, 4) / 0, DivBy0);
+            CHECK_THROWS_AS(TestRational(0, 1) / 0, DivBy0);
+
+            CHECK(1 / TestRational(1, 2) == TestRational(2, 1));
+            CHECK(5 / TestRational(4, 3) == TestRational(15, 4));
+            CHECK_THROWS_AS(1 / TestRational(0, 1), DivBy0);
+            CHECK_THROWS_AS(5 / TestRational(0, 1), DivBy0);
+            CHECK_THROWS_AS(-5 / TestRational(0, 1), DivBy0);
+            CHECK_THROWS_AS(0 / TestRational(0, 1), DivBy0);
+        }
+        SECTION("Integer Division Member")
+        {
+            TestRational r(1, 2);
+            r /= 2;
+            CHECK(r == TestRational(1, 4));
+            r = TestRational(4, 3);
+            r /= 2;
+            CHECK(r == TestRational(2, 3));
+            r = TestRational(1, 2);
+            CHECK_THROWS_AS(r /= 0, DivBy0);
+            r = TestRational(3, 4);
+            CHECK_THROWS_AS(r /= 0, DivBy0);
+            r = TestRational(-3, 4);
+            CHECK_THROWS_AS(r /= 0, DivBy0);
+            r = TestRational(0, 1);
+            CHECK_THROWS_AS(r /= 0, DivBy0);
         }
     }
 }
