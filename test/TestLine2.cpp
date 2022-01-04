@@ -6,6 +6,10 @@
 
 #include <catch.hpp>
 
+#ifdef _MSC_VER
+#   pragma warning(disable: 4723)
+#endif
+
 TEST_CASE("Line2")
 {
     using GHULBUS_MATH_NAMESPACE::Line2;
