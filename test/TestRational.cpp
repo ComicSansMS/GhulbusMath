@@ -435,7 +435,14 @@ TEST_CASE("Rational")
         }
         {
             Rational<int> r(1, 2);
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
             r -= r;
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
             CHECK(r == Rational<int>(0, 1));
         }
         {
@@ -655,7 +662,14 @@ TEST_CASE("Rational")
     {
         {
             Rational<int> r(1, 2);
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
             r /= r;
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
             CHECK(r == Rational<int>(1, 1));
         }
         {
