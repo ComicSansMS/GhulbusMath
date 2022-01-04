@@ -9,6 +9,12 @@ TEST_CASE("Rational")
 {
     using GHULBUS_MATH_NAMESPACE::Rational;
 
+    static_assert(std::is_same_v<Rational<int>::ValueType, int>);
+    static_assert(std::is_same_v<Rational<unsigned int>::ValueType, unsigned int>);
+    static_assert(std::is_same_v<Rational<int8_t>::ValueType, int8_t>);
+    static_assert(std::is_same_v<Rational<int16_t>::ValueType, int16_t>);
+    static_assert(std::is_same_v<Rational<int64_t>::ValueType, int64_t>);
+
     SECTION("Default Construction constructs to 0")
     {
         Rational<int> r;
@@ -631,6 +637,8 @@ TEST_CASE("Rational")
         CHECK(Rational<int>(-1, 3) / Rational<int>(1, 2) == Rational<int>(-2, 3));
         CHECK(Rational<int>(1, 3) / Rational<int>(-1, 2) == Rational<int>(-2, 3));
         CHECK(Rational<int>(-1, 3) / Rational<int>(-1, 2) == Rational<int>(2, 3));
+        CHECK(Rational<int>(3, 4) / Rational<int>(0, 1) == Rational<int>(1, 0));
+        CHECK(Rational<int>(-3, 4) / Rational<int>(0, 1) == Rational<int>(-1, 0));
     }
 
     SECTION("Division overflow")
@@ -671,6 +679,16 @@ TEST_CASE("Rational")
             r /= Rational<int>(-1, 2);
             CHECK(r == Rational<int>(2, 3));
         }
+        {
+            Rational<int> r(3, 4);
+            r /= Rational<int>(0, 1);
+            CHECK(r == Rational<int>(1, 0));
+        }
+        {
+            Rational<int> r(-3, 4);
+            r /= Rational<int>(0, 1);
+            CHECK(r == Rational<int>(-1, 0));
+        }
     }
 
     SECTION("Division with integer")
@@ -682,6 +700,9 @@ TEST_CASE("Rational")
         CHECK(Rational<int>(-3, 4) / 2 == Rational<int>(-3, 8));
         CHECK(Rational<int>(3, 4) / -2 == Rational<int>(-3, 8));
         CHECK(Rational<int>(-3, 4) / -2 == Rational<int>(3, 8));
+
+        CHECK(Rational<int>(3, 4) / 0 == Rational<int>(1, 0));
+        CHECK(Rational<int>(-3, 4) / 0 == Rational<int>(-1, 0));
 
         CHECK(0 / Rational<int>(1, 2) == Rational<int>(0, 1));
         CHECK(1 / Rational<int>(1, 2) == Rational<int>(2, 1));
@@ -738,6 +759,16 @@ TEST_CASE("Rational")
             r /= -2;
             CHECK(r == Rational<int>(3, 8));
         }
+        {
+            Rational<int> r(3, 4);
+            r /= 0;
+            CHECK(r == Rational<int>(1, 0));
+        }
+        {
+            Rational<int> r(-3, 4);
+            r /= 0;
+            CHECK(r == Rational<int>(-1, 0));
+        }
     }
 
     SECTION("Div by Zero values propagate")
@@ -787,6 +818,20 @@ TEST_CASE("Rational")
             CHECK(Rational<int>(2, 3) + divzz == divzz);
             CHECK(Rational<int>(-1, 3) + divzz == divzz);
             CHECK(Rational<int>(5, 2) + divzz == divzz);
+
+            // ∞ + ∞ = ∞
+            CHECK(divz + divz == divz);
+            // -∞ + -∞ = -∞
+            CHECK(ndivz + ndivz == ndivz);
+            // ∞ + -∞ = NaN
+            CHECK(divz + ndivz == divzz);
+            CHECK(ndivz + divz == divzz);
+            // x + NaN = NaN + x = NaN
+            CHECK(divz + divzz == divzz);
+            CHECK(divzz + divz == divzz);
+            CHECK(ndivz + divzz == divzz);
+            CHECK(divzz + ndivz == divzz);
+            CHECK(divzz + divzz == divzz);
         }
         SECTION("Member Addition")
         {
@@ -843,6 +888,91 @@ TEST_CASE("Rational")
             r = Rational<int>(5, 2);
             r += divzz;
             CHECK(r == divzz);
+
+            // ∞ + ∞ = ∞
+            r = divz;
+            r += divz;
+            CHECK(r == divz);
+            // -∞ + -∞ = -∞
+            r = ndivz;
+            r += ndivz;
+            CHECK(r == ndivz);
+            // ∞ + -∞ = NaN
+            r = divz;
+            r += ndivz;
+            CHECK(r == divzz);
+            r = ndivz;
+            r += divz;
+            CHECK(r == divzz);
+            // x + NaN = NaN + x = NaN
+            r = divz;
+            r += divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r += divz;
+            CHECK(r == divzz);
+            r = ndivz;
+            r += divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r += ndivz;
+            CHECK(r == divzz);
+            r = divzz;
+            r += divzz;
+            CHECK(r == divzz);
+        }
+        SECTION("Integer Addition")
+        {
+            CHECK(divz + 0 == divz);
+            CHECK(divz + 1000 == divz);
+            CHECK(divz + (-1000) == divz);
+            CHECK(ndivz + 0 == ndivz);
+            CHECK(ndivz + 1000 == ndivz);
+            CHECK(ndivz + (-1000) == ndivz);
+            CHECK(divzz + 0 == divzz);
+            CHECK(divzz + 1000 == divzz);
+            CHECK(divzz + (-1000) == divzz);
+
+            CHECK(0 + divz == divz);
+            CHECK(1000 + divz == divz);
+            CHECK((-1000) + divz == divz);
+            CHECK(0 + ndivz == ndivz);
+            CHECK(1000 + ndivz == ndivz);
+            CHECK((-1000) + ndivz == ndivz);
+            CHECK(0 + divzz == divzz);
+            CHECK(1000 + divzz == divzz);
+            CHECK((-1000) + divzz == divzz);
+        }
+        SECTION("Integer Addition Member")
+        {
+            Rational<int> r;
+            r = divz;
+            r += 0;
+            CHECK(r == divz);
+            r = divz;
+            r += 1000;
+            CHECK(r == divz);
+            r = divz;
+            r += (-1000);
+            CHECK(r == divz);
+            r = ndivz;
+            r += 0;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r += 1000;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r += (-1000);
+            CHECK(r == ndivz);
+            r = divzz;
+            r += 0;
+            CHECK(r == divzz);
+            r = divzz;
+            r += 1000;
+            CHECK(r == divzz);
+            r = divzz;
+            r += (-1000);
+            CHECK(r == divzz);
         }
         SECTION("Subtraction")
         {
@@ -871,6 +1001,21 @@ TEST_CASE("Rational")
             CHECK(Rational<int>(2, 3) - divzz == divzz);
             CHECK(Rational<int>(-1, 3) - divzz == divzz);
             CHECK(Rational<int>(5, 2) - divzz == divzz);
+
+            // ∞ - ∞ = NaN
+            CHECK(divz - divz == divzz);
+            // -∞ - -∞ = NaN
+            CHECK(ndivz - ndivz == divzz);
+            // +∞ - -∞ = +∞
+            CHECK(divz - ndivz == divz);
+            // -∞ - +∞ = -∞
+            CHECK(ndivz - divz == ndivz);
+            // x - NaN = NaN - x = NaN
+            CHECK(divz - divzz == divzz);
+            CHECK(divzz - divz == divzz);
+            CHECK(ndivz - divzz == divzz);
+            CHECK(divzz - ndivz == divzz);
+            CHECK(divzz - divzz == divzz);
         }
         SECTION("Member Subtraction")
         {
@@ -927,6 +1072,92 @@ TEST_CASE("Rational")
             r = Rational<int>(5, 2);
             r -= divzz;
             CHECK(r == divzz);
+
+            // ∞ - ∞ = NaN
+            r = divz;
+            r -= divz;
+            CHECK(r == divzz);
+            // -∞ - -∞ = NaN
+            r = ndivz;
+            r -= ndivz;
+            CHECK(r == divzz);
+            // +∞ - -∞ = +∞
+            r = divz;
+            r -= ndivz;
+            CHECK(r == divz);
+            // -∞ - +∞ = -∞
+            r = ndivz;
+            r -= divz;
+            CHECK(r == ndivz);
+            // x - NaN = NaN - x = NaN
+            r = divz;
+            r -= divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r -= divz;
+            CHECK(r == divzz);
+            r = ndivz;
+            r -= divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r -= ndivz;
+            CHECK(r == divzz);
+            r = divzz;
+            r -= divzz;
+            CHECK(r == divzz);
+        }
+        SECTION("Integer Subtraction")
+        {
+            CHECK(divz - 0 == divz);
+            CHECK(divz - 1000 == divz);
+            CHECK(divz - (-1000) == divz);
+            CHECK(ndivz - 0 == ndivz);
+            CHECK(ndivz - (-1000) == ndivz);
+            CHECK(ndivz - 1000 == ndivz);
+            CHECK(divzz - 0 == divzz);
+            CHECK(divzz - 1000 == divzz);
+            CHECK(divzz - (-1000) == divzz);
+
+            CHECK(0 - divz == ndivz);
+            CHECK(1000 - divz == ndivz);
+            CHECK((-1000) - divz == ndivz);
+            CHECK(0 - ndivz == divz);
+            CHECK(1000 - ndivz == divz);
+            CHECK((-1000) - ndivz == divz);
+            CHECK(0 - divzz == divzz);
+            CHECK(1000 - divzz == divzz);
+            CHECK((-1000) - divzz == divzz);
+        }
+        SECTION("Integer Subtraction Member")
+        {
+            Rational<int> r;
+            r = divz;
+            r -= 0;
+            CHECK(r == divz);
+            r = divz;
+            r -= 1000;
+            CHECK(r == divz);
+            r = divz;
+            r -= (-1000);
+            CHECK(r == divz);
+            r = ndivz;
+            r -= 0;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r -= 1000;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r -= (-1000);
+            CHECK(r == ndivz);
+            r = divzz;
+            r -= 0;
+            CHECK(r == divzz);
+            r = divzz;
+            r -= 1000;
+            CHECK(r == divzz);
+            r = divzz;
+            r -= (-1000);
+            CHECK(r == divzz);
         }
         SECTION("Multiplication")
         {
@@ -935,26 +1166,47 @@ TEST_CASE("Rational")
             CHECK(divz * Rational<int>(2, 3) == divz);
             CHECK(divz * Rational<int>(-1, 3) == ndivz);
             CHECK(divz * Rational<int>(5, 2) == divz);
+            CHECK(divz * Rational<int>(0, 1) == divzz);
 
             CHECK(Rational<int>(2, 3) * divz == divz);
             CHECK(Rational<int>(-1, 3) * divz == ndivz);
             CHECK(Rational<int>(5, 2) * divz == divz);
+            CHECK(Rational<int>(0, 1) * divz == divzz);
 
             CHECK(ndivz * Rational<int>(2, 3) == ndivz);
             CHECK(ndivz * Rational<int>(-1, 3) == divz);
             CHECK(ndivz * Rational<int>(5, 2) == ndivz);
+            CHECK(ndivz * Rational<int>(0, 1) == divzz);
 
             CHECK(Rational<int>(2, 3) * ndivz == ndivz);
             CHECK(Rational<int>(-1, 3) * ndivz == divz);
             CHECK(Rational<int>(5, 2) * ndivz == ndivz);
+            CHECK(Rational<int>(0, 1) * ndivz == divzz);
 
             CHECK(divzz * Rational<int>(2, 3) == divzz);
             CHECK(divzz * Rational<int>(-1, 3) == divzz);
             CHECK(divzz * Rational<int>(5, 2) == divzz);
+            CHECK(divzz * Rational<int>(0, 1) == divzz);
 
             CHECK(Rational<int>(2, 3) * divzz == divzz);
             CHECK(Rational<int>(-1, 3) * divzz == divzz);
             CHECK(Rational<int>(5, 2) * divzz == divzz);
+            CHECK(Rational<int>(0, 1) * divzz == divzz);
+
+            // ∞ * ∞ = ∞
+            CHECK(divz * divz == divz);
+            // -∞ * -∞ = ∞
+            CHECK(ndivz * ndivz == divz);
+            // +∞ * -∞ = -∞
+            CHECK(divz * ndivz == ndivz);
+            // -∞ * +∞ = -∞
+            CHECK(ndivz * divz == ndivz);
+            // x * NaN = NaN * x = NaN
+            CHECK(divz * divzz == divzz);
+            CHECK(divzz * divz == divzz);
+            CHECK(ndivz * divzz == divzz);
+            CHECK(divzz * ndivz == divzz);
+            CHECK(divzz * divzz == divzz);
         }
         SECTION("Member Multiplication")
         {
@@ -966,6 +1218,9 @@ TEST_CASE("Rational")
             r = divz;
             r *= Rational<int>(5, 2);
             REQUIRE(r == divz);
+            r = divz;
+            r *= Rational<int>(0, 1);
+            REQUIRE(r == divzz);
 
             r = Rational<int>(2, 3);
             r *= divz;
@@ -976,6 +1231,9 @@ TEST_CASE("Rational")
             r = Rational<int>(5, 2);
             r *= divz;
             CHECK(r == divz);
+            r = Rational<int>(0, 1);
+            r *= divz;
+            CHECK(r == divzz);
 
             r = ndivz;
             r *= Rational<int>(2, 3);
@@ -985,6 +1243,9 @@ TEST_CASE("Rational")
             r = ndivz;
             r *= Rational<int>(5, 2);
             REQUIRE(r == ndivz);
+            r = ndivz;
+            r *= Rational<int>(0, 1);
+            REQUIRE(r == divzz);
 
             r = Rational<int>(2, 3);
             r *= ndivz;
@@ -995,6 +1256,9 @@ TEST_CASE("Rational")
             r = Rational<int>(5, 2);
             r *= ndivz;
             CHECK(r == ndivz);
+            r = Rational<int>(0, 1);
+            r *= ndivz;
+            CHECK(r == divzz);
 
 
             r = divzz;
@@ -1003,6 +1267,9 @@ TEST_CASE("Rational")
             r *= Rational<int>(-1, 3);
             REQUIRE(r == divzz);
             r *= Rational<int>(5, 2);
+            REQUIRE(r == divzz);
+            r = divzz;
+            r *= Rational<int>(0, 1);
             REQUIRE(r == divzz);
 
             r = Rational<int>(2, 3);
@@ -1014,7 +1281,95 @@ TEST_CASE("Rational")
             r = Rational<int>(5, 2);
             r *= divzz;
             CHECK(r == divzz);
+            r = Rational<int>(0, 1);
+            r *= divzz;
+            CHECK(r == divzz);
 
+            // ∞ * ∞ = ∞
+            r = divz;
+            r *= divz;
+            CHECK(r == divz);
+            // -∞ * -∞ = +∞
+            r = ndivz;
+            r *= ndivz;
+            CHECK(r == divz);
+            // +∞ * -∞ = -∞
+            r = divz;
+            r *= ndivz;
+            CHECK(r == ndivz);
+            // -∞ * +∞ = -∞
+            r = ndivz;
+            r *= divz;
+            CHECK(r == ndivz);
+            // x * NaN = NaN * x = NaN
+            r = divz;
+            r *= divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r *= divz;
+            CHECK(r == divzz);
+            r = ndivz;
+            r *= divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r *= ndivz;
+            CHECK(r == divzz);
+            r = divzz;
+            r *= divzz;
+            CHECK(r == divzz);
+        }
+        SECTION("Integer Multiplication")
+        {
+            CHECK(divz * 0 == divzz);
+            CHECK(divz * 1000 == divz);
+            CHECK(divz * (-1000) == ndivz);
+            CHECK(ndivz * 0 == divzz);
+            CHECK(ndivz * 1000 == ndivz);
+            CHECK(ndivz * (-1000) == divz);
+            CHECK(divzz * 0 == divzz);
+            CHECK(divzz * 1000 == divzz);
+            CHECK(divzz * (-1000) == divzz);
+
+            CHECK(0 * divz == divzz);
+            CHECK(1000 * divz == divz);
+            CHECK((-1000) * divz == ndivz);
+            CHECK(0 * ndivz == divzz);
+            CHECK(1000 * ndivz == ndivz);
+            CHECK((-1000) * ndivz == divz);
+            CHECK(0 * divzz == divzz);
+            CHECK(1000 * divzz == divzz);
+            CHECK((-1000) * divzz == divzz);
+        }
+        SECTION("Integer Multiplication Member")
+        {
+            Rational<int> r;
+            r = divz;
+            r *= 0;
+            CHECK(r == divzz);
+            r = divz;
+            r *= 1000;
+            CHECK(r == divz);
+            r = divz;
+            r *= (-1000);
+            CHECK(r == ndivz);
+            r = ndivz;
+            r *= 0;
+            CHECK(r == divzz);
+            r = ndivz;
+            r *= 1000;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r *= (-1000);
+            CHECK(r == divz);
+            r = divzz;
+            r *= 0;
+            CHECK(r == divzz);
+            r = divzz;
+            r *= 1000;
+            CHECK(r == divzz);
+            r = divzz;
+            r *= (-1000);
+            CHECK(r == divzz);
         }
         SECTION("Division")
         {
@@ -1024,26 +1379,47 @@ TEST_CASE("Rational")
             CHECK(divz / Rational<int>(2, 3) == divz);
             CHECK(divz / Rational<int>(-1, 3) == ndivz);
             CHECK(divz / Rational<int>(5, 2) == divz);
+            CHECK(divz / Rational<int>(0, 1) == divz);
 
-            CHECK(Rational<int>(2, 3) / divz == Rational(0, 1));
-            CHECK(Rational<int>(-1, 3) / divz == Rational(0, 1));
-            CHECK(Rational<int>(5, 2) / divz == Rational(0, 1));
+            CHECK(Rational<int>(2, 3) / divz == Rational<int>(0, 1));
+            CHECK(Rational<int>(-1, 3) / divz == Rational<int>(0, 1));
+            CHECK(Rational<int>(5, 2) / divz == Rational<int>(0, 1));
+            CHECK(Rational<int>(0, 1) / divz == Rational<int>(0, 1));
 
             CHECK(ndivz / Rational<int>(2, 3) == ndivz);
             CHECK(ndivz / Rational<int>(-1, 3) == divz);
             CHECK(ndivz / Rational<int>(5, 2) == ndivz);
+            CHECK(ndivz / Rational<int>(0, 1) == ndivz);
 
-            CHECK(Rational<int>(2, 3) / ndivz == Rational(0, 1));
-            CHECK(Rational<int>(-1, 3) / ndivz == Rational(0, 1));
-            CHECK(Rational<int>(5, 2) / ndivz == Rational(0, 1));
+            CHECK(Rational<int>(2, 3) / ndivz == Rational<int>(0, 1));
+            CHECK(Rational<int>(-1, 3) / ndivz == Rational<int>(0, 1));
+            CHECK(Rational<int>(5, 2) / ndivz == Rational<int>(0, 1));
+            CHECK(Rational<int>(0, 1) / ndivz == Rational<int>(0, 1));
 
             CHECK(divzz / Rational<int>(2, 3) == divzz);
             CHECK(divzz / Rational<int>(-1, 3) == divzz);
             CHECK(divzz / Rational<int>(5, 2) == divzz);
+            CHECK(divzz / Rational<int>(0, 1) == divzz);
 
             CHECK(Rational<int>(2, 3) / divzz == divzz);
             CHECK(Rational<int>(-1, 3) / divzz == divzz);
             CHECK(Rational<int>(5, 2) / divzz == divzz);
+            CHECK(Rational<int>(0, 1) / divzz == divzz);
+
+            // ∞ / ∞ = NaN
+            CHECK(divz / divz == divzz);
+            // -∞ / -∞ = NaN
+            CHECK(ndivz / ndivz == divzz);
+            // +∞ / -∞ = NaN
+            CHECK(divz / ndivz == divzz);
+            // -∞ / +∞ = NaN
+            CHECK(ndivz / divz == divzz);
+            // x * NaN = NaN * x = NaN
+            CHECK(divz / divzz == divzz);
+            CHECK(divzz / divz == divzz);
+            CHECK(ndivz / divzz == divzz);
+            CHECK(divzz / ndivz == divzz);
+            CHECK(divzz / divzz == divzz);
         }
         SECTION("Member Division")
         {
@@ -1102,6 +1478,92 @@ TEST_CASE("Rational")
             CHECK(r == divzz);
             r = Rational<int>(5, 2);
             r /= divzz;
+            CHECK(r == divzz);
+
+            // ∞ / ∞ = NaN
+            r = divz;
+            r /= divz;
+            CHECK(r == divzz);
+            // -∞ / -∞ = NaN
+            r = ndivz;
+            r /= ndivz;
+            CHECK(r == divzz);
+            // +∞ / -∞ = NaN
+            r = divz;
+            r /= ndivz;
+            CHECK(r == divzz);
+            // -∞ / +∞ = NaN
+            r = ndivz;
+            r /= divz;
+            CHECK(r == divzz);
+            // x / NaN = NaN * x = NaN
+            r = divz;
+            r /= divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r /= divz;
+            CHECK(r == divzz);
+            r = ndivz;
+            r /= divzz;
+            CHECK(r == divzz);
+            r = divzz;
+            r /= ndivz;
+            CHECK(r == divzz);
+            r = divzz;
+            r /= divzz;
+            CHECK(r == divzz);
+        }
+        SECTION("Integer Division")
+        {
+            CHECK(divz / 0 == divz);
+            CHECK(divz / 1000 == divz);
+            CHECK(divz / (-1000) == ndivz);
+            CHECK(ndivz / 0 == ndivz);
+            CHECK(ndivz / 1000 == ndivz);
+            CHECK(ndivz / (-1000) == divz);
+            CHECK(divzz / 0 == divzz);
+            CHECK(divzz / 1000 == divzz);
+            CHECK(divzz / (-1000) == divzz);
+
+            CHECK(0 / divz == Rational<int>(0, 1));
+            CHECK(1000 / divz == Rational<int>(0, 1));
+            CHECK((-1000) / divz == Rational<int>(0, 1));
+            CHECK(0 / ndivz == Rational<int>(0, 1));
+            CHECK(1000 / ndivz == Rational<int>(0, 1));
+            CHECK((-1000) / ndivz == Rational<int>(0, 1));
+            CHECK(0 / divzz == divzz);
+            CHECK(1000 / divzz == divzz);
+            CHECK((-1000) / divzz == divzz);
+        }
+        SECTION("Integer Division Member")
+        {
+            Rational<int> r;
+            r = divz;
+            r /= 0;
+            CHECK(r == divz);
+            r = divz;
+            r /= 1000;
+            CHECK(r == divz);
+            r = divz;
+            r /= (-1000);
+            CHECK(r == ndivz);
+            r = ndivz;
+            r /= 0;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r /= 1000;
+            CHECK(r == ndivz);
+            r = ndivz;
+            r /= (-1000);
+            CHECK(r == divz);
+            r = divzz;
+            r /= 0;
+            CHECK(r == divzz);
+            r = divzz;
+            r /= 1000;
+            CHECK(r == divzz);
+            r = divzz;
+            r /= (-1000);
             CHECK(r == divzz);
         }
     }

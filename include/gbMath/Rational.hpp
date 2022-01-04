@@ -20,6 +20,8 @@ template<typename T>
 class Rational {
     static_assert(std::is_integral_v<T>, "Rational requires integral type");
     static_assert(!std::is_same_v<T, bool>, "Rational cannot be instantiated with bool");
+public:
+    using ValueType = T;
 private:
     T num;
     T denom;
@@ -162,11 +164,14 @@ public:
         if (d1 == 1) {
             ret.num = lhs.numerator() * rhs.denominator() + lhs.denominator() * rhs.numerator();
             ret.denom = lhs.denominator() * rhs.denominator();
-        } else {
+        } else if (d1 != 0) {
             auto const t = lhs.numerator() * (rhs.denominator() / d1) + rhs.numerator() * (lhs.denominator() / d1);
             auto const d2 = gcd(t, d1);
             ret.num = static_cast<T>(t / d2);
             ret.denom = static_cast<T>((lhs.denominator() / d1) * (rhs.denominator() / d2));
+        } else [[unlikely]] {
+            ret.num = (lhs.numerator() == rhs.numerator()) ? lhs.numerator() : 0;
+            ret.denom = 0;
         }
         return ret;
     }
@@ -178,11 +183,13 @@ public:
         if (d1 == 1) {
             num = numerator() * rhs.denominator() + denominator() * rhs.numerator();
             denom = denominator() * rhs.denominator();
-        } else {
+        } else if (d1 != 0) {
             auto const t = numerator() * (rhs.denominator() / d1) + rhs.numerator() * (denominator() / d1);
             auto const d2 = gcd(t, d1);
             num = static_cast<T>(t / d2);
             denom = static_cast<T>((denominator() / d1) * (rhs.denominator() / d2));
+        } else [[unlikely]] {
+            if (numerator() != rhs.numerator()) { num = 0; }
         }
         return *this;
     }
@@ -217,11 +224,18 @@ public:
         if (d1 == 1) {
             ret.num = lhs.numerator() * rhs.denominator() - lhs.denominator() * rhs.numerator();
             ret.denom = lhs.denominator() * rhs.denominator();
-        } else {
+        } else if (d1 != 0) {
             auto const t = lhs.numerator() * (rhs.denominator() / d1) - rhs.numerator() * (lhs.denominator() / d1);
             auto const d2 = gcd(t, d1);
             ret.num = static_cast<T>(t / d2);
             ret.denom = static_cast<T>((lhs.denominator() / d1) * (rhs.denominator() / d2));
+        } else [[unlikely]] {
+            if (lhs.numerator() + rhs.numerator() != 0) {
+                ret.num = 0;
+            } else {
+                ret.num = lhs.numerator();
+            }
+            ret.denom = 0;
         }
         return ret;
     }
@@ -233,11 +247,15 @@ public:
         if (d1 == 1) {
             num = numerator() * rhs.denominator() - denominator() * rhs.numerator();
             denom = denominator() * rhs.denominator();
-        } else {
+        } else if (d1 != 0) {
             auto const t = numerator() * (rhs.denominator() / d1) - rhs.numerator() * (denominator() / d1);
             auto const d2 = gcd(t, d1);
             num = static_cast<T>(t / d2);
             denom = static_cast<T>((denominator() / d1) * (rhs.denominator() / d2));
+        } else [[unlikely]] {
+            if (numerator() + rhs.numerator() != 0) {
+                num = 0;
+            }
         }
         return *this;
     }
@@ -270,8 +288,13 @@ public:
         auto const d1 = gcd(lhs.numerator(), rhs.denominator());
         auto const d2 = gcd(lhs.denominator(), rhs.numerator());
         Rational<T> ret;
-        ret.num = static_cast<T>((lhs.numerator() / d1) * (rhs.numerator() / d2));
-        ret.denom = static_cast<T>((lhs.denominator() / d2) * (rhs.denominator() / d1));
+        if ((d1 != 0) && (d2 != 0)) {
+            ret.num = static_cast<T>((lhs.numerator() / d1) * (rhs.numerator() / d2));
+            ret.denom = static_cast<T>((lhs.denominator() / d2) * (rhs.denominator() / d1));
+        } else [[unlikely]] {
+            ret.num = 0;
+            ret.denom = 0;
+        }
         return ret;
     }
 
@@ -280,8 +303,13 @@ public:
         using std::gcd;
         auto const d1 = gcd(numerator(), rhs.denominator());
         auto const d2 = gcd(denominator(), rhs.numerator());
-        num = static_cast<T>((numerator() / d1) * (rhs.numerator() / d2));
-        denom = static_cast<T>((denominator() / d2) * (rhs.denominator() / d1));
+        if ((d1 != 0) && (d2 != 0)) {
+            num = static_cast<T>((numerator() / d1) * (rhs.numerator() / d2));
+            denom = static_cast<T>((denominator() / d2) * (rhs.denominator() / d1));
+        } else [[unlikely]] {
+            num = 0;
+            denom = 0;
+        }
         return *this;
     }
 
@@ -290,8 +318,13 @@ public:
         using std::gcd;
         auto const d2 = gcd(lhs.denominator(), i);
         Rational<T> ret;
-        ret.num = static_cast<T>(lhs.numerator() * (i / d2));
-        ret.denom = static_cast<T>(lhs.denominator() / d2);
+        if (d2 != 0) {
+            ret.num = static_cast<T>(lhs.numerator() * (i / d2));
+            ret.denom = static_cast<T>(lhs.denominator() / d2);
+        } else [[unlikely]] {
+            ret.num = 0;
+            ret.denom = 0;
+        }
         return ret;
     }
 
@@ -299,8 +332,12 @@ public:
     {
         using std::gcd;
         auto const d2 = gcd(denominator(), i);
-        num *= (i / d2);
-        denom /= d2;
+        if (d2 != 0) {
+            num *= (i / d2);
+            denom /= d2;
+        } else [[unlikely]] {
+            num = 0;
+        }
         return *this;
     }
 
@@ -309,8 +346,13 @@ public:
         using std::gcd;
         auto const d1 = gcd(i, rhs.denominator());
         Rational<T> ret;
-        ret.num = static_cast<T>((i / d1) * rhs.numerator());
-        ret.denom = static_cast<T>(rhs.denominator() / d1);
+        if (d1 != 0) {
+            ret.num = static_cast<T>((i / d1) * rhs.numerator());
+            ret.denom = static_cast<T>(rhs.denominator() / d1);
+        } else [[unlikely]] {
+            ret.num = 0;
+            ret.denom = 0;
+        }
         return ret;
     }
 
@@ -320,8 +362,13 @@ public:
         auto const d1 = gcd(lhs.numerator(), rhs.numerator()) * ((rhs.numerator() < 0) ? -1 : 1);
         auto const d2 = gcd(lhs.denominator(), rhs.denominator());
         Rational<T> ret;
-        ret.num = static_cast<T>((lhs.numerator() / d1) * (rhs.denominator() / d2));
-        ret.denom = static_cast<T>((lhs.denominator() / d2) * (rhs.numerator() / d1));
+        if ((d1 != 0) && (d2 != 0)) {
+            ret.num = static_cast<T>((lhs.numerator() / d1) * (rhs.denominator() / d2));
+            ret.denom = static_cast<T>((lhs.denominator() / d2) * (rhs.numerator() / d1));
+        } else [[unlikely]] {
+            ret.num = 0;
+            ret.denom = 0;
+        }
         return ret;
     }
 
@@ -330,8 +377,12 @@ public:
         using std::gcd;
         auto const d1 = gcd(numerator(), rhs.numerator()) * ((rhs.numerator() < 0) ? -1 : 1);
         auto const d2 = gcd(denominator(), rhs.denominator());
-        num = static_cast<T>((numerator() / d1) * (rhs.denominator() / d2));
-        denom = static_cast<T>((denominator() / d2) * (rhs.numerator() / d1));
+        if ((d1 != 0) && (d2 != 0)) {
+            num = static_cast<T>((numerator() / d1) * (rhs.denominator() / d2));
+            denom = static_cast<T>((denominator() / d2) * (rhs.numerator() / d1));
+        } else [[unlikely]] {
+            num = 0;
+        }
         return *this;
     }
 
@@ -340,8 +391,13 @@ public:
         using std::gcd;
         auto const d1 = gcd(lhs.numerator(), i) * ((i < 0) ? -1 : 1);
         Rational<T> ret;
-        ret.num = static_cast<T>((lhs.numerator() / d1));
-        ret.denom = static_cast<T>(lhs.denominator() * (i / d1));
+        if (d1 != 0) {
+            ret.num = static_cast<T>((lhs.numerator() / d1));
+            ret.denom = static_cast<T>(lhs.denominator() * (i / d1));
+        } else [[unlikely]] {
+            ret.num = 0;
+            ret.denom = 0;
+        }
         return ret;
     }
 
@@ -349,8 +405,12 @@ public:
     {
         using std::gcd;
         auto const d1 = gcd(numerator(), i) * ((i < 0) ? -1 : 1);
-        num /= d1;
-        denom *= (i / d1);
+        if (d1 != 0) {
+            num /= d1;
+            denom *= (i / d1);
+        } else [[unlikely]] {
+            num = 0;
+        }
         return *this;
     }
 
@@ -359,8 +419,13 @@ public:
         using std::gcd;
         auto const d1 = gcd(i, rhs.numerator()) * ((rhs.numerator() < 0) ? -1 : 1);
         Rational<T> ret;
-        ret.num = static_cast<T>((i / d1) * rhs.denominator());
-        ret.denom = static_cast<T>((rhs.numerator() / d1));
+        if (d1 != 0) {
+            ret.num = static_cast<T>((i / d1) * rhs.denominator());
+            ret.denom = static_cast<T>((rhs.numerator() / d1));
+        } else [[unlikely]] {
+            ret.num = 0;
+            ret.denom = 0;
+        }
         return ret;
     }
 };
