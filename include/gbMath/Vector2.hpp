@@ -9,13 +9,13 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/VectorTraits.hpp>
 
 #include <cmath>
 #include <concepts>
 #include <cstdint>
-#include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
@@ -57,7 +57,11 @@ public:
     T x;
     T y;
 
-    constexpr Vector2Impl() = default;
+    constexpr Vector2Impl()
+        :x{}, y{}
+    {}
+    constexpr Vector2Impl(DoNotInitialize_Tag)
+    {}
     constexpr Vector2Impl(Vector2Impl<T, Tag> const&) = default;
     constexpr Vector2Impl<T, Tag>& operator=(Vector2Impl<T, Tag> const&) = default;
 

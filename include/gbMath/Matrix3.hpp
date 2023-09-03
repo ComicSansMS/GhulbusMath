@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/MatrixPolicies.hpp>
 #include <gbMath/Vector3.hpp>
@@ -28,7 +29,13 @@ public:
     T m21, m22, m23;
     T m31, m32, m33;
 
-    Matrix3() = default;
+    Matrix3()
+        :m11{}, m12{}, m13{},
+         m21{}, m22{}, m23{},
+         m31{}, m32{}, m33{}
+    {}
+    Matrix3(DoNotInitialize_Tag)
+    {}
     Matrix3(Matrix3 const&) = default;
     Matrix3& operator=(Matrix3 const&) = default;
 

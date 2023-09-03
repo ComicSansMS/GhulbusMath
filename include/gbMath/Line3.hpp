@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/Vector3.hpp>
 
 namespace GHULBUS_MATH_NAMESPACE
@@ -20,6 +21,9 @@ public:
     Vector3<T> v;
 public:
     Line3() = default;
+    Line3(DoNotInitialize_Tag)
+        :p(doNotInitialize), v(doNotInitialize)
+    {}
     Line3(Line3<T> const&) = default;
     Line3<T>& operator=(Line3<T> const&) = default;
 

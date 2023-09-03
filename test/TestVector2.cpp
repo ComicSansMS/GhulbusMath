@@ -13,7 +13,27 @@ TEST_CASE("Vector2")
     using GHULBUS_MATH_NAMESPACE::Normal2;
     using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
     using Catch::Approx;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Vector2<float> v;
+
+        CHECK(v.x == 0.0f);
+        CHECK(v.y == 0.0f);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Vector2<float> v(doNotInitialize);
+
+        v.x = 1.f;
+        v.y = 2.f;
+
+        CHECK(v.x == 1.0f);
+        CHECK(v.y == 2.0f);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

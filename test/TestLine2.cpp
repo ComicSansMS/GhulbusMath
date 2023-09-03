@@ -15,7 +15,25 @@ TEST_CASE("Line2")
     using GHULBUS_MATH_NAMESPACE::Line2;
     using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
     using Catch::Approx;
+
+    SECTION("Default Initialization")
+    {
+        Line2<float> l;
+        CHECK(l.p == Point2<float>(0.f, 0.f));
+        CHECK(l.v == Vector2<float>(0.f, 0.f));
+    }
+
+    SECTION("Uninitialized Construction")
+    {
+        Line2<float> l(doNotInitialize);
+
+        l.p = Point2<float>(1.f, 2.f);
+        CHECK(l.p == Point2<float>(1.f, 2.f));
+        l.v = Vector2<float>(3.f, 4.f);
+        CHECK(l.v == Vector2<float>(3.f, 4.f));
+    }
 
     SECTION("Zero Initialization")
     {

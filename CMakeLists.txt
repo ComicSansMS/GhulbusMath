@@ -42,6 +42,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Basis3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Circle2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Color4.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/Common.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/ComponentVector3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line3.hpp
@@ -75,6 +76,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestBasis3.cpp
     ${GB_MATH_TEST_DIR}/TestCircle2.cpp
     ${GB_MATH_TEST_DIR}/TestColor4.cpp
+    ${GB_MATH_TEST_DIR}/TestCommon.cpp
     ${GB_MATH_TEST_DIR}/TestComponentVector3.cpp
     ${GB_MATH_TEST_DIR}/TestLine2.cpp
     ${GB_MATH_TEST_DIR}/TestLine3.cpp
@@ -113,6 +115,7 @@ target_compile_options(gbMath INTERFACE $<$<CXX_COMPILER_ID:GNU>:-pedantic -Wall
 
 add_library(gbMath_Sources EXCLUDE_FROM_ALL)
 target_sources(gbMath_Sources PRIVATE ${GB_MATH_HEADER_FILES} ${PROJECT_SOURCE_DIR}/src/gbMath.cpp)
+target_include_directories(gbMath_Sources PRIVATE ${GB_MATH_INCLUDE_DIR})
 
 ###############################################################################
 ## Testing gbMath

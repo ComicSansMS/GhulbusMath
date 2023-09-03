@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/VectorTraits.hpp>
 
@@ -58,7 +59,11 @@ public:
     T y;
     T z;
 
-    Vector3Impl() = default;
+    Vector3Impl()
+        :x{}, y{}, z{}
+    {}
+    Vector3Impl(DoNotInitialize_Tag)
+    {}
     Vector3Impl(Vector3Impl<T, Tag> const&) = default;
     Vector3Impl<T, Tag>& operator=(Vector3Impl<T, Tag> const&) = default;
 

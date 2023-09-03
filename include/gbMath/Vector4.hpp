@@ -9,6 +9,8 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
+
 #include <cmath>
 #include <type_traits>
 
@@ -34,7 +36,11 @@ public:
     T z;
     T w;
 
-    Vector4() = default;
+    Vector4()
+        :x{}, y{}, z{}, w{}
+    {}
+    Vector4(DoNotInitialize_Tag)
+    {}
     Vector4(Vector4<T> const&) = default;
     Vector4<T>& operator=(Vector4<T> const&) = default;
 

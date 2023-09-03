@@ -7,6 +7,46 @@
 TEST_CASE("Matrix3")
 {
     using GHULBUS_MATH_NAMESPACE::Matrix3;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default construction initializes to 0")
+    {
+        Matrix3<float> const m;
+
+        CHECK(m.m11 == 0.0f);
+        CHECK(m.m12 == 0.0f);
+        CHECK(m.m13 == 0.0f);
+        CHECK(m.m21 == 0.0f);
+        CHECK(m.m22 == 0.0f);
+        CHECK(m.m23 == 0.0f);
+        CHECK(m.m31 == 0.0f);
+        CHECK(m.m32 == 0.0f);
+        CHECK(m.m33 == 0.0f);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Matrix3<float> m(doNotInitialize);
+
+        m.m11 = 1.f;
+        CHECK(m.m11 == 1.f);
+        m.m12 = 2.f;
+        CHECK(m.m12 == 2.f);
+        m.m13 = 3.f;
+        CHECK(m.m13 == 3.f);
+        m.m21 = 4.f;
+        CHECK(m.m21 == 4.f);
+        m.m22 = 5.f;
+        CHECK(m.m22 == 5.f);
+        m.m23 = 6.f;
+        CHECK(m.m23 == 6.f);
+        m.m31 = 7.f;
+        CHECK(m.m31 == 7.f);
+        m.m32 = 8.f;
+        CHECK(m.m32 == 8.f);
+        m.m33 = 9.f;
+        CHECK(m.m33 == 9.f);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

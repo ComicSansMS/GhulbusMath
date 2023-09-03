@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector4.hpp>
 
@@ -32,7 +33,11 @@ public:
     T b;
     T a;
 
-    Color4() = default;
+    Color4()
+        :r{}, g{}, b{}, a{}
+    {}
+    Color4(DoNotInitialize_Tag)
+    {}
     Color4(Color4 const&) = default;
     Color4& operator=(Color4 const&) = default;
 

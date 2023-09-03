@@ -12,6 +12,32 @@ TEST_CASE("OBB3")
     using GHULBUS_MATH_NAMESPACE::Matrix3;
     using GHULBUS_MATH_NAMESPACE::Point3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default construction initializes to 0")
+    {
+        OBB3<float> obb;
+        CHECK(obb.center == Point3<float>(0.f, 0.f, 0.f));
+        CHECK(obb.orientation == Matrix3<float>(0.f, 0.f, 0.f,
+                                                0.f, 0.f, 0.f,
+                                                0.f, 0.f, 0.f));
+        CHECK(obb.halfwidth == Vector3<float>(0.f, 0.f, 0.f));
+    }
+
+    SECTION("Constriction to uninitialized")
+    {
+        OBB3<float> obb{doNotInitialize};
+        obb.center = Point3<float>(1.f, 2.f, 3.f);
+        CHECK(obb.center == Point3<float>(1.f, 2.f, 3.f));
+        obb.orientation = Matrix3<float>(4.f, 5.f, 6.f,
+                                         7.f, 8.f, 9.f,
+                                         10.f, 11.f, 12.f);
+        CHECK(obb.orientation == Matrix3<float>(4.f, 5.f, 6.f,
+                                                7.f, 8.f, 9.f,
+                                                10.f, 11.f, 12.f));
+        obb.halfwidth = Vector3<float>(13.f, 14.f, 15.f);
+        CHECK(obb.halfwidth == Vector3<float>(13.f, 14.f, 15.f));
+    }
 
     SECTION("Value initialization initializes to 0")
     {

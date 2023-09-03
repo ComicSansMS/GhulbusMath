@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector2.hpp>
 
@@ -27,6 +28,9 @@ public:
     Point2<T> max;
 
     AABB2() = default;
+    AABB2(DoNotInitialize_Tag)
+        :min(doNotInitialize), max(doNotInitialize)
+    {}
     AABB2(AABB2 const&) = default;
     AABB2& operator=(AABB2 const&) = default;
 

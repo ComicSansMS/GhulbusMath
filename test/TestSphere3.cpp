@@ -11,6 +11,23 @@ TEST_CASE("Sphere3")
     using GHULBUS_MATH_NAMESPACE::Point3;
     using GHULBUS_MATH_NAMESPACE::Line3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Sphere3<int> sphere;
+        CHECK(sphere.center == Point3<int>(0, 0, 0));
+        CHECK(sphere.radius == 0);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Sphere3<int> sphere{doNotInitialize};
+        sphere.center = Point3<int>(0, 0, 0);
+        CHECK(sphere.center == Point3<int>(0, 0, 0));
+        sphere.radius = 0;
+        CHECK(sphere.radius == 0);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

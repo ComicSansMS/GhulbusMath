@@ -11,6 +11,32 @@
 TEST_CASE("Vector4")
 {
     using GHULBUS_MATH_NAMESPACE::Vector4;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Vector4<float> v;
+
+        CHECK(v.x == 0.0f);
+        CHECK(v.y == 0.0f);
+        CHECK(v.z == 0.0f);
+        CHECK(v.w == 0.0f);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Vector4<float> v(doNotInitialize);
+
+        v.x = 1.f;
+        v.y = 2.f;
+        v.z = 3.f;
+        v.w = 4.f;
+
+        CHECK(v.x == 1.0f);
+        CHECK(v.y == 2.0f);
+        CHECK(v.z == 3.0f);
+        CHECK(v.w == 4.0f);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

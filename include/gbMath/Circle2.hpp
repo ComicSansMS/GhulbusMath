@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/Line2.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector2.hpp>
@@ -27,7 +28,12 @@ public:
     Point2<T> center;
     T radius;
 
-    Circle2() = default;
+    Circle2()
+        :center{}, radius{}
+    {}
+    Circle2(DoNotInitialize_Tag)
+        :center(doNotInitialize)
+    {}
     Circle2(Circle2 const&) = default;
     Circle2& operator=(Circle2 const&) = default;
 

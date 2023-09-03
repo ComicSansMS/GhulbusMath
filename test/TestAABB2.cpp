@@ -8,6 +8,25 @@ TEST_CASE("AABB2")
     using GHULBUS_MATH_NAMESPACE::AABB2;
     using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        AABB2<int> aabb;
+
+        CHECK(aabb.min == Point2<int>(0, 0));
+        CHECK(aabb.max == Point2<int>(0, 0));
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        AABB2<int> aabb(doNotInitialize);
+
+        aabb.min = Point2<int>(1, 2);
+        CHECK(aabb.min == Point2<int>(1, 2));
+        aabb.max = Point2<int>(3, 4);
+        CHECK(aabb.max == Point2<int>(3, 4));
+    }
 
     SECTION("Value initialization initializes to 0")
     {

@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/Matrix3.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector3.hpp>
@@ -28,6 +29,9 @@ public:
     Vector3<T> halfwidth;
 
     OBB3() = default;
+    OBB3(DoNotInitialize_Tag)
+        :center(doNotInitialize), orientation(doNotInitialize), halfwidth(doNotInitialize)
+    {}
     OBB3(OBB3 const&) = default;
     OBB3& operator=(OBB3 const&) = default;
 

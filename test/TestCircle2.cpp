@@ -11,7 +11,26 @@ TEST_CASE("Circle2")
     using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Line2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
     using Catch::Approx;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Circle2<int> circle;
+
+        CHECK(circle.center == Point2<int>(0, 0));
+        CHECK(circle.radius == 0);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Circle2<int> circle(doNotInitialize);
+
+        circle.center = Point2<int>(1, 2);
+        CHECK(circle.center == Point2<int>(1, 2));
+        circle.radius = 3;
+        CHECK(circle.radius == 3);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

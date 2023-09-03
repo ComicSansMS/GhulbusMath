@@ -10,6 +10,32 @@
 TEST_CASE("Color4")
 {
     using GHULBUS_MATH_NAMESPACE::Color4;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Color4 <float> c;
+
+        CHECK(c.r == 0.0f);
+        CHECK(c.g == 0.0f);
+        CHECK(c.b == 0.0f);
+        CHECK(c.a == 0.0f);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Color4<float> c(doNotInitialize);
+
+        c.r = 1.f;
+        c.g = 2.f;
+        c.b = 3.f;
+        c.a = 4.f;
+
+        CHECK(c.r == 1.0f);
+        CHECK(c.g == 2.0f);
+        CHECK(c.b == 3.0f);
+        CHECK(c.a == 4.0f);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

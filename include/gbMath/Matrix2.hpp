@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/MatrixPolicies.hpp>
 #include <gbMath/Vector2.hpp>
@@ -27,7 +28,12 @@ public:
     T m11, m12;
     T m21, m22;
 
-    Matrix2() = default;
+    Matrix2()
+        :m11{}, m12{},
+         m21{}, m22{}
+    {}
+    Matrix2(DoNotInitialize_Tag)
+    {}
     Matrix2(Matrix2 const&) = default;
     Matrix2& operator=(Matrix2 const&) = default;
 

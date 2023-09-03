@@ -7,6 +7,31 @@
 TEST_CASE("Matrix2")
 {
     using GHULBUS_MATH_NAMESPACE::Matrix2;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Matrix2<float> const m;
+
+        CHECK(m.m11 == 0.0f);
+        CHECK(m.m12 == 0.0f);
+        CHECK(m.m21 == 0.0f);
+        CHECK(m.m22 == 0.0f);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Matrix2<float> m(doNotInitialize);
+
+        m.m11 = 1.f;
+        CHECK(m.m11 == 1.f);
+        m.m12 = 2.f;
+        CHECK(m.m12 == 2.f);
+        m.m21 = 3.f;
+        CHECK(m.m21 == 3.f);
+        m.m22 = 4.f;
+        CHECK(m.m22 == 4.f);
+    }
 
     SECTION("Value initialization initializes to 0")
     {

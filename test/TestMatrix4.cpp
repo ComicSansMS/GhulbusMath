@@ -10,6 +10,68 @@
 TEST_CASE("Matrix4")
 {
     using GHULBUS_MATH_NAMESPACE::Matrix4;
+    using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+
+    SECTION("Default constructor initializes to 0")
+    {
+        Matrix4<float> const m;
+
+        CHECK(m.m11 == 0.0f);
+        CHECK(m.m12 == 0.0f);
+        CHECK(m.m13 == 0.0f);
+        CHECK(m.m14 == 0.0f);
+        CHECK(m.m21 == 0.0f);
+        CHECK(m.m22 == 0.0f);
+        CHECK(m.m23 == 0.0f);
+        CHECK(m.m24 == 0.0f);
+        CHECK(m.m31 == 0.0f);
+        CHECK(m.m32 == 0.0f);
+        CHECK(m.m33 == 0.0f);
+        CHECK(m.m34 == 0.0f);
+        CHECK(m.m41 == 0.0f);
+        CHECK(m.m42 == 0.0f);
+        CHECK(m.m43 == 0.0f);
+        CHECK(m.m44 == 0.0f);
+    }
+
+    SECTION("Construction to uninitialized")
+    {
+        Matrix4<float> m{doNotInitialize};
+
+        m.m11 = 1.0f;
+        CHECK(m.m11 == 1.0f);
+        m.m12 = 2.0f;
+        CHECK(m.m12 == 2.0f);
+        m.m13 = 3.0f;
+        CHECK(m.m13 == 3.0f);
+        m.m14 = 4.0f;
+        CHECK(m.m14 == 4.0f);
+        m.m21 = 5.0f;
+        CHECK(m.m21 == 5.0f);
+        m.m22 = 6.0f;
+        CHECK(m.m22 == 6.0f);
+        m.m23 = 7.0f;
+        CHECK(m.m23 == 7.0f);
+        m.m24 = 8.0f;
+        CHECK(m.m24 == 8.0f);
+        m.m31 = 9.0f;
+        CHECK(m.m31 == 9.0f);
+        m.m32 = 10.0f;
+        CHECK(m.m32 == 10.0f);
+        m.m33 = 11.0f;
+        CHECK(m.m33 == 11.0f);
+        m.m34 = 12.0f;
+        CHECK(m.m34 == 12.0f);
+        m.m41 = 13.0f;
+        CHECK(m.m41 == 13.0f);
+        m.m42 = 14.0f;
+        CHECK(m.m42 == 14.0f);
+        m.m43 = 15.0f;
+        CHECK(m.m43 == 15.0f);
+        m.m44 = 16.0f;
+        CHECK(m.m44 == 16.0f);
+    }
+
 
     SECTION("Value initialization initializes to 0")
     {

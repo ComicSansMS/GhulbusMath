@@ -9,6 +9,7 @@
 
 #include <gbMath/config.hpp>
 
+#include <gbMath/Common.hpp>
 #include <gbMath/Line3.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/Vector3.hpp>
@@ -28,7 +29,12 @@ public:
     Point3<T> center;
     T radius;
 
-    Sphere3() = default;
+    Sphere3()
+        :center{}, radius{}
+    {}
+    Sphere3(DoNotInitialize_Tag)
+        :center(doNotInitialize)
+    {}
     Sphere3(Sphere3 const&) = default;
     Sphere3& operator=(Sphere3 const&) = default;
 
