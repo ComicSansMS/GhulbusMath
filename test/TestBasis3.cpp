@@ -49,6 +49,16 @@ TEST_CASE("Basis3")
         CHECK(b.fromComponentVector(ComponentVector3<float>(0.f, -5.f, 4.f)) == Vector3<float>(-1.f, -1.f, 4.f));
     }
 
+    SECTION("Transform Vector into Basis")
+    {
+        Basis3<float> b(Vector3<float>(4.f, 0.f, 0.f), Vector3<float>(3.f, 5.f, 0.f), Vector3<float>(0.f, 0.f, 1.f));
+        ComponentVector3<float> cv = b.toComponentVector(Vector3<float>(2.f, 10.f, 0.f));
+        CHECK(cv.x == -1.f);
+        CHECK(cv.y == 2.f);
+        CHECK(cv.z == 0.f);
+        CHECK(b.fromComponentVector(cv) == Vector3<float>(2.f, 10.f, 0.f));
+    }
+
     SECTION("Contravariant Bases")
     {
         Basis3<float> b(Vector3<float>(1.f, 0.f, 0.f), Vector3<float>(1.f, 1.f, 0.f), Vector3<float>(1.f, 1.f, 1.f));

@@ -20,13 +20,15 @@ template<typename T>
 class Basis3 {
 private:
     Matrix3<T> m_rowMatrix;
+    Matrix3<T> m_inverseTransposeRowMatrix;
 public:
     Basis3()
-        :m_rowMatrix(identity3<T>())
+        :m_rowMatrix(identity3<T>()), m_inverseTransposeRowMatrix(identity3<T>())
     {}
 
     Basis3(Vector3<T> const& x, Vector3<T> const& y, Vector3<T> const& z)
-        :m_rowMatrix(x.x, x.y, x.z, y.x, y.y, y.z, z.x, z.y, z.z)
+        :m_rowMatrix(x.x, x.y, x.z, y.x, y.y, y.z, z.x, z.y, z.z),
+         m_inverseTransposeRowMatrix(transpose(inverse(m_rowMatrix)))
     {}
 
     Vector3<T> x() const {
@@ -53,10 +55,16 @@ public:
         return (cv.x * x() + cv.y * y() + cv.z * z());
     }
 
+    ComponentVector3<T> toComponentVector(Vector3<T> const& v) const {
+        auto const r = m_inverseTransposeRowMatrix * v;
+        return ComponentVector3<T>(r.x, r.y, r.z);
+    }
+
     template <typename TT>
     friend inline Basis3<TT> contravariant(Basis3<TT> const& b) {
         Basis3<TT> ret;
-        ret.m_rowMatrix = inverse(b.m_rowMatrix);
+        ret.m_rowMatrix = transpose(b.m_inverseTransposeRowMatrix);
+        ret.m_inverseTransposeRowMatrix = transpose(b.m_rowMatrix);
         return ret;
     }
 };
