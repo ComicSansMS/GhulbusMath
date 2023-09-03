@@ -122,6 +122,7 @@ target_include_directories(gbMath_Sources PRIVATE ${GB_MATH_INCLUDE_DIR})
 ###############################################################################
 
 option(GB_BUILD_TESTS "Determines whether to build tests." ON)
+option(GB_RUN_TESTS_AFTER_BUILD "If set, automatically runs unit tests after building them." OFF)
 if(GB_BUILD_TESTS)
     enable_testing()
 
@@ -163,6 +164,15 @@ if(GB_BUILD_TESTS)
     )
     target_link_libraries(gbMath_Test gbMath Catch2)
     add_test(NAME TestMath COMMAND gbMath_Test)
+    if(GB_RUN_TESTS_AFTER_BUILD)
+        add_custom_command(
+            TARGET gbMath_Test
+            COMMENT "Run tests"
+            POST_BUILD
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --output-on-failures
+        )
+    endif()
 
     if(GB_GENERATE_COVERAGE_INFO AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
         target_compile_options(gbMath_Test PRIVATE --coverage -fprofile-arcs -ftest-coverage)
