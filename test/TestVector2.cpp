@@ -255,7 +255,7 @@ TEST_CASE("Vector2")
             MultiplicationOrderAwareOperand(1, lhsIds, rhsIds),
             MultiplicationOrderAwareOperand(2, lhsIds, rhsIds));
         MultiplicationOrderAwareOperand s(3, lhsIds, rhsIds);
-        auto vl = v3 * s;
+        auto const vl = v3 * s;
         REQUIRE(lhsIds.size() == 2);
         REQUIRE(rhsIds.size() == 2);
         CHECK(std::find(begin(lhsIds), end(lhsIds), 1) != end(lhsIds));
@@ -267,7 +267,7 @@ TEST_CASE("Vector2")
 
         lhsIds.clear();
         rhsIds.clear();
-        auto vr = s * v3;
+        auto const vr = s * v3;
         REQUIRE(lhsIds.size() == 2);
         REQUIRE(rhsIds.size() == 2);
         CHECK(lhsIds[0] == 3);

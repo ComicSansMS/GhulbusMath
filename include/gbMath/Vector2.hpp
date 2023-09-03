@@ -62,8 +62,8 @@ public:
     {}
     constexpr Vector2Impl(DoNotInitialize_Tag)
     {}
-    constexpr Vector2Impl(Vector2Impl<T, Tag> const&) = default;
-    constexpr Vector2Impl<T, Tag>& operator=(Vector2Impl<T, Tag> const&) = default;
+    constexpr Vector2Impl(Vector2Impl const&) = default;
+    constexpr Vector2Impl& operator=(Vector2Impl const&) = default;
 
     constexpr Vector2Impl(T vx, T vy)
         :x(vx), y(vy)

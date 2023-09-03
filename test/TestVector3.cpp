@@ -286,7 +286,7 @@ TEST_CASE("Vector3")
             MultiplicationOrderAwareOperand(2, lhsIds, rhsIds),
             MultiplicationOrderAwareOperand(3, lhsIds, rhsIds));
         MultiplicationOrderAwareOperand s(4, lhsIds, rhsIds);
-        v3 * s;
+        auto const vl = v3 * s;
         REQUIRE(lhsIds.size() == 3);
         REQUIRE(rhsIds.size() == 3);
         CHECK(std::find(begin(lhsIds), end(lhsIds), 1) != end(lhsIds));
@@ -294,10 +294,13 @@ TEST_CASE("Vector3")
         CHECK(std::find(begin(lhsIds), end(lhsIds), 3) != end(lhsIds));
         CHECK(rhsIds[0] == 4);
         CHECK(rhsIds[1] == 4);
+        CHECK(vl.x.id() == 11);
+        CHECK(vl.y.id() == 12);
+        CHECK(vl.z.id() == 13);
 
         lhsIds.clear();
         rhsIds.clear();
-        s * v3;
+        auto const vr = s * v3;
         REQUIRE(lhsIds.size() == 3);
         REQUIRE(rhsIds.size() == 3);
         CHECK(lhsIds[0] == 4);
@@ -305,6 +308,9 @@ TEST_CASE("Vector3")
         CHECK(std::find(begin(rhsIds), end(rhsIds), 1) != end(rhsIds));
         CHECK(std::find(begin(rhsIds), end(rhsIds), 2) != end(rhsIds));
         CHECK(std::find(begin(rhsIds), end(rhsIds), 3) != end(rhsIds));
+        CHECK(vr.x.id() == 14);
+        CHECK(vr.y.id() == 14);
+        CHECK(vr.z.id() == 14);
     }
 
     SECTION("Scalar Division Member")

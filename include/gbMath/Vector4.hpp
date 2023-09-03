@@ -12,7 +12,8 @@
 #include <gbMath/Common.hpp>
 
 #include <cmath>
-#include <type_traits>
+#include <concepts>
+#include <cstdint>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
@@ -36,38 +37,38 @@ public:
     T z;
     T w;
 
-    Vector4()
+    constexpr Vector4()
         :x{}, y{}, z{}, w{}
     {}
-    Vector4(DoNotInitialize_Tag)
+    constexpr Vector4(DoNotInitialize_Tag)
     {}
-    Vector4(Vector4<T> const&) = default;
-    Vector4<T>& operator=(Vector4<T> const&) = default;
+    constexpr Vector4(Vector4<T> const&) = default;
+    constexpr Vector4<T>& operator=(Vector4<T> const&) = default;
 
-    Vector4(T vx, T vy, T vz, T vw)
+    constexpr Vector4(T vx, T vy, T vz, T vw)
         :x(vx), y(vy), z(vz), w(vw)
     {}
 
-    explicit Vector4(T const* arr)
+    constexpr explicit Vector4(T const* arr)
         :x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
     {}
 
     template<typename U>
-    explicit Vector4(Vector4<U> const& v)
+    constexpr explicit Vector4(Vector4<U> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)), w(static_cast<T>(v.w))
     {}
 
-    T& operator[](std::size_t idx)
+    [[nodiscard]] constexpr T& operator[](std::size_t idx)
     {
         return (&x)[idx];
     }
 
-    T const& operator[](std::size_t idx) const
+    [[nodiscard]] constexpr T const& operator[](std::size_t idx) const
     {
         return (&x)[idx];
     }
 
-    Vector4<T>& operator+=(Vector4<T> const& rhs)
+    constexpr Vector4<T>& operator+=(Vector4<T> const& rhs)
     {
         x += rhs.x;
         y += rhs.y;
@@ -76,7 +77,7 @@ public:
         return *this;
     }
 
-    Vector4<T>& operator-=(Vector4<T> const& rhs)
+    constexpr Vector4<T>& operator-=(Vector4<T> const& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -85,7 +86,7 @@ public:
         return *this;
     }
 
-    Vector4<T>& operator*=(T s)
+    constexpr Vector4<T>& operator*=(T s)
     {
         x *= s;
         y *= s;
@@ -94,7 +95,7 @@ public:
         return *this;
     }
 
-    Vector4<T>& operator/=(T s)
+    constexpr Vector4<T>& operator/=(T s)
     {
         x /= s;
         y /= s;
@@ -102,115 +103,64 @@ public:
         w /= s;
         return *this;
     }
+
+    [[nodiscard]] friend constexpr auto operator<=>(Vector4 const&, Vector4 const&) = default;
+
+    [[nodiscard]] friend constexpr Vector4 operator+(Vector4 const& lhs, Vector4 const& rhs)
+    {
+        return Vector4(lhs.x + rhs.x,
+                       lhs.y + rhs.y,
+                       lhs.z + rhs.z,
+                       lhs.w + rhs.w);
+    }
+
+    [[nodiscard]] friend constexpr Vector4 operator-(Vector4 const& lhs, Vector4 const& rhs)
+    {
+        return Vector4<T>(lhs.x - rhs.x,
+                          lhs.y - rhs.y,
+                          lhs.z - rhs.z,
+                          lhs.w - rhs.w);
+    }
+
+    [[nodiscard]] friend constexpr Vector4 operator*(Vector4 const& v, T s)
+    {
+        return Vector4(v.x * s, v.y * s, v.z * s, v.w * s);
+    }
+
+    [[nodiscard]] friend constexpr Vector4 operator*(T s, Vector4 const& v)
+    {
+        return Vector4(s * v.x, s * v.y, s * v.z, s * v.w);
+    }
+
+    [[nodiscard]] friend constexpr Vector4 operator/(Vector4 const& v, T s)
+    {
+        return Vector4(v.x / s, v.y / s, v.z / s, v.w / s);
+    }
+
+    [[nodiscard]] friend constexpr T dot(Vector4 const& lhs, Vector4 const& rhs)
+    {
+        return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z) + (lhs.w * rhs.w);
+    }
 };
 
 template<typename T>
-inline bool operator==(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return (lhs.x == rhs.x) &&
-           (lhs.y == rhs.y) &&
-           (lhs.z == rhs.z) &&
-           (lhs.w == rhs.w);
-}
-
-template<typename T>
-inline bool operator<(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    if(lhs.x != rhs.x) {
-        return lhs.x < rhs.x;
-    } else if(lhs.y != rhs.y) {
-        return lhs.y < rhs.y;
-    } else if(lhs.z != rhs.z) {
-        return lhs.z < rhs.z;
-    } else {
-        return lhs.w < rhs.w;
-    }
-}
-
-template<typename T>
-inline bool operator!=(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return !(lhs == rhs);
-}
-
-template<typename T>
-inline bool operator<=(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return !(rhs < lhs);
-}
-
-template<typename T>
-inline bool operator>(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return rhs < lhs;
-}
-
-template<typename T>
-inline bool operator>=(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return !(lhs < rhs);
-}
-
-template<typename T>
-inline Vector4<T> operator+(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return Vector4<T>(lhs.x + rhs.x,
-                      lhs.y + rhs.y,
-                      lhs.z + rhs.z,
-                      lhs.w + rhs.w);
-}
-
-template<typename T>
-inline Vector4<T> operator-(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return Vector4<T>(lhs.x - rhs.x,
-                      lhs.y - rhs.y,
-                      lhs.z - rhs.z,
-                      lhs.w - rhs.w);
-}
-
-template<typename T>
-inline Vector4<T> operator*(Vector4<T> const& v, T s)
-{
-    return Vector4<T>(v.x * s, v.y * s, v.z * s, v.w * s);
-}
-
-template<typename T>
-inline Vector4<T> operator*(T s, Vector4<T> const& v)
-{
-    return Vector4<T>(s * v.x, s * v.y, s * v.z, s * v.w);
-}
-
-template<typename T>
-inline Vector4<T> operator/(Vector4<T> const& v, T s)
-{
-    return Vector4<T>(v.x / s, v.y / s, v.z / s,  v.w / s);
-}
-
-template<typename T>
-inline T dot(Vector4<T> const& lhs, Vector4<T> const& rhs)
-{
-    return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z) + (lhs.w * rhs.w);
-}
-
-template<typename T>
-inline double length(Vector4<T> const& v)
+[[nodiscard]] inline double length(Vector4<T> const& v)
 {
     return std::sqrt(static_cast<double>(dot(v, v)));
 }
 
-inline float length(Vector4<float> const& v)
+[[nodiscard]] inline float length(Vector4<float> const& v)
 {
     return std::sqrt(dot(v, v));
 }
 
-inline long double length(Vector4<long double> const& v)
+[[nodiscard]] inline long double length(Vector4<long double> const& v)
 {
     return std::sqrt(dot(v, v));
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point<T>::value, Vector4<T>> normalized(Vector4<T> const& v)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Vector4<T> normalized(Vector4<T> const& v)
 {
     T const len = length(v);
     return Vector4<T>(v.x / len, v.y / len, v.z / len, v.w / len);
