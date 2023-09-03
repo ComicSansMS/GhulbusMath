@@ -13,6 +13,7 @@
 #include <gbMath/VectorTraits.hpp>
 
 #include <cmath>
+#include <concepts>
 #include <cstdint>
 #include <type_traits>
 
@@ -56,44 +57,44 @@ public:
     T x;
     T y;
 
-    Vector2Impl() = default;
-    Vector2Impl(Vector2Impl<T, Tag> const&) = default;
-    Vector2Impl<T, Tag>& operator=(Vector2Impl<T, Tag> const&) = default;
+    constexpr Vector2Impl() = default;
+    constexpr Vector2Impl(Vector2Impl<T, Tag> const&) = default;
+    constexpr Vector2Impl<T, Tag>& operator=(Vector2Impl<T, Tag> const&) = default;
 
-    Vector2Impl(T vx, T vy)
+    constexpr Vector2Impl(T vx, T vy)
         :x(vx), y(vy)
     {}
 
-    explicit Vector2Impl(T const* arr)
+    constexpr explicit Vector2Impl(T const* arr)
         :x(arr[0]), y(arr[1])
     {}
 
     template<typename U>
-    explicit Vector2Impl(Vector2Impl<U, Tag> const& v)
+    constexpr explicit Vector2Impl(Vector2Impl<U, Tag> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y))
     {}
 
-    Vector2<T> to_vector() const
+    [[nodiscard]] constexpr Vector2<T> to_vector() const
     {
         return Vector2<T>(x, y);
     }
 
-    static Vector2Impl<T, Tag> from_vector(Vector2<T> const& v)
+    static [[nodiscard]] constexpr Vector2Impl from_vector(Vector2<T> const& v)
     {
-        return Vector2Impl<T, Tag>(v.x, v.y);
+        return Vector2Impl(v.x, v.y);
     }
 
-    T& operator[](std::size_t idx)
-    {
-        return (&x)[idx];
-    }
-
-    T const& operator[](std::size_t idx) const
+    [[nodiscard]] constexpr T& operator[](std::size_t idx)
     {
         return (&x)[idx];
     }
 
-    Vector2Impl<T, Tag>& operator+=(Vector2Impl<T, Tag> const& rhs)
+    [[nodiscard]] constexpr T const& operator[](std::size_t idx) const
+    {
+        return (&x)[idx];
+    }
+
+    constexpr Vector2Impl& operator+=(Vector2Impl const& rhs)
     {
         static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Addition of points not allowed.");
         x += rhs.x;
@@ -101,17 +102,16 @@ public:
         return *this;
     }
 
-    template<typename TTag = Tag, typename RhsTag>
-    std::enable_if_t<VectorTraits::IsFinitePoint<TTag>::value &&
-                     !VectorTraits::IsFinitePoint<RhsTag>::value , Vector2Impl<T, TTag>>&
-        operator+=(Vector2Impl<T, RhsTag> const& rhs)
+    template<typename RhsTag>
+    constexpr Vector2Impl& operator+=(Vector2Impl<T, RhsTag> const& rhs)
+        requires(VectorTraits::IsFinitePoint<Tag>::value && !VectorTraits::IsFinitePoint<RhsTag>::value)
     {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
 
-    Vector2Impl<T, Tag>& operator-=(Vector2Impl<T, Tag> const& rhs)
+    constexpr Vector2Impl& operator-=(Vector2Impl const& rhs)
     {
         static_assert(!VectorTraits::IsFinitePoint<Tag>::value, "Compound subtraction of points not allowed.");
         x -= rhs.x;
@@ -119,162 +119,126 @@ public:
         return *this;
     }
 
-    template<typename TTag = Tag, typename RhsTag>
-    std::enable_if_t<VectorTraits::IsFinitePoint<TTag>::value &&
-                     !VectorTraits::IsFinitePoint<RhsTag>::value, Vector2Impl<T, TTag>>&
-        operator-=(Vector2Impl<T, RhsTag> const& rhs)
+    template<typename RhsTag>
+    constexpr Vector2Impl& operator-=(Vector2Impl<T, RhsTag> const& rhs)
+        requires(VectorTraits::IsFinitePoint<Tag>::value && !VectorTraits::IsFinitePoint<RhsTag>::value)
     {
         x -= rhs.x;
         y -= rhs.y;
         return *this;
     }
 
-    Vector2Impl<T, Tag>& operator*=(T s)
+    constexpr Vector2Impl& operator*=(T s)
     {
         x *= s;
         y *= s;
         return *this;
     }
 
-    Vector2Impl<T, Tag>& operator/=(T s)
+    constexpr Vector2Impl& operator/=(T s)
     {
         x /= s;
         y /= s;
         return *this;
     }
+
+    friend [[nodiscard]] constexpr auto operator<=>(Vector2Impl const&, Vector2Impl const&) = default;
+
+    friend [[nodiscard]] constexpr Vector2Impl operator+(Vector2Impl const& lhs,
+                                                         Vector2Impl const& rhs)
+    {
+        static_assert(!VectorTraits::IsFinitePoint<VectorTag_T>::value, "Addition of points is not allowed.");
+        return Vector2Impl(lhs.x + rhs.x,
+                           lhs.y + rhs.y);
+    }
+
+    friend [[nodiscard]] constexpr Vector2Impl operator*(Vector2Impl const& v, T s)
+    {
+        return Vector2Impl(v.x * s, v.y * s);
+    }
+
+    friend [[nodiscard]] constexpr Vector2Impl operator*(T s, Vector2Impl const& v)
+    {
+        return Vector2Impl(s * v.x, s * v.y);
+    }
+
+    friend [[nodiscard]] constexpr Vector2Impl operator/(Vector2Impl const& v, T s)
+    {
+        return Vector2Impl(v.x / s, v.y / s);
+    }
+
+    friend [[nodiscard]] constexpr T dot(Vector2Impl const& lhs, Vector2Impl const& rhs)
+    {
+        return (lhs.x * rhs.x) + (lhs.y * rhs.y);
+    }
 };
 
-template<typename T, typename VectorTag_T>
-inline bool operator==(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return (lhs.x == rhs.x) &&
-           (lhs.y == rhs.y);
-}
-
-template<typename T, typename VectorTag_T>
-inline bool operator<(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return (lhs.x != rhs.x) ? (lhs.x < rhs.x) : (lhs.y < rhs.y);
-}
-
-template<typename T, typename VectorTag_T>
-inline bool operator!=(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return !(lhs == rhs);
-}
-
-template<typename T, typename VectorTag_T>
-inline bool operator<=(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return !(rhs < lhs);
-}
-
-template<typename T, typename VectorTag_T>
-inline bool operator>(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return rhs < lhs;
-}
-
-template<typename T, typename VectorTag_T>
-inline bool operator>=(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return !(lhs < rhs);
-}
-
-template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> operator+(Vector2Impl<T, VectorTag_T> const& lhs,
-                                             Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    static_assert(!VectorTraits::IsFinitePoint<VectorTag_T>::value, "Addition of points is not allowed.");
-    return Vector2Impl<T, VectorTag_T>(lhs.x + rhs.x,
-                                       lhs.y + rhs.y);
-}
-
-template<typename T, typename VectorTag_T> inline
-std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Point2<T>>
-    operator+(Point2<T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+Point2<T> operator+(Point2<T> const& lhs,
+                    Vector2Impl<T, VectorTag_T> const& rhs)
+    requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
 {
     return Point2<T>(lhs.x + rhs.x,
                      lhs.y + rhs.y);
 }
 
-template<typename T, typename VectorTag_T> inline
-std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Point2<T>>
-    operator+(Vector2Impl<T, VectorTag_T> const& lhs, Point2<T> const& rhs)
+template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+Point2<T> operator+(Vector2Impl<T, VectorTag_T> const& lhs,
+                    Point2<T> const& rhs)
+    requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
 {
     return Point2<T>(lhs.x + rhs.x,
                      lhs.y + rhs.y);
 }
 
-template<typename T, typename VectorTag_T> inline
-std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
-    operator-(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+Vector2Impl<T, VectorTag_T> operator-(Vector2Impl<T, VectorTag_T> const& lhs,
+                                      Vector2Impl<T, VectorTag_T> const& rhs)
+    requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
 {
     return Vector2Impl<T, VectorTag_T>(lhs.x - rhs.x,
                                        lhs.y - rhs.y);
 }
 
-template<typename T, typename VectorTag_T> inline
-std::enable_if_t<VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2<T>>
-    operator-(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+Vector2<T> operator-(Vector2Impl<T, VectorTag_T> const& lhs,
+                     Vector2Impl<T, VectorTag_T> const& rhs)
+    requires(VectorTraits::IsFinitePoint<VectorTag_T>::value)
 {
     return Vector2<T>(lhs.x - rhs.x,
                       lhs.y - rhs.y);
 }
 
-template<typename T, typename VectorTag_T> inline
-std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Point2<T>>
-    operator-(Point2<T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+Point2<T> operator-(Point2<T> const& lhs,
+                    Vector2Impl<T, VectorTag_T> const& rhs)
+    requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
 {
     return Point2<T>(lhs.x - rhs.x,
                      lhs.y - rhs.y);
 }
 
-template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> operator*(Vector2Impl<T, VectorTag_T> const& v, T s)
-{
-    return Vector2Impl<T, VectorTag_T>(v.x * s, v.y * s);
-}
 
 template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> operator*(T s, Vector2Impl<T, VectorTag_T> const& v)
-{
-    return Vector2Impl<T, VectorTag_T>(s * v.x, s * v.y);
-}
-
-template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> operator/(Vector2Impl<T, VectorTag_T> const& v, T s)
-{
-    return Vector2Impl<T, VectorTag_T>(v.x / s, v.y / s);
-}
-
-template<typename T, typename VectorTag_T>
-inline T dot(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
-{
-    return (lhs.x * rhs.x) + (lhs.y * rhs.y);
-}
-
-template<typename T, typename VectorTag_T>
-inline double length(Vector2Impl<T, VectorTag_T> const& v)
+[[nodiscard]] constexpr inline double length(Vector2Impl<T, VectorTag_T> const& v)
 {
     return std::hypot(static_cast<double>(v.x), static_cast<double>(v.y));
 }
 
 template<typename VectorTag_T>
-inline float length(Vector2Impl<float, VectorTag_T> const& v)
+[[nodiscard]] constexpr inline float length(Vector2Impl<float, VectorTag_T> const& v)
 {
     return std::hypot(v.x, v.y);
 }
 
 template<typename VectorTag_T>
-inline long double length(Vector2Impl<long double, VectorTag_T> const& v)
+[[nodiscard]] constexpr inline long double length(Vector2Impl<long double, VectorTag_T> const& v)
 {
     return std::hypot(v.x, v.y);
 }
 
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<std::is_floating_point<T>::value, Vector2Impl<T, VectorTag_T>>
-normalized(Vector2Impl<T, VectorTag_T> const& v)
+template<std::floating_point T, typename VectorTag_T>
+[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> normalized(Vector2Impl<T, VectorTag_T> const& v)
 {
     T const len = length(v);
     return Vector2Impl<T, VectorTag_T>(v.x / len, v.y / len);
@@ -283,7 +247,7 @@ normalized(Vector2Impl<T, VectorTag_T> const& v)
 /** Computes the counter-clockwise perpendicular normal.
  */
 template<typename T>
-inline Normal2<T> perp(Vector2<T> const& v)
+[[nodiscard]] constexpr inline Normal2<T> perp(Vector2<T> const& v)
 {
     return Normal2<T>(-v.y, v.x);
 }
@@ -292,67 +256,67 @@ inline Normal2<T> perp(Vector2<T> const& v)
  * The result corresponds to the 2d bivector in Grassman algebra, ie. the wedge product of the two 2d vectors.
  */
 template<typename T>
-inline T perp_dot(Vector2<T> const& lhs, Vector2<T> const& rhs)
+[[nodiscard]] constexpr inline T perp_dot(Vector2<T> const& lhs, Vector2<T> const& rhs)
 {
     return dot(perp(lhs).to_vector(), rhs);
 }
 
-template<typename T, typename VectorTag_T>
-inline T angle_vector(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<std::floating_point T, typename VectorTag_T>
+[[nodiscard]] constexpr inline T angle_vector(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs) / (length(lhs) * length(rhs)));
 }
 
-template<typename T, typename VectorTag_T>
-inline T angle_vector_unit(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+template<std::floating_point T, typename VectorTag_T>
+[[nodiscard]] constexpr inline T angle_vector_unit(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs));
 }
 
 template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> project(Vector2Impl<T, VectorTag_T> const& lhs,
-                                           Vector2Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> project(Vector2Impl<T, VectorTag_T> const& lhs,
+                                                                   Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return rhs * (dot(lhs, rhs) / dot(rhs, rhs));
 }
 
 template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> project_unit(Vector2Impl<T, VectorTag_T> const& lhs,
-                                                Vector2Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> project_unit(Vector2Impl<T, VectorTag_T> const& lhs,
+                                                                        Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return rhs * dot(lhs, rhs);
 }
 
 template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> reject(Vector2Impl<T, VectorTag_T> const& lhs,
-                                          Vector2Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> reject(Vector2Impl<T, VectorTag_T> const& lhs,
+                                                                  Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return lhs - project(lhs, rhs);
 }
 
 template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> reject_unit(Vector2Impl<T, VectorTag_T> const& lhs,
-                                               Vector2Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> reject_unit(Vector2Impl<T, VectorTag_T> const& lhs,
+                                                                       Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return lhs - project_unit(lhs, rhs);
 }
 
 template<typename T, typename VectorTag_T>
-inline T max_component(Vector2Impl<T, VectorTag_T> const& v)
+[[nodiscard]] constexpr inline T max_component(Vector2Impl<T, VectorTag_T> const& v)
 {
     return (v.x < v.y) ? v.y : v.x;
 }
 
 template<typename T, typename VectorTag_T>
-inline T min_component(Vector2Impl<T, VectorTag_T> const& v)
+[[nodiscard]] constexpr inline T min_component(Vector2Impl<T, VectorTag_T> const& v)
 {
     return (v.x < v.y) ? v.x : v.y;
 }
 
 template<typename T, typename VectorTag_T>
-inline Vector2Impl<T, VectorTag_T> lerp(Vector2Impl<T, VectorTag_T> const& v1,
-                                        Vector2Impl<T, VectorTag_T> const& v2,
-                                        T t)
+[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> lerp(Vector2Impl<T, VectorTag_T> const& v1,
+                                                                Vector2Impl<T, VectorTag_T> const& v2,
+                                                                T t)
 {
     auto const one_minus_t = GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One() - t;
     return Vector2Impl<T, VectorTag_T>(one_minus_t * v1.x + t * v2.x,
