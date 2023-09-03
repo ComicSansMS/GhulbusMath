@@ -35,12 +35,7 @@ set(GB_MATH_VERSION "${GB_MATH_VERSION_MAJOR}.${GB_MATH_VERSION_MINOR}.${GB_MATH
 set(GB_MATH_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(GB_MATH_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
 
-add_library(gbMath INTERFACE)
-target_sources(gbMath
-    INTERFACE
-    FILE_SET HEADERS
-    BASE_DIRS ${GB_MATH_INCLUDE_DIR}
-    FILES
+set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/config.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/AABB2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/AABB3.hpp
@@ -73,18 +68,9 @@ target_sources(gbMath
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorTraits.hpp
 )
-target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/W4>>)
-target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/permissive->>)
-target_compile_options(gbMath INTERFACE
-    $<BUILD_INTERFACE:$<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>>)
-target_compile_options(gbMath INTERFACE $<$<CXX_COMPILER_ID:GNU>:-pedantic -Wall>)
-
-###############################################################################
-## Testing gbMath
-###############################################################################
 
 set(GB_MATH_TEST_SOURCES
-${GB_MATH_TEST_DIR}/TestAABB2.cpp
+    ${GB_MATH_TEST_DIR}/TestAABB2.cpp
     ${GB_MATH_TEST_DIR}/TestAABB3.cpp
     ${GB_MATH_TEST_DIR}/TestBasis3.cpp
     ${GB_MATH_TEST_DIR}/TestCircle2.cpp
@@ -111,6 +97,26 @@ ${GB_MATH_TEST_DIR}/TestAABB2.cpp
     ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
     ${GB_MATH_TEST_DIR}/TestMath.cpp
 )
+add_library(gbMath INTERFACE)
+target_sources(gbMath
+    INTERFACE
+    FILE_SET HEADERS
+    BASE_DIRS ${GB_MATH_INCLUDE_DIR}
+    FILES
+    ${GB_MATH_HEADER_FILES}
+)
+target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/W4>>)
+target_compile_options(gbMath INTERFACE $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/permissive->>)
+target_compile_options(gbMath INTERFACE
+    $<BUILD_INTERFACE:$<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>>)
+target_compile_options(gbMath INTERFACE $<$<CXX_COMPILER_ID:GNU>:-pedantic -Wall>)
+
+add_library(gbMath_Sources EXCLUDE_FROM_ALL)
+target_sources(gbMath_Sources PRIVATE ${GB_MATH_HEADER_FILES} ${PROJECT_SOURCE_DIR}/src/gbMath.cpp)
+
+###############################################################################
+## Testing gbMath
+###############################################################################
 
 option(GB_BUILD_TESTS "Determines whether to build tests." ON)
 if(GB_BUILD_TESTS)
