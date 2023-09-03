@@ -13,6 +13,7 @@
 #include <gbMath/Vector4.hpp>
 
 #include <ostream>
+#include <version>
 
 #ifdef __cpp_lib_format
 #include <concepts>

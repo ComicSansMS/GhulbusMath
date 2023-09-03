@@ -10,10 +10,11 @@
 #include <gbMath/config.hpp>
 #include <gbMath/Rational.hpp>
 
-#include <concepts>
 #include <ostream>
+#include <version>
 
 #ifdef __cpp_lib_format
+#include <concepts>
 #include <format>
 
 template<class T, class Char_T>
