@@ -235,23 +235,27 @@ TEST_CASE("Vector2")
             MultiplicationOrderAwareOperand(1, lhsIds, rhsIds),
             MultiplicationOrderAwareOperand(2, lhsIds, rhsIds));
         MultiplicationOrderAwareOperand s(3, lhsIds, rhsIds);
-        v3 * s;
+        auto vl = v3 * s;
         REQUIRE(lhsIds.size() == 2);
         REQUIRE(rhsIds.size() == 2);
         CHECK(std::find(begin(lhsIds), end(lhsIds), 1) != end(lhsIds));
         CHECK(std::find(begin(lhsIds), end(lhsIds), 2) != end(lhsIds));
         CHECK(rhsIds[0] == 3);
         CHECK(rhsIds[1] == 3);
+        CHECK(vl.x.id() == 11);
+        CHECK(vl.y.id() == 12);
 
         lhsIds.clear();
         rhsIds.clear();
-        s * v3;
+        auto vr = s * v3;
         REQUIRE(lhsIds.size() == 2);
         REQUIRE(rhsIds.size() == 2);
         CHECK(lhsIds[0] == 3);
         CHECK(lhsIds[1] == 3);
         CHECK(std::find(begin(rhsIds), end(rhsIds), 1) != end(rhsIds));
         CHECK(std::find(begin(rhsIds), end(rhsIds), 2) != end(rhsIds));
+        CHECK(vr.x.id() == 13);
+        CHECK(vr.y.id() == 13);
     }
 
     SECTION("Scalar Division Member")

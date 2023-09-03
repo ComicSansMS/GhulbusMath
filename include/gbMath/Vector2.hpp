@@ -79,7 +79,7 @@ public:
         return Vector2<T>(x, y);
     }
 
-    static [[nodiscard]] constexpr Vector2Impl from_vector(Vector2<T> const& v)
+    [[nodiscard]] static constexpr Vector2Impl from_vector(Vector2<T> const& v)
     {
         return Vector2Impl(v.x, v.y);
     }
@@ -142,9 +142,9 @@ public:
         return *this;
     }
 
-    friend [[nodiscard]] constexpr auto operator<=>(Vector2Impl const&, Vector2Impl const&) = default;
+    [[nodiscard]] friend constexpr auto operator<=>(Vector2Impl const&, Vector2Impl const&) = default;
 
-    friend [[nodiscard]] constexpr Vector2Impl operator+(Vector2Impl const& lhs,
+    [[nodiscard]] friend constexpr Vector2Impl operator+(Vector2Impl const& lhs,
                                                          Vector2Impl const& rhs)
     {
         static_assert(!VectorTraits::IsFinitePoint<VectorTag_T>::value, "Addition of points is not allowed.");
@@ -152,28 +152,29 @@ public:
                            lhs.y + rhs.y);
     }
 
-    friend [[nodiscard]] constexpr Vector2Impl operator*(Vector2Impl const& v, T s)
+    [[nodiscard]] friend constexpr Vector2Impl operator*(Vector2Impl const& v, T s)
     {
         return Vector2Impl(v.x * s, v.y * s);
     }
 
-    friend [[nodiscard]] constexpr Vector2Impl operator*(T s, Vector2Impl const& v)
+    [[nodiscard]] friend constexpr Vector2Impl operator*(T s, Vector2Impl const& v)
     {
         return Vector2Impl(s * v.x, s * v.y);
     }
 
-    friend [[nodiscard]] constexpr Vector2Impl operator/(Vector2Impl const& v, T s)
+    [[nodiscard]] friend constexpr Vector2Impl operator/(Vector2Impl const& v, T s)
     {
         return Vector2Impl(v.x / s, v.y / s);
     }
 
-    friend [[nodiscard]] constexpr T dot(Vector2Impl const& lhs, Vector2Impl const& rhs)
+    [[nodiscard]] friend constexpr T dot(Vector2Impl const& lhs, Vector2Impl const& rhs)
     {
         return (lhs.x * rhs.x) + (lhs.y * rhs.y);
     }
 };
 
-template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline
 Point2<T> operator+(Point2<T> const& lhs,
                     Vector2Impl<T, VectorTag_T> const& rhs)
     requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
@@ -182,7 +183,8 @@ Point2<T> operator+(Point2<T> const& lhs,
                      lhs.y + rhs.y);
 }
 
-template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline
 Point2<T> operator+(Vector2Impl<T, VectorTag_T> const& lhs,
                     Point2<T> const& rhs)
     requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
@@ -191,7 +193,8 @@ Point2<T> operator+(Vector2Impl<T, VectorTag_T> const& lhs,
                      lhs.y + rhs.y);
 }
 
-template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline
 Vector2Impl<T, VectorTag_T> operator-(Vector2Impl<T, VectorTag_T> const& lhs,
                                       Vector2Impl<T, VectorTag_T> const& rhs)
     requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
@@ -200,7 +203,8 @@ Vector2Impl<T, VectorTag_T> operator-(Vector2Impl<T, VectorTag_T> const& lhs,
                                        lhs.y - rhs.y);
 }
 
-template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline
 Vector2<T> operator-(Vector2Impl<T, VectorTag_T> const& lhs,
                      Vector2Impl<T, VectorTag_T> const& rhs)
     requires(VectorTraits::IsFinitePoint<VectorTag_T>::value)
@@ -209,7 +213,8 @@ Vector2<T> operator-(Vector2Impl<T, VectorTag_T> const& lhs,
                       lhs.y - rhs.y);
 }
 
-template<typename T, typename VectorTag_T> [[nodiscard]] constexpr inline
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline
 Point2<T> operator-(Point2<T> const& lhs,
                     Vector2Impl<T, VectorTag_T> const& rhs)
     requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
