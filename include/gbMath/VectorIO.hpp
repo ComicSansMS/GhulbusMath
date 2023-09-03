@@ -3,7 +3,7 @@
 
 /** @file
  *
- * @brief Formatters and ostream inserter functions for Vector types.
+ * @brief Formatters and ostream inserters for Vector types.
  * @author Andreas Weis (der_ghulbus@ghulbus-inc.de)
  */
 
@@ -15,10 +15,11 @@
 #include <ostream>
 
 #ifdef __cpp_lib_format
+#include <concepts>
 #include <format>
 
-template<class T, typename VectorTag_T, class CharT>
-struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector2Impl<T, VectorTag_T>, CharT>
+template<class T, typename VectorTag_T, class Char_T>
+struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector2Impl<T, VectorTag_T>, Char_T>
 {
     constexpr auto parse(std::format_parse_context& ctx) {
         return ctx.begin();
@@ -27,26 +28,16 @@ struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector2Impl<T, VectorTag_T>, CharT
     template<class FormatContext>
     auto format(GHULBUS_MATH_NAMESPACE::Vector2Impl<T, VectorTag_T> const& v, FormatContext& ctx) const
     {
-        return std::format_to(ctx.out(), "[{} {}]", v.x, v.y);
+        if constexpr (std::same_as<T, char>) {
+            return std::format_to(ctx.out(), "[{} {}]", static_cast<int>(v.x), static_cast<int>(v.y));
+        } else {
+            return std::format_to(ctx.out(), "[{} {}]", v.x, v.y);
+        }
     }
 };
 
-template<typename VectorTag_T, class CharT>
-struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector2Impl<char, VectorTag_T>, CharT>
-{
-    constexpr auto parse(std::format_parse_context& ctx) {
-        return ctx.begin();
-    }
-
-    template<class FormatContext>
-    auto format(GHULBUS_MATH_NAMESPACE::Vector2Impl<char, VectorTag_T> const& v, FormatContext& ctx) const
-    {
-        return std::format_to(ctx.out(), "[{} {}]", static_cast<int>(v.x), static_cast<int>(v.y));
-    }
-};
-
-template<class T, typename VectorTag_T, class CharT>
-struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector3Impl<T, VectorTag_T>, CharT>
+template<class T, typename VectorTag_T, class Char_T>
+struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector3Impl<T, VectorTag_T>, Char_T>
 {
     constexpr auto parse(std::format_parse_context& ctx) {
         return ctx.begin();
@@ -55,26 +46,16 @@ struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector3Impl<T, VectorTag_T>, CharT
     template<class FormatContext>
     auto format(GHULBUS_MATH_NAMESPACE::Vector3Impl<T, VectorTag_T> const& v, FormatContext& ctx) const
     {
-        return std::format_to(ctx.out(), "[{} {} {}]", v.x, v.y, v.z);
+        if constexpr (std::same_as<T, char>) {
+            return std::format_to(ctx.out(), "[{} {} {}]", static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z));
+        } else {
+            return std::format_to(ctx.out(), "[{} {} {}]", v.x, v.y, v.z);
+        }
     }
 };
 
-template<typename VectorTag_T, class CharT>
-struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector3Impl<char, VectorTag_T>, CharT>
-{
-    constexpr auto parse(std::format_parse_context& ctx) {
-        return ctx.begin();
-    }
-
-    template<class FormatContext>
-    auto format(GHULBUS_MATH_NAMESPACE::Vector3Impl<char, VectorTag_T> const& v, FormatContext& ctx) const
-    {
-        return std::format_to(ctx.out(), "[{} {} {}]", static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z));
-    }
-};
-
-template<class T, class CharT>
-struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector4<T>, CharT>
+template<class T, class Char_T>
+struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector4<T>, Char_T>
 {
     constexpr auto parse(std::format_parse_context& ctx) {
         return ctx.begin();
@@ -83,22 +64,12 @@ struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector4<T>, CharT>
     template<class FormatContext>
     auto format(GHULBUS_MATH_NAMESPACE::Vector4<T> const& v, FormatContext& ctx) const
     {
-        return std::format_to(ctx.out(), "[{} {} {} {}]", v.x, v.y, v.z, v.w);
-    }
-};
-
-template<class CharT>
-struct std::formatter<GHULBUS_MATH_NAMESPACE::Vector4<char>, CharT>
-{
-    constexpr auto parse(std::format_parse_context& ctx) {
-        return ctx.begin();
-    }
-
-    template<class FormatContext>
-    auto format(GHULBUS_MATH_NAMESPACE::Vector4<char> const& v, FormatContext& ctx) const
-    {
-        return std::format_to(ctx.out(), "[{} {} {} {}]",
-            static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z), static_cast<int>(v.w));
+        if constexpr (std::same_as<T, char>) {
+            return std::format_to(ctx.out(), "[{} {} {} {}]",
+                static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z), static_cast<int>(v.w));
+        } else {
+            return std::format_to(ctx.out(), "[{} {} {} {}]", v.x, v.y, v.z, v.w);
+        }
     }
 };
 
