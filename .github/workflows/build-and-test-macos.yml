@@ -2,7 +2,7 @@ name: Build and Test macOS
 on: [push]
 jobs:
   build:
-    name: ${{ matrix.config.name }}
+    name: ${{ matrix.config.name }} (${{matrix.build_type}})
     runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
