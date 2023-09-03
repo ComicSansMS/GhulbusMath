@@ -12,6 +12,7 @@
 #include <gbMath/Common.hpp>
 
 #include <cmath>
+#include <compare>
 #include <concepts>
 #include <cstdint>
 

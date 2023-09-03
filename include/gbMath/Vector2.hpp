@@ -14,6 +14,7 @@
 #include <gbMath/VectorTraits.hpp>
 
 #include <cmath>
+#include <compare>
 #include <concepts>
 #include <cstdint>
 
