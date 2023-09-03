@@ -15,7 +15,7 @@
 #include <gbMath/Vector3.hpp>
 
 #include <cmath>
-#include <type_traits>
+#include <concepts>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
@@ -29,66 +29,66 @@ public:
     T m21, m22, m23;
     T m31, m32, m33;
 
-    Matrix3()
+    constexpr Matrix3()
         :m11{}, m12{}, m13{},
          m21{}, m22{}, m23{},
          m31{}, m32{}, m33{}
     {}
-    Matrix3(DoNotInitialize_Tag)
+    constexpr Matrix3(DoNotInitialize_Tag)
     {}
-    Matrix3(Matrix3 const&) = default;
-    Matrix3& operator=(Matrix3 const&) = default;
+    constexpr Matrix3(Matrix3 const&) = default;
+    constexpr Matrix3& operator=(Matrix3 const&) = default;
 
-    Matrix3(T n11, T n12, T n13,
-            T n21, T n22, T n23,
-            T n31, T n32, T n33)
+    constexpr Matrix3(T n11, T n12, T n13,
+                      T n21, T n22, T n23,
+                      T n31, T n32, T n33)
         :m11(n11), m12(n12), m13(n13),
          m21(n21), m22(n22), m23(n23),
          m31(n31), m32(n32), m33(n33)
     {}
 
     template<typename U>
-    explicit Matrix3(Matrix3<U> const& rhs)
+    constexpr explicit Matrix3(Matrix3<U> const& rhs)
         :m11(static_cast<T>(rhs.m11)), m12(static_cast<T>(rhs.m12)), m13(static_cast<T>(rhs.m13)),
          m21(static_cast<T>(rhs.m21)), m22(static_cast<T>(rhs.m22)), m23(static_cast<T>(rhs.m23)),
          m31(static_cast<T>(rhs.m31)), m32(static_cast<T>(rhs.m32)), m33(static_cast<T>(rhs.m33))
     {}
 
-    explicit Matrix3(T const* arr, MatrixPolicies::InputOrder_RowMajor)
+    constexpr explicit Matrix3(T const* arr, MatrixPolicies::InputOrder_RowMajor)
         :m11(arr[0]), m12(arr[1]), m13(arr[2]),
          m21(arr[3]), m22(arr[4]), m23(arr[5]),
          m31(arr[6]), m32(arr[7]), m33(arr[8])
     {}
 
-    explicit Matrix3(T const* arr, MatrixPolicies::InputOrder_ColumnMajor)
+    constexpr explicit Matrix3(T const* arr, MatrixPolicies::InputOrder_ColumnMajor)
         :m11(arr[0]), m12(arr[3]), m13(arr[6]),
          m21(arr[1]), m22(arr[4]), m23(arr[7]),
          m31(arr[2]), m32(arr[5]), m33(arr[8])
     {}
 
-    T& operator[](std::size_t idx)
+    [[nodiscard]] constexpr T& operator[](std::size_t idx)
     {
         return (&m11)[idx];
     }
 
-    T const& operator[](std::size_t idx) const
+    [[nodiscard]] constexpr T const& operator[](std::size_t idx) const
     {
         return (&m11)[idx];
     }
 
-    Vector3<T> row(std::size_t idx) const
+    [[nodiscard]] constexpr Vector3<T> row(std::size_t idx) const
     {
         auto const& m = *this;
         return Vector3<T>(m[idx*3], m[idx*3 + 1], m[idx*3 + 2]);
     }
 
-    Vector3<T> column(std::size_t idx) const
+    [[nodiscard]] constexpr Vector3<T> column(std::size_t idx) const
     {
         auto const& m = *this;
         return Vector3<T>(m[idx], m[idx + 3], m[idx + 6]);
     }
 
-    Matrix3<T>& operator+=(Matrix3<T> const& rhs)
+    constexpr Matrix3& operator+=(Matrix3 const& rhs)
     {
         m11 += rhs.m11;
         m12 += rhs.m12;
@@ -102,7 +102,7 @@ public:
         return *this;
     }
 
-    Matrix3<T>& operator-=(Matrix3<T> const& rhs)
+    constexpr Matrix3& operator-=(Matrix3 const& rhs)
     {
         m11 -= rhs.m11;
         m12 -= rhs.m12;
@@ -116,7 +116,7 @@ public:
         return *this;
     }
 
-    Matrix3<T>& operator*=(T f)
+    constexpr Matrix3& operator*=(T f)
     {
         m11 *= f;
         m12 *= f;
@@ -130,7 +130,7 @@ public:
         return *this;
     }
 
-    Matrix3<T>& operator/=(T f)
+    constexpr Matrix3& operator/=(T f)
     {
         m11 /= f;
         m12 /= f;
@@ -144,109 +144,77 @@ public:
         return *this;
     }
 
-    Matrix3<T>& operator*=(Matrix3<T> const& rhs)
+    constexpr Matrix3& operator*=(Matrix3 const& rhs)
     {
         *this = (*this) * rhs;
         return *this;
     }
+
+    [[nodiscard]] friend constexpr auto operator<=>(Matrix3 const&, Matrix3 const&) = default;
+
+    [[nodiscard]] friend constexpr Matrix3 operator+(Matrix3 const& lhs, Matrix3 const& rhs)
+    {
+        return Matrix3(lhs.m11 + rhs.m11, lhs.m12 + rhs.m12, lhs.m13 + rhs.m13,
+                       lhs.m21 + rhs.m21, lhs.m22 + rhs.m22, lhs.m23 + rhs.m23,
+                       lhs.m31 + rhs.m31, lhs.m32 + rhs.m32, lhs.m33 + rhs.m33);
+    }
+
+    [[nodiscard]] friend constexpr Matrix3 operator-(Matrix3 const& lhs, Matrix3 const& rhs)
+    {
+        return Matrix3(lhs.m11 - rhs.m11, lhs.m12 - rhs.m12, lhs.m13 - rhs.m13,
+                       lhs.m21 - rhs.m21, lhs.m22 - rhs.m22, lhs.m23 - rhs.m23,
+                       lhs.m31 - rhs.m31, lhs.m32 - rhs.m32, lhs.m33 - rhs.m33);
+    }
+
+    [[nodiscard]] friend constexpr Matrix3 operator*(Matrix3 const& lhs, T f)
+    {
+        return Matrix3(lhs.m11 * f, lhs.m12 * f, lhs.m13 * f,
+                       lhs.m21 * f, lhs.m22 * f, lhs.m23 * f,
+                       lhs.m31 * f, lhs.m32 * f, lhs.m33 * f);
+    }
+
+    [[nodiscard]] friend constexpr Matrix3 operator*(T f, Matrix3 const& rhs)
+    {
+        return Matrix3(f * rhs.m11, f * rhs.m12, f * rhs.m13,
+                       f * rhs.m21, f * rhs.m22, f * rhs.m23,
+                       f * rhs.m31, f * rhs.m32, f * rhs.m33);
+    }
+
+    [[nodiscard]] friend constexpr Matrix3 operator/(Matrix3 const& lhs, T f)
+    {
+        return Matrix3(lhs.m11 / f, lhs.m12 / f, lhs.m13 / f,
+                       lhs.m21 / f, lhs.m22 / f, lhs.m23 / f,
+                       lhs.m31 / f, lhs.m32 / f, lhs.m33 / f);
+    }
+
+    [[nodiscard]] friend constexpr Matrix3 operator*(Matrix3 const& lhs, Matrix3 const& rhs)
+    {
+        return Matrix3(lhs.m11*rhs.m11 + lhs.m12*rhs.m21 + lhs.m13*rhs.m31,
+                       lhs.m11*rhs.m12 + lhs.m12*rhs.m22 + lhs.m13*rhs.m32,
+                       lhs.m11*rhs.m13 + lhs.m12*rhs.m23 + lhs.m13*rhs.m33,
+                       lhs.m21*rhs.m11 + lhs.m22*rhs.m21 + lhs.m23*rhs.m31,
+                       lhs.m21*rhs.m12 + lhs.m22*rhs.m22 + lhs.m23*rhs.m32,
+                       lhs.m21*rhs.m13 + lhs.m22*rhs.m23 + lhs.m23*rhs.m33,
+                       lhs.m31*rhs.m11 + lhs.m32*rhs.m21 + lhs.m33*rhs.m31,
+                       lhs.m31*rhs.m12 + lhs.m32*rhs.m22 + lhs.m33*rhs.m32,
+                       lhs.m31*rhs.m13 + lhs.m32*rhs.m23 + lhs.m33*rhs.m33);
+    }
+
+    [[nodiscard]] friend constexpr Vector3<T> operator*(Matrix3 const& m, Vector3<T> const& v)
+    {
+        return Vector3<T>(m.m11*v.x + m.m12*v.y + m.m13*v.z,
+                          m.m21*v.x + m.m22*v.y + m.m23*v.z,
+                          m.m31*v.x + m.m32*v.y + m.m33*v.z);
+    }
+
 };
 
-template<typename T>
-inline bool operator==(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return ((lhs.m11 == rhs.m11) && (lhs.m12 == rhs.m12) && (lhs.m13 == rhs.m13) &&
-            (lhs.m21 == rhs.m21) && (lhs.m22 == rhs.m22) && (lhs.m23 == rhs.m23) &&
-            (lhs.m31 == rhs.m31) && (lhs.m32 == rhs.m32) && (lhs.m33 == rhs.m33));
-}
+
 
 template<typename T>
-inline bool operator<(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    std::size_t i;
-    for(i = 0; (i < 8) && (lhs[i] == rhs[i]); ++i) ;
-    return (lhs[i] < rhs[i]);
-}
-
-template<typename T>
-inline bool operator!=(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return !(lhs == rhs);
-}
-
-template<typename T>
-inline bool operator<=(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return !(rhs < lhs);
-}
-
-template<typename T>
-inline bool operator>(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return rhs < lhs;
-}
-
-template<typename T>
-inline bool operator>=(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return !(lhs < rhs);
-}
-
-template<typename T>
-inline Matrix3<T> operator+(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return Matrix3<T>(lhs.m11 + rhs.m11, lhs.m12 + rhs.m12, lhs.m13 + rhs.m13,
-                      lhs.m21 + rhs.m21, lhs.m22 + rhs.m22, lhs.m23 + rhs.m23,
-                      lhs.m31 + rhs.m31, lhs.m32 + rhs.m32, lhs.m33 + rhs.m33);
-}
-
-template<typename T>
-inline Matrix3<T> operator-(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return Matrix3<T>(lhs.m11 - rhs.m11, lhs.m12 - rhs.m12, lhs.m13 - rhs.m13,
-                      lhs.m21 - rhs.m21, lhs.m22 - rhs.m22, lhs.m23 - rhs.m23,
-                      lhs.m31 - rhs.m31, lhs.m32 - rhs.m32, lhs.m33 - rhs.m33);
-}
-
-template<typename T>
-inline Matrix3<T> operator*(Matrix3<T> const& lhs, T f)
-{
-    return Matrix3<T>(lhs.m11 * f, lhs.m12 * f, lhs.m13 * f,
-                      lhs.m21 * f, lhs.m22 * f, lhs.m23 * f,
-                      lhs.m31 * f, lhs.m32 * f, lhs.m33 * f);
-}
-
-template<typename T>
-inline Matrix3<T> operator*(T f, Matrix3<T> const& rhs)
-{
-    return Matrix3<T>(f * rhs.m11, f * rhs.m12, f * rhs.m13,
-                      f * rhs.m21, f * rhs.m22, f * rhs.m23,
-                      f * rhs.m31, f * rhs.m32, f * rhs.m33);
-}
-
-template<typename T>
-inline Matrix3<T> operator/(Matrix3<T> const& lhs, T f)
-{
-    return Matrix3<T>(lhs.m11 / f, lhs.m12 / f, lhs.m13 / f,
-                      lhs.m21 / f, lhs.m22 / f, lhs.m23 / f,
-                      lhs.m31 / f, lhs.m32 / f, lhs.m33 / f);
-}
-
-template<typename T>
-inline Matrix3<T> operator*(Matrix3<T> const& lhs, Matrix3<T> const& rhs)
-{
-    return Matrix3<T>(lhs.m11*rhs.m11 + lhs.m12*rhs.m21 + lhs.m13*rhs.m31,
-                      lhs.m11*rhs.m12 + lhs.m12*rhs.m22 + lhs.m13*rhs.m32,
-                      lhs.m11*rhs.m13 + lhs.m12*rhs.m23 + lhs.m13*rhs.m33,
-                      lhs.m21*rhs.m11 + lhs.m22*rhs.m21 + lhs.m23*rhs.m31,
-                      lhs.m21*rhs.m12 + lhs.m22*rhs.m22 + lhs.m23*rhs.m32,
-                      lhs.m21*rhs.m13 + lhs.m22*rhs.m23 + lhs.m23*rhs.m33,
-                      lhs.m31*rhs.m11 + lhs.m32*rhs.m21 + lhs.m33*rhs.m31,
-                      lhs.m31*rhs.m12 + lhs.m32*rhs.m22 + lhs.m33*rhs.m32,
-                      lhs.m31*rhs.m13 + lhs.m32*rhs.m23 + lhs.m33*rhs.m33);
-}
-
-template<typename T>
-inline Matrix3<T> matrix_from_row_vectors(Vector3<T> const& r1, Vector3<T> const& r2, Vector3<T> const& r3)
+[[nodiscard]] constexpr inline Matrix3<T> matrix_from_row_vectors(Vector3<T> const& r1,
+                                                                  Vector3<T> const& r2,
+                                                                  Vector3<T> const& r3)
 {
     return Matrix3<T>(r1.x, r1.y, r1.z,
                       r2.x, r2.y, r2.z,
@@ -254,23 +222,18 @@ inline Matrix3<T> matrix_from_row_vectors(Vector3<T> const& r1, Vector3<T> const
 }
 
 template<typename T>
-inline Matrix3<T> matrix_from_column_vectors(Vector3<T> const& c1, Vector3<T> const& c2, Vector3<T> const& c3)
+[[nodiscard]] constexpr inline Matrix3<T> matrix_from_column_vectors(Vector3<T> const& c1,
+                                                                     Vector3<T> const& c2,
+                                                                     Vector3<T> const& c3)
 {
     return Matrix3<T>(c1.x, c2.x, c3.x,
                       c1.y, c2.y, c3.y,
                       c1.z, c2.z, c3.z);
 }
 
-template<typename T>
-inline Vector3<T> operator*(Matrix3<T> const& m, Vector3<T> const& v)
-{
-    return Vector3<T>(m.m11*v.x + m.m12*v.y + m.m13*v.z,
-                      m.m21*v.x + m.m22*v.y + m.m23*v.z,
-                      m.m31*v.x + m.m32*v.y + m.m33*v.z);
-}
 
 template<typename T>
-inline Matrix3<T> transpose(Matrix3<T> const& m)
+[[nodiscard]] constexpr inline Matrix3<T> transpose(Matrix3<T> const& m)
 {
     return Matrix3<T>(m.m11, m.m21, m.m31,
                       m.m12, m.m22, m.m32,
@@ -278,7 +241,7 @@ inline Matrix3<T> transpose(Matrix3<T> const& m)
 }
 
 template<typename T>
-inline T determinant(Matrix3<T> const& m)
+[[nodiscard]] constexpr inline T determinant(Matrix3<T> const& m)
 {
     return (m.m11 * (m.m22 * m.m33 - m.m23 * m.m32)) +
            (m.m12 * (m.m23 * m.m31 - m.m21 * m.m33)) +
@@ -286,7 +249,7 @@ inline T determinant(Matrix3<T> const& m)
 }
 
 template<typename T>
-inline Matrix3<T> adjugate(Matrix3<T> const& m)
+[[nodiscard]] constexpr inline Matrix3<T> adjugate(Matrix3<T> const& m)
 {
     Vector3<T> const a = m.column(0);
     Vector3<T> const b = m.column(1);
@@ -310,16 +273,16 @@ struct ScaledMatrix3
     Matrix3<T> m;
     T inverse_scale_factor;
 
-    ScaledMatrix3() = default;
-    ScaledMatrix3(ScaledMatrix3 const&) = default;
-    ScaledMatrix3& operator=(ScaledMatrix3 const&) = default;
+    constexpr ScaledMatrix3() = default;
+    constexpr ScaledMatrix3(ScaledMatrix3 const&) = default;
+    constexpr ScaledMatrix3& operator=(ScaledMatrix3 const&) = default;
 
-    ScaledMatrix3(Matrix3<T> const& mat, T n_inverse_scale_factor)
+    constexpr ScaledMatrix3(Matrix3<T> const& mat, T n_inverse_scale_factor)
         :m(mat), inverse_scale_factor(n_inverse_scale_factor)
     {}
 
     template<typename U>
-    Matrix3<U> evaluate() const
+    [[nodiscard]] constexpr Matrix3<U> evaluate() const
     {
         Matrix3<U> ret(m);
         ret /= static_cast<U>(inverse_scale_factor);
@@ -335,7 +298,7 @@ struct ScaledMatrix3
  * The inverse scale factor of the ScaledMatrix is the determinant of the input matrix.
  */
 template<typename T>
-inline ScaledMatrix3<T> inverse_scaled(Matrix3<T> const& m)
+[[nodiscard]] constexpr inline ScaledMatrix3<T> inverse_scaled(Matrix3<T> const& m)
 {
     Vector3<T> const a = m.column(0);
     Vector3<T> const b = m.column(1);
@@ -359,8 +322,8 @@ inline ScaledMatrix3<T> inverse_scaled(Matrix3<T> const& m)
  * is true for floating point types, but might not be true for custom types.
  * If this is undesired, inverse_scaled() instead which evaluates by division instead.
  */
-template<typename T>
-inline std::enable_if_t<!std::is_integral<T>::value, Matrix3<T>> inverse(Matrix3<T> const& m)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Matrix3<T> inverse(Matrix3<T> const& m)
 {
     using ::GHULBUS_MATH_NAMESPACE::traits::Constants;
     Vector3<T> const a = m.column(0);
@@ -378,7 +341,7 @@ inline std::enable_if_t<!std::is_integral<T>::value, Matrix3<T>> inverse(Matrix3
 }
 
 template<typename T>
-inline Matrix3<T> identity3()
+[[nodiscard]] constexpr inline Matrix3<T> identity3()
 {
     using ::GHULBUS_MATH_NAMESPACE::traits::Constants;
     return Matrix3<T>(Constants<T>::One(),  Constants<T>::Zero(), Constants<T>::Zero(),
