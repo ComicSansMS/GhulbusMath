@@ -79,10 +79,38 @@ target_compile_options(gbMath INTERFACE
     $<BUILD_INTERFACE:$<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:Clang>>:-pedantic -Wall>>)
 target_compile_options(gbMath INTERFACE $<$<CXX_COMPILER_ID:GNU>:-pedantic -Wall>)
 
-
 ###############################################################################
 ## Testing gbMath
 ###############################################################################
+
+set(GB_MATH_TEST_SOURCES
+${GB_MATH_TEST_DIR}/TestAABB2.cpp
+    ${GB_MATH_TEST_DIR}/TestAABB3.cpp
+    ${GB_MATH_TEST_DIR}/TestBasis3.cpp
+    ${GB_MATH_TEST_DIR}/TestCircle2.cpp
+    ${GB_MATH_TEST_DIR}/TestColor4.cpp
+    ${GB_MATH_TEST_DIR}/TestComponentVector3.cpp
+    ${GB_MATH_TEST_DIR}/TestLine2.cpp
+    ${GB_MATH_TEST_DIR}/TestLine3.cpp
+    ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
+    ${GB_MATH_TEST_DIR}/TestMatrix3.cpp
+    ${GB_MATH_TEST_DIR}/TestMatrix4.cpp
+    ${GB_MATH_TEST_DIR}/TestMatrixIO.cpp
+    ${GB_MATH_TEST_DIR}/TestOBB3.cpp
+    ${GB_MATH_TEST_DIR}/TestRational.cpp
+    ${GB_MATH_TEST_DIR}/TestRationalIO.cpp
+    ${GB_MATH_TEST_DIR}/TestSphere3.cpp
+    ${GB_MATH_TEST_DIR}/TestTensor3.cpp
+    ${GB_MATH_TEST_DIR}/TestTransform2.cpp
+    ${GB_MATH_TEST_DIR}/TestTransform3.cpp
+    ${GB_MATH_TEST_DIR}/TestTransformLine3.cpp
+    ${GB_MATH_TEST_DIR}/TestVector2.cpp
+    ${GB_MATH_TEST_DIR}/TestVector3.cpp
+    ${GB_MATH_TEST_DIR}/TestVector4.cpp
+    ${GB_MATH_TEST_DIR}/TestVectorIO.cpp
+    ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
+    ${GB_MATH_TEST_DIR}/TestMath.cpp
+)
 
 option(GB_BUILD_TESTS "Determines whether to build tests." ON)
 if(GB_BUILD_TESTS)
@@ -117,32 +145,7 @@ if(GB_BUILD_TESTS)
     add_executable(gbMath_Test)
     target_sources(gbMath_Test
         PRIVATE
-        ${GB_MATH_TEST_DIR}/TestAABB2.cpp
-        ${GB_MATH_TEST_DIR}/TestAABB3.cpp
-        ${GB_MATH_TEST_DIR}/TestBasis3.cpp
-        ${GB_MATH_TEST_DIR}/TestCircle2.cpp
-        ${GB_MATH_TEST_DIR}/TestColor4.cpp
-        ${GB_MATH_TEST_DIR}/TestComponentVector3.cpp
-        ${GB_MATH_TEST_DIR}/TestLine2.cpp
-        ${GB_MATH_TEST_DIR}/TestLine3.cpp
-        ${GB_MATH_TEST_DIR}/TestMatrix2.cpp
-        ${GB_MATH_TEST_DIR}/TestMatrix3.cpp
-        ${GB_MATH_TEST_DIR}/TestMatrix4.cpp
-        ${GB_MATH_TEST_DIR}/TestMatrixIO.cpp
-        ${GB_MATH_TEST_DIR}/TestOBB3.cpp
-        ${GB_MATH_TEST_DIR}/TestRational.cpp
-        ${GB_MATH_TEST_DIR}/TestRationalIO.cpp
-        ${GB_MATH_TEST_DIR}/TestSphere3.cpp
-        ${GB_MATH_TEST_DIR}/TestTensor3.cpp
-        ${GB_MATH_TEST_DIR}/TestTransform2.cpp
-        ${GB_MATH_TEST_DIR}/TestTransform3.cpp
-        ${GB_MATH_TEST_DIR}/TestTransformLine3.cpp
-        ${GB_MATH_TEST_DIR}/TestVector2.cpp
-        ${GB_MATH_TEST_DIR}/TestVector3.cpp
-        ${GB_MATH_TEST_DIR}/TestVector4.cpp
-        ${GB_MATH_TEST_DIR}/TestVectorIO.cpp
-        ${GB_MATH_TEST_DIR}/TestVectorSwizzle.cpp
-        ${GB_MATH_TEST_DIR}/TestMath.cpp
+        ${GB_MATH_TEST_SOURCES}
         PRIVATE
         FILE_SET HEADERS
         BASE_DIRS ${GB_MATH_TEST_DIR}
