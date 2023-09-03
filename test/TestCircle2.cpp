@@ -11,6 +11,7 @@ TEST_CASE("Circle2")
     using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Line2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
+    using Catch::Approx;
 
     SECTION("Value initialization initializes to 0")
     {

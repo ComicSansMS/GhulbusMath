@@ -9,6 +9,7 @@ TEST_CASE("TransformLine3")
     using GHULBUS_MATH_NAMESPACE::Point3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
     using GHULBUS_MATH_NAMESPACE::Transform3;
+    using Catch::Approx;
 
     Line3<float> const source_line(Point3<float>(1.f, 2.f, 3.f), Vector3<float>(1.f, 0.f, 0.f));
 

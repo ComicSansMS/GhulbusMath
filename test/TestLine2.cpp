@@ -15,6 +15,7 @@ TEST_CASE("Line2")
     using GHULBUS_MATH_NAMESPACE::Line2;
     using GHULBUS_MATH_NAMESPACE::Point2;
     using GHULBUS_MATH_NAMESPACE::Vector2;
+    using Catch::Approx;
 
     SECTION("Zero Initialization")
     {

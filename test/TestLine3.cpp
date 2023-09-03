@@ -10,6 +10,7 @@ namespace {
             using GHULBUS_MATH_NAMESPACE::Line3;
             using GHULBUS_MATH_NAMESPACE::Point3;
             using GHULBUS_MATH_NAMESPACE::Vector3;
+            using Catch::Approx;
 
             Line3<T> const l0(Point3<T>(0.f, 0.f, 0.f), Vector3<T>(1.f, 1.f, 1.f));
             auto const l0_norm = normalized(l0);
@@ -46,6 +47,7 @@ TEST_CASE("Line3")
     using GHULBUS_MATH_NAMESPACE::Line3;
     using GHULBUS_MATH_NAMESPACE::Point3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
+    using Catch::Approx;
 
     SECTION("Zero Initialization")
     {

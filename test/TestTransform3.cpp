@@ -11,6 +11,7 @@ TEST_CASE("Transform3")
     using GHULBUS_MATH_NAMESPACE::Point3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
     using GHULBUS_MATH_NAMESPACE::Transform3;
+    using Catch::Approx;
 
     SECTION("Default construction")
     {
