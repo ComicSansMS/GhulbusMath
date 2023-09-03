@@ -12,18 +12,20 @@ jobs:
         - {
             name: "Ubuntu Latest gcc",
             os: ubuntu-latest,
-            cc: "gcc-10",
-            cxx: "g++-10",
+            cc: gcc-12,
+            cxx: g++-12,
           }
         - {
             name: "Ubuntu Latest clang",
             os: ubuntu-latest,
-            cc: "clang-12",
-            cxx: "clang++-12",
+            cc: clang-14,
+            cxx: clang++-14,
+            cxxflags: -stdlib=libc++,
           }
     env:
       CC: ${{ matrix.config.cc }}
       CXX: ${{ matrix.config.cxx }}
+      CXXFLAGS: ${{ matrix.config.cxxflags }}
     steps:
       - uses: actions/checkout@v2
       - run: echo "🏃‍♂️ Running job ${{ matrix.config.name }} (${{matrix.build_type}})."
@@ -38,18 +40,18 @@ jobs:
       - name: 👷‍♂️ Build
         run: |
             cd build
-            cmake -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=/usr/bin/gcov-10 ..
+            cmake -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=/usr/bin/gcov-12 ..
             cmake --build .
       - name: 🔍 Test
         run: |
             cd build
             ctest -C ${{matrix.build_type}}
       - name: 👮‍♂️ Code Coverage
-        if: matrix.config.cc == 'gcc-10' && matrix.build_type == 'Debug'
+        if: matrix.config.cc == 'gcc-12' && matrix.build_type == 'Debug'
         run: |
             cd build
             cmake --build . --target gbMath_TestCoverage
-            bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-10 2> /dev/null
+            bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-12 2> /dev/null
       - name: 📖 Documentation
         if: matrix.build_type == 'Release'
         run: |
