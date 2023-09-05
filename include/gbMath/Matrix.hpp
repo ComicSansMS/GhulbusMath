@@ -167,7 +167,44 @@ public:
         return *this;
     }
 
+#ifndef __clang__
     [[nodiscard]] friend constexpr auto operator<=>(Matrix const&, Matrix const&) = default;
+#else
+    // clang currently fails to generate comparison operators correctly.
+    [[nodiscard]] friend constexpr auto operator==(Matrix const& lhs, Matrix const& rhs)
+    {
+        return std::equal(begin(lhs.m), end(lhs.m), begin(rhs.m));
+    }
+
+    [[nodiscard]] friend constexpr auto operator!=(Matrix const& lhs, Matrix const& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    [[nodiscard]] friend constexpr auto operator<(Matrix const& lhs, Matrix const& rhs)
+    {
+        for (std::size_t i = 0; i < lhs.m.size(); ++i) {
+            if (lhs.m[i] < rhs.m[i]) { return true; }
+            else if (lhs.m[i] != rhs.m[i]) { return false; }
+        }
+        return false;
+    }
+
+    [[nodiscard]] friend constexpr auto operator<=(Matrix const& lhs, Matrix const& rhs)
+    {
+        return (lhs < rhs) || (lhs == rhs);
+    }
+
+    [[nodiscard]] friend constexpr auto operator>(Matrix const& lhs, Matrix const& rhs)
+    {
+        return (rhs < lhs);
+    }
+
+    [[nodiscard]] friend constexpr auto operator>=(Matrix const& lhs, Matrix const& rhs)
+    {
+        return (rhs <= lhs);
+    }
+#endif
 
     [[nodiscard]] friend constexpr Matrix operator+(Matrix const& lhs, Matrix const& rhs)
     {

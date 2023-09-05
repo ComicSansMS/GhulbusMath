@@ -106,7 +106,44 @@ public:
         return *this;
     }
 
+#ifndef __clang__
     [[nodiscard]] friend constexpr auto operator<=>(Vector const&, Vector const&) = default;
+#else
+    // clang currently fails to generate comparison operators correctly.
+    [[nodiscard]] friend constexpr auto operator==(Vector const& lhs, Vector const& rhs)
+    {
+        return std::equal(begin(lhs.v), end(lhs.v), begin(rhs.v));
+    }
+
+    [[nodiscard]] friend constexpr auto operator!=(Vector const& lhs, Vector const& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    [[nodiscard]] friend constexpr auto operator<(Vector const& lhs, Vector const& rhs)
+    {
+        for (std::size_t i = 0; i < lhs.v.size(); ++i) {
+            if (lhs.v[i] < rhs.v[i]) { return true; }
+            else if (lhs.v[i] != rhs.v[i]) { return false; }
+        }
+        return false;
+    }
+
+    [[nodiscard]] friend constexpr auto operator<=(Vector const& lhs, Vector const& rhs)
+    {
+        return (lhs < rhs) || (lhs == rhs);
+    }
+
+    [[nodiscard]] friend constexpr auto operator>(Vector const& lhs, Vector const& rhs)
+    {
+        return (rhs < lhs);
+    }
+
+    [[nodiscard]] friend constexpr auto operator>=(Vector const& lhs, Vector const& rhs)
+    {
+        return (rhs <= lhs);
+    }
+#endif
 
     [[nodiscard]] friend constexpr Vector operator+(Vector const& lhs, Vector const& rhs)
     {
