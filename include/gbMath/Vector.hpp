@@ -112,7 +112,7 @@ public:
     // clang currently fails to generate comparison operators correctly.
     [[nodiscard]] friend constexpr auto operator==(Vector const& lhs, Vector const& rhs)
     {
-        return std::equal(begin(lhs.v), end(lhs.v), begin(rhs.v));
+        return lhs.v == rhs.v;
     }
 
     [[nodiscard]] friend constexpr auto operator!=(Vector const& lhs, Vector const& rhs)
@@ -122,11 +122,7 @@ public:
 
     [[nodiscard]] friend constexpr auto operator<(Vector const& lhs, Vector const& rhs)
     {
-        for (std::size_t i = 0; i < lhs.v.size(); ++i) {
-            if (lhs.v[i] < rhs.v[i]) { return true; }
-            else if (lhs.v[i] != rhs.v[i]) { return false; }
-        }
-        return false;
+        return lhs.v < rhs.v;
     }
 
     [[nodiscard]] friend constexpr auto operator<=(Vector const& lhs, Vector const& rhs)

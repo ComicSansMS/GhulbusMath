@@ -173,7 +173,7 @@ public:
     // clang currently fails to generate comparison operators correctly.
     [[nodiscard]] friend constexpr auto operator==(Matrix const& lhs, Matrix const& rhs)
     {
-        return std::equal(begin(lhs.m), end(lhs.m), begin(rhs.m));
+        return lhs.m == rhs.m;
     }
 
     [[nodiscard]] friend constexpr auto operator!=(Matrix const& lhs, Matrix const& rhs)
@@ -183,11 +183,7 @@ public:
 
     [[nodiscard]] friend constexpr auto operator<(Matrix const& lhs, Matrix const& rhs)
     {
-        for (std::size_t i = 0; i < lhs.m.size(); ++i) {
-            if (lhs.m[i] < rhs.m[i]) { return true; }
-            else if (lhs.m[i] != rhs.m[i]) { return false; }
-        }
-        return false;
+        return lhs.m < rhs.m;
     }
 
     [[nodiscard]] friend constexpr auto operator<=(Matrix const& lhs, Matrix const& rhs)
