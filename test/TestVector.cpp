@@ -455,4 +455,64 @@ TEST_CASE("Vector")
         CHECK(normalized(Vector<float, 4>(5.f, 5.f, 5.f, 5.f)) ==
             Vector<float, 4>(1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f)));
     }
+
+    SECTION("Construction from Vector2")
+    {
+        using GHULBUS_MATH_NAMESPACE::Vector2;
+        Vector2<float> v2{ 11.f, 22.f };
+        Vector v{ v2 };
+        static_assert(std::same_as<decltype(v)::ValueType, float>);
+        REQUIRE(v.dimension() == 2);
+        CHECK(v[0] == 11.f);
+        CHECK(v[1] == 22.f);
+
+        Vector2<int> v2i{ 5, 23 };
+        Vector vi{ v2i };
+        static_assert(std::same_as<decltype(vi)::ValueType, int>);
+        REQUIRE(vi.dimension() == 2);
+        CHECK(vi[0] == 5);
+        CHECK(vi[1] == 23);
+    }
+
+    SECTION("Construction from Vector3")
+    {
+        using GHULBUS_MATH_NAMESPACE::Vector3;
+        Vector3<float> v3{ 11.f, 22.f, 33.f };
+        Vector v{ v3 };
+        static_assert(std::same_as<decltype(v)::ValueType, float>);
+        REQUIRE(v.dimension() == 3);
+        CHECK(v[0] == 11.f);
+        CHECK(v[1] == 22.f);
+        CHECK(v[2] == 33.f);
+
+        Vector3<int> v3i{ 5, 23, 42 };
+        Vector vi{ v3i };
+        static_assert(std::same_as<decltype(vi)::ValueType, int>);
+        REQUIRE(vi.dimension() == 3);
+        CHECK(vi[0] == 5);
+        CHECK(vi[1] == 23);
+        CHECK(vi[2] == 42);
+    }
+
+    SECTION("Construction from Vector4")
+    {
+        using GHULBUS_MATH_NAMESPACE::Vector4;
+        Vector4<float> v4{ 11.f, 22.f, 33.f, 44.f };
+        Vector v{ v4 };
+        static_assert(std::same_as<decltype(v)::ValueType, float>);
+        REQUIRE(v.dimension() == 4);
+        CHECK(v[0] == 11.f);
+        CHECK(v[1] == 22.f);
+        CHECK(v[2] == 33.f);
+        CHECK(v[3] == 44.f);
+
+        Vector4<int> v4i{ 5, 23, 42, 64 };
+        Vector vi{ v4i };
+        static_assert(std::same_as<decltype(vi)::ValueType, int>);
+        REQUIRE(vi.dimension() == 4);
+        CHECK(vi[0] == 5);
+        CHECK(vi[1] == 23);
+        CHECK(vi[2] == 42);
+        CHECK(vi[3] == 64);
+    }
 }

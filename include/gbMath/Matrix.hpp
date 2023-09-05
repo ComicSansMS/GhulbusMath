@@ -11,6 +11,9 @@
 
 #include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
+#include <gbMath/Matrix2.hpp>
+#include <gbMath/Matrix3.hpp>
+#include <gbMath/Matrix4.hpp>
 #include <gbMath/MatrixPolicies.hpp>
 #include <gbMath/Vector.hpp>
 
@@ -68,6 +71,29 @@ public:
                 m[i * N + j] = arr[j * M + i];
             }
         }
+    }
+
+    constexpr explicit Matrix(Matrix2<T> const& other)
+        : m{ other.m11, other.m12, other.m21, other.m22 }
+    {
+        static_assert((M == 2) && (N == 2), "Dimensions must match.");
+    }
+
+    constexpr explicit Matrix(Matrix3<T> const& other)
+        : m{ other.m11, other.m12, other.m13,
+             other.m21, other.m22, other.m23,
+             other.m31, other.m32, other.m33 }
+    {
+        static_assert((M == 3) && (N == 3), "Dimensions must match.");
+    }
+
+    constexpr explicit Matrix(Matrix4<T> const& other)
+        : m{ other.m11, other.m12, other.m13, other.m14,
+             other.m21, other.m22, other.m23, other.m24,
+             other.m31, other.m32, other.m33, other.m34,
+             other.m41, other.m42, other.m43, other.m44 }
+    {
+        static_assert((M == 4) && (N == 4), "Dimensions must match.");
     }
 
     [[nodiscard]] constexpr std::pair<std::size_t, std::size_t> dimension() const
@@ -267,6 +293,23 @@ public:
     }
 };
 
+///@{
+/** Deduction guide for Matrix2.
+ */
+template<typename T>
+Matrix(Matrix2<T> const&) -> Matrix<T, 2, 2>;
+
+/** Deduction guide for Matrix3.
+ */
+template<typename T>
+Matrix(Matrix3<T> const&) -> Matrix<T, 3, 3>;
+
+/** Deduction guide for Matrix4.
+ */
+template<typename T>
+Matrix(Matrix4<T> const&) -> Matrix<T, 4, 4>;
+/// @}
+
 template<typename T, std::size_t M, std::size_t N, typename... Args>
 [[nodiscard]] constexpr inline Matrix<T, M, N> matrix_from_row_vectors(Args... args)
     requires((sizeof...(args) == M) && (std::same_as<Args, Vector<T, N>> && ...))
@@ -308,7 +351,7 @@ template<typename T, std::size_t M, std::size_t N>
 }
 
 template<typename T, std::size_t N>
-[[nodiscard]] constexpr inline Matrix<T, N, N> identityMN()
+[[nodiscard]] constexpr inline Matrix<T, N, N> identityN()
 {
     using ::GHULBUS_MATH_NAMESPACE::traits::Constants;
     Matrix<T, N, N> ret(doNotInitialize);
@@ -354,7 +397,7 @@ struct LUDecomposition {
     }
 
     [[nodiscard]] constexpr Matrix<T, N, N> getL() const {
-        Matrix<T, N, N> l = identityMN<T, N>();
+        Matrix<T, N, N> l = identityN<T, N>();
         for (std::size_t i = 1; i < N; ++i) {
             for (std::size_t j = 0; j < i; ++j) {
                 l(i, j) = m(i, j);

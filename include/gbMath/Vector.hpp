@@ -11,6 +11,9 @@
 
 #include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
+#include <gbMath/Vector2.hpp>
+#include <gbMath/Vector3.hpp>
+#include <gbMath/Vector4.hpp>
 
 #include <array>
 #include <algorithm>
@@ -65,6 +68,26 @@ public:
     {
         std::transform(begin(other.v), end(other.v), begin(v),
             [](U const& u) -> T { return static_cast<T>(u); });
+    }
+
+    template<typename VectorTag_T>
+    constexpr explicit Vector(Vector2Impl<T, VectorTag_T> const& other)
+        : v{ other.x, other.y }
+    {
+        static_assert(N == 2, "Dimensions must match.");
+    }
+
+    template<typename VectorTag_T>
+    constexpr explicit Vector(Vector3Impl<T, VectorTag_T> const& other)
+        : v{ other.x, other.y, other.z }
+    {
+        static_assert(N == 3, "Dimensions must match.");
+    }
+
+    constexpr explicit Vector(Vector4<T> const& other)
+        : v{ other.x, other.y, other.z, other.w }
+    {
+        static_assert(N == 4, "Dimensions must match.");
     }
 
     [[nodiscard]] constexpr std::size_t dimension() const
@@ -182,6 +205,24 @@ public:
             begin(rhs.v), traits::Constants<T>::Zero());
     }
 };
+
+///@{
+/** Deduction guide for Vector2.
+ */
+template<typename T, typename VectorTag_T>
+Vector(Vector2Impl<T, VectorTag_T> const&) -> Vector<T, 2>;
+
+/** Deduction guide for Vector3.
+ */
+template<typename T, typename VectorTag_T>
+Vector(Vector3Impl<T, VectorTag_T> const&) -> Vector<T, 3>;
+
+/** Deduction guide for Vector4.
+ */
+template<typename T>
+Vector(Vector4<T> const&) -> Vector<T, 4>;
+/// @}
+
 template<typename T, std::size_t N>
 [[nodiscard]] inline double length(Vector<T, N> const& v)
 {

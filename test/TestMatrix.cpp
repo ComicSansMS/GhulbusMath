@@ -485,7 +485,7 @@ TEST_CASE("Matrix")
 
     SECTION("Identity")
     {
-        Matrix<float, 6, 6> const m = GHULBUS_MATH_NAMESPACE::identityMN<float, 6>();
+        Matrix<float, 6, 6> const m = GHULBUS_MATH_NAMESPACE::identityN<float, 6>();
         CHECK(m == Matrix<float, 6, 6>(1.f, 0.f, 0.f, 0.f, 0.f, 0.f,
                                        0.f, 1.f, 0.f, 0.f, 0.f, 0.f,
                                        0.f, 0.f, 1.f, 0.f, 0.f, 0.f,
@@ -493,7 +493,7 @@ TEST_CASE("Matrix")
                                        0.f, 0.f, 0.f, 0.f, 1.f, 0.f,
                                        0.f, 0.f, 0.f, 0.f, 0.f, 1.f));
 
-        Matrix<unsigned int, 4, 4> const mi = GHULBUS_MATH_NAMESPACE::identityMN<unsigned int, 4>();
+        Matrix<unsigned int, 4, 4> const mi = GHULBUS_MATH_NAMESPACE::identityN<unsigned int, 4>();
         CHECK(mi == Matrix<unsigned int, 4, 4>(1u, 0u, 0u, 0u,
                                                0u, 1u, 0u, 0u,
                                                0u, 0u, 1u, 0u,
@@ -630,6 +630,78 @@ TEST_CASE("LU Decomposition")
         }
 
         CHECK(lud.getDeterminant() == Approx(-29931807057498744.f/29041807.f));
+    }
+
+    SECTION("Construction from Matrix2")
+    {
+        using GHULBUS_MATH_NAMESPACE::Matrix2;
+        Matrix2<float> m22{ 11.f, 22.f,
+                            33.f, 44.f };
+        Matrix m{ m22 };
+        static_assert(std::same_as<decltype(m)::ValueType, float>);
+        REQUIRE(m.dimension() == std::pair<std::size_t, std::size_t>(2, 2));
+        CHECK(m(0, 0) == 11.f);  CHECK(m(0, 1) == 22.f);
+        CHECK(m(1, 0) == 33.f);  CHECK(m(1, 1) == 44.f);
+
+        Matrix2<int> m2i{  5, 23,
+                          15, 55 };
+        Matrix mi{ m2i };
+        static_assert(std::same_as<decltype(mi)::ValueType, int>);
+        REQUIRE(m.dimension() == std::pair<std::size_t, std::size_t>(2, 2));
+        CHECK(mi(0, 0) ==  5);  CHECK(mi(0, 1) == 23);
+        CHECK(mi(1, 0) == 15);  CHECK(mi(1, 1) == 55);
+    }
+
+    SECTION("Construction from Matrix3")
+    {
+        using GHULBUS_MATH_NAMESPACE::Matrix3;
+        Matrix3<float> m33{ 11.f, 22.f, 33.f,
+                            44.f, 55.f, 66.f,
+                            77.f, 88.f, 99.f };
+        Matrix m{ m33 };
+        static_assert(std::same_as<decltype(m)::ValueType, float>);
+        REQUIRE(m.dimension() == std::pair<std::size_t, std::size_t>(3, 3));
+        CHECK(m(0, 0) == 11.f);  CHECK(m(0, 1) == 22.f);  CHECK(m(0, 2) == 33.f);
+        CHECK(m(1, 0) == 44.f);  CHECK(m(1, 1) == 55.f);  CHECK(m(1, 2) == 66.f);
+        CHECK(m(2, 0) == 77.f);  CHECK(m(2, 1) == 88.f);  CHECK(m(2, 2) == 99.f);
+
+        Matrix3<int> m3i{  5, 23, 42,
+                          15, 55, 65,
+                          13, 17, 23, };
+        Matrix mi{ m3i };
+        static_assert(std::same_as<decltype(mi)::ValueType, int>);
+        REQUIRE(m.dimension() == std::pair<std::size_t, std::size_t>(3, 3));
+        CHECK(mi(0, 0) ==  5);  CHECK(mi(0, 1) == 23);  CHECK(mi(0, 2) == 42);
+        CHECK(mi(1, 0) == 15);  CHECK(mi(1, 1) == 55);  CHECK(mi(1, 2) == 65);
+        CHECK(mi(2, 0) == 13);  CHECK(mi(2, 1) == 17);  CHECK(mi(2, 2) == 23);
+    }
+
+    SECTION("Construction from Matrix4")
+    {
+        using GHULBUS_MATH_NAMESPACE::Matrix4;
+        Matrix4<float> m44{ 11.f, 22.f, 33.f, 12.f,
+                            44.f, 55.f, 66.f, 13.f,
+                            77.f, 88.f, 99.f, 14.f,
+                            15.f, 16.f, 17.f, 18.f };
+        Matrix m{ m44 };
+        static_assert(std::same_as<decltype(m)::ValueType, float>);
+        REQUIRE(m.dimension() == std::pair<std::size_t, std::size_t>(4, 4));
+        CHECK(m(0, 0) == 11.f);  CHECK(m(0, 1) == 22.f);  CHECK(m(0, 2) == 33.f);  CHECK(m(0, 3) == 12.f);
+        CHECK(m(1, 0) == 44.f);  CHECK(m(1, 1) == 55.f);  CHECK(m(1, 2) == 66.f);  CHECK(m(1, 3) == 13.f);
+        CHECK(m(2, 0) == 77.f);  CHECK(m(2, 1) == 88.f);  CHECK(m(2, 2) == 99.f);  CHECK(m(2, 3) == 14.f);
+        CHECK(m(3, 0) == 15.f);  CHECK(m(3, 1) == 16.f);  CHECK(m(3, 2) == 17.f);  CHECK(m(3, 3) == 18.f);
+
+        Matrix4<int> m4i{  5, 23, 42, 54,
+                          15, 55, 65, 95,
+                          13, 17, 23, 29,
+                          48, 10, 79, 86 };
+        Matrix mi{ m4i };
+        static_assert(std::same_as<decltype(mi)::ValueType, int>);
+        REQUIRE(m.dimension() == std::pair<std::size_t, std::size_t>(4, 4));
+        CHECK(mi(0, 0) ==  5);  CHECK(mi(0, 1) == 23);  CHECK(mi(0, 2) == 42);  CHECK(mi(0, 3) == 54);
+        CHECK(mi(1, 0) == 15);  CHECK(mi(1, 1) == 55);  CHECK(mi(1, 2) == 65);  CHECK(mi(1, 3) == 95);
+        CHECK(mi(2, 0) == 13);  CHECK(mi(2, 1) == 17);  CHECK(mi(2, 2) == 23);  CHECK(mi(2, 3) == 29);
+        CHECK(mi(3, 0) == 48);  CHECK(mi(3, 1) == 10);  CHECK(mi(3, 2) == 79);  CHECK(mi(3, 3) == 86);
     }
 
 }
