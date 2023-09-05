@@ -63,8 +63,8 @@ public:
 
     constexpr explicit Matrix(T const* arr, MatrixPolicies::InputOrder_ColumnMajor)
     {
-        for (int j = 0; j < N; ++j) {
-            for (int i = 0; i < M; ++i) {
+        for (std::size_t j = 0; j < N; ++j) {
+            for (std::size_t i = 0; i < M; ++i) {
                 m[i * N + j] = arr[j * M + i];
             }
         }
