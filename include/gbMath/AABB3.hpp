@@ -63,7 +63,7 @@ public:
 
     [[nodiscard]] static constexpr inline AABB3 from_points(std::initializer_list<Point3<T>> l)
     {
-        return from_points(std::ranges::subrange(l));
+        return std::accumulate(std::ranges::begin(l), std::ranges::end(l), empty_aabb3<T>(), enclose<T>);
     }
 };
 
