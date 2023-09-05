@@ -54,9 +54,16 @@ public:
 
     [[nodiscard]] friend constexpr bool operator==(AABB3 const& lhs, AABB3 const& rhs) = default;
 
+#ifndef __clang__
     template<std::ranges::range R>
     [[nodiscard]] static constexpr inline AABB3 from_points(R points)
         requires(std::same_as<typename std::ranges::range_value_t<R>, Point3<T>> )
+#else
+    // Clang is missing the range concept currently.
+    template<typename R>
+    [[nodiscard]] static constexpr inline AABB3 from_points(R points)
+        requires(requires(R r) { std::ranges::begin(r); std::ranges::end(r); })
+#endif
     {
         return std::accumulate(std::ranges::begin(points), std::ranges::end(points), empty_aabb3<T>(), enclose<T>);
     }
