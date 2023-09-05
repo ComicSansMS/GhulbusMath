@@ -135,13 +135,13 @@ TEST_CASE("Matrix")
     SECTION("Matrix dimension")
     {
         Matrix<int, 2, 3> m23;
-        CHECK(m23.dimension() == std::make_pair(2, 3));
+        CHECK(m23.dimension() == std::make_pair<std::size_t>(2, 3));
         Matrix<int, 3, 2> m32;
-        CHECK(m32.dimension() == std::make_pair(3, 2));
+        CHECK(m32.dimension() == std::make_pair<std::size_t>(3, 2));
         Matrix<int, 15, 9> m159;
-        CHECK(m159.dimension() == std::make_pair(15, 9));
+        CHECK(m159.dimension() == std::make_pair<std::size_t>(15, 9));
         Matrix<int, 1, 8> m18;
-        CHECK(m18.dimension() == std::make_pair(1, 8));
+        CHECK(m18.dimension() == std::make_pair<std::size_t>(1, 8));
     }
 
     SECTION("Is square")
