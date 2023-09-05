@@ -29,22 +29,22 @@ public:
     Point3<T> center;
     T radius;
 
-    Sphere3()
+    constexpr Sphere3()
         :center{}, radius{}
     {}
-    Sphere3(DoNotInitialize_Tag)
+    constexpr explicit Sphere3(DoNotInitialize_Tag)
         :center(doNotInitialize)
     {}
-    Sphere3(Sphere3 const&) = default;
-    Sphere3& operator=(Sphere3 const&) = default;
+    constexpr Sphere3(Sphere3 const&) = default;
+    constexpr Sphere3& operator=(Sphere3 const&) = default;
 
-    Sphere3(Point3<T> const& n_center, T n_radius)
+    constexpr Sphere3(Point3<T> const& n_center, T n_radius)
         :center(n_center), radius(n_radius)
     {}
 };
 
 template<typename T>
-inline bool collides(Sphere3<T> const& s, Point3<T> const& p)
+[[nodiscard]] constexpr inline bool collides(Sphere3<T> const& s, Point3<T> const& p)
 {
     Vector3<T> const dist = s.center - p;
     T const squared_dist = dot(dist, dist);
@@ -55,7 +55,7 @@ inline bool collides(Sphere3<T> const& s, Point3<T> const& p)
 }
 
 template<typename T>
-inline bool collides(Sphere3<T> const& s1, Sphere3<T> const& s2)
+[[nodiscard]] constexpr inline bool collides(Sphere3<T> const& s1, Sphere3<T> const& s2)
 {
     Vector3<T> const dist = s1.center - s2.center;
     T const squared_dist = dot(dist, dist);
@@ -67,7 +67,7 @@ inline bool collides(Sphere3<T> const& s1, Sphere3<T> const& s2)
 }
 
 template<typename T>
-inline bool intersects(Sphere3<T> const& s, Line3<T> const& l)
+[[nodiscard]] constexpr inline bool intersects(Sphere3<T> const& s, Line3<T> const& l)
 {
     Vector3<T> const m = l.p - s.center;
     T const c = dot(m, m) - (s.radius * s.radius);
@@ -86,7 +86,7 @@ inline bool intersects(Sphere3<T> const& s, Line3<T> const& l)
 }
 
 template<typename T>
-inline std::optional<T> intersect_p(Sphere3<T> const& s, Line3<T> const& l)
+[[nodiscard]] constexpr inline std::optional<T> intersect_p(Sphere3<T> const& s, Line3<T> const& l)
 {
     Vector3<T> const m = l.p - s.center;
     T const b = dot(m, normalized(l.v));
@@ -123,17 +123,17 @@ struct Sphere3Line3Intersection
     T c;
     T discr;
 
-    Sphere3Line3Intersection(T n_b, T n_c)
+    constexpr Sphere3Line3Intersection(T n_b, T n_c)
         :b(n_b), c(n_c), discr(b*b - c)
     {}
 
-    Sphere3Line3Intersection() = default;
-    Sphere3Line3Intersection(Sphere3Line3Intersection const&) = default;
-    Sphere3Line3Intersection& operator=(Sphere3Line3Intersection const&) = default;
+    constexpr Sphere3Line3Intersection() = default;
+    constexpr Sphere3Line3Intersection(Sphere3Line3Intersection const&) = default;
+    constexpr Sphere3Line3Intersection& operator=(Sphere3Line3Intersection const&) = default;
 
     /** Returns true if an intersection point was found.
      */
-    bool doesHitSphere() const {
+    [[nodiscard]] constexpr bool doesHitSphere() const {
         // negative discriminant: ray is not hitting sphere
         return (discr >= traits::Constants<T>::Zero());
     }
@@ -142,7 +142,7 @@ struct Sphere3Line3Intersection
      * all values returned by evaluateT() will be negative. The return value is unspecified
      * if there is no intersection.
      */
-    bool allIntersectionsBehindRayOrigin() const {
+    [[nodiscard]] constexpr bool allIntersectionsBehindRayOrigin() const {
         // returns true iff ray origin is outside of sphere and ray is pointing away from sphere
         return (c > traits::Constants<T>::Zero() && b > traits::Constants<T>::Zero());
     }
@@ -150,7 +150,7 @@ struct Sphere3Line3Intersection
     /** Evaluates to true if an intersection point was found and at least one intersection point
      * lies along the direction of the ray.
      */
-    operator bool() const
+    [[nodiscard]] constexpr operator bool() const
     {
         return (!allIntersectionsBehindRayOrigin()) && doesHitSphere();
     }
@@ -159,7 +159,7 @@ struct Sphere3Line3Intersection
      * \pre doesHitSphere() - The behavior is undefined if no intersection points exist.
      */
     template<typename U = T>
-    Sphere3Line3IntersectionParameters<U> evaluateT() const
+    [[nodiscard]] constexpr Sphere3Line3IntersectionParameters<U> evaluateT() const
     {
         auto const sqr_discr = std::sqrt(static_cast<U>(discr));
         U const neg_b = static_cast<U>(-b);
@@ -171,7 +171,7 @@ struct Sphere3Line3Intersection
 };
 
 template<typename T>
-inline Sphere3Line3Intersection<T> intersect(Sphere3<T> const& s, Line3<T> const& l)
+[[nodiscard]] constexpr inline Sphere3Line3Intersection<T> intersect(Sphere3<T> const& s, Line3<T> const& l)
 {
     Vector3<T> const m = l.p - s.center;
     T const b = dot(m, normalized(l.v));

@@ -43,8 +43,8 @@ public:
     {}
     constexpr Vector4(DoNotInitialize_Tag)
     {}
-    constexpr Vector4(Vector4<T> const&) = default;
-    constexpr Vector4<T>& operator=(Vector4<T> const&) = default;
+    constexpr Vector4(Vector4 const&) = default;
+    constexpr Vector4& operator=(Vector4 const&) = default;
 
     constexpr Vector4(T vx, T vy, T vz, T vw)
         :x(vx), y(vy), z(vz), w(vw)
@@ -54,7 +54,7 @@ public:
         :x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
     {}
 
-    template<typename U>
+    template<std::convertible_to<T> U>
     constexpr explicit Vector4(Vector4<U> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)), w(static_cast<T>(v.w))
     {}
@@ -69,7 +69,7 @@ public:
         return (&x)[idx];
     }
 
-    constexpr Vector4<T>& operator+=(Vector4<T> const& rhs)
+    constexpr Vector4& operator+=(Vector4 const& rhs)
     {
         x += rhs.x;
         y += rhs.y;
@@ -78,7 +78,7 @@ public:
         return *this;
     }
 
-    constexpr Vector4<T>& operator-=(Vector4<T> const& rhs)
+    constexpr Vector4& operator-=(Vector4 const& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -87,7 +87,7 @@ public:
         return *this;
     }
 
-    constexpr Vector4<T>& operator*=(T s)
+    constexpr Vector4& operator*=(T s)
     {
         x *= s;
         y *= s;
@@ -96,7 +96,7 @@ public:
         return *this;
     }
 
-    constexpr Vector4<T>& operator/=(T s)
+    constexpr Vector4& operator/=(T s)
     {
         x /= s;
         y /= s;
@@ -117,10 +117,10 @@ public:
 
     [[nodiscard]] friend constexpr Vector4 operator-(Vector4 const& lhs, Vector4 const& rhs)
     {
-        return Vector4<T>(lhs.x - rhs.x,
-                          lhs.y - rhs.y,
-                          lhs.z - rhs.z,
-                          lhs.w - rhs.w);
+        return Vector4(lhs.x - rhs.x,
+                       lhs.y - rhs.y,
+                       lhs.z - rhs.z,
+                       lhs.w - rhs.w);
     }
 
     [[nodiscard]] friend constexpr Vector4 operator*(Vector4 const& v, T s)

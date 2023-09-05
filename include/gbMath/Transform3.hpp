@@ -34,6 +34,17 @@ class TransformReciprocal3
 {
 public:
     Matrix3<T> m;
+
+    template<typename VectorTag_T>
+    [[nodiscard]] friend constexpr Vector3Impl<T, VectorTag_T> operator*(Vector3Impl<T, VectorTag_T> const& n,
+                                                                         TransformReciprocal3 const& rt)
+        requires(VectorTraits::IsReciprocal<VectorTag_T>::value && !VectorTraits::IsFinitePoint<VectorTag_T>::value)
+    {
+        Matrix3<T> const& m = rt.m;
+        return Vector3Impl<T, VectorTag_T>(n.x*m.m11 + n.y*m.m21 + n.z*m.m31,
+                                           n.x*m.m12 + n.y*m.m22 + n.z*m.m32,
+                                           n.x*m.m13 + n.y*m.m23 + n.z*m.m33);
+    }
 };
 
 /** A homogeneous 2D transformation.
@@ -44,18 +55,18 @@ class Transform3
 public:
     Matrix4<T> m;
 public:
-    Transform3()
+    constexpr Transform3()
         :m(identity4<T>())
     {}
 
-    explicit Transform3(Matrix4<T> const& transform_matrix)
+    constexpr explicit Transform3(Matrix4<T> const& transform_matrix)
         :m(transform_matrix)
     {}
 
-    Transform3(T n11, T n12, T n13, T n14,
-               T n21, T n22, T n23, T n24,
-               T n31, T n32, T n33, T n34,
-               T n41, T n42, T n43, T n44)
+    constexpr Transform3(T n11, T n12, T n13, T n14,
+                         T n21, T n22, T n23, T n24,
+                         T n31, T n32, T n33, T n34,
+                         T n41, T n42, T n43, T n44)
         :m(n11, n12, n13, n14,
            n21, n22, n23, n24,
            n31, n32, n33, n34,
@@ -67,7 +78,7 @@ public:
      * transformation. We follow Lengyel's suggestion here by using the adjugate to properly mirror normals if the
      * winding order changed and instead of transposing, multiply it from the right.
      */
-    TransformReciprocal3<T> reciprocal()
+    [[nodiscard]] constexpr TransformReciprocal3<T> reciprocal()
     {
         Matrix3<T> const upper_left(m.m11, m.m12, m.m13,
                                     m.m21, m.m22, m.m23,
@@ -81,7 +92,7 @@ public:
      * if you know beforehand that the transform is in fact orthogonal.
      * @pre this->m * transpose(this->m) ~= identity4()
      */
-    TransformReciprocal3<T> reciprocal(assume_orthogonal_t)
+    [[nodiscard]] constexpr TransformReciprocal3<T> reciprocal(assume_orthogonal_t)
     {
         Matrix3<T> const upper_left(m.m11, m.m12, m.m13,
                                     m.m21, m.m22, m.m23,
@@ -89,51 +100,41 @@ public:
         return TransformReciprocal3<T>{ transpose(upper_left) };
     }
 
-    Transform3<T>& operator*=(Transform3<T> const& rhs) {
+    constexpr Transform3& operator*=(Transform3 const& rhs) {
         m *= rhs.m;
         return *this;
     }
+
+    [[nodiscard]] friend constexpr Transform3 operator*(Transform3 const& lhs, Transform3 const& rhs) {
+        return Transform3(lhs.m * rhs.m);
+    }
+
+    template<typename VectorTag_T>
+    [[nodiscard]] friend constexpr Vector3Impl<T, VectorTag_T> operator*(Transform3 const& t,
+                                                                         Vector3Impl<T, VectorTag_T> const& v)
+        requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
+    {
+        Matrix4<T> const& m = t.m;
+        return Vector3Impl<T, VectorTag_T>(m.m11*v.x + m.m12*v.y + m.m13*v.z,
+                                           m.m21*v.x + m.m22*v.y + m.m23*v.z,
+                                           m.m31*v.x + m.m32*v.y + m.m33*v.z);
+    }
+
+    template<typename VectorTag_T>
+    [[nodiscard]] friend constexpr Vector3Impl<T, VectorTag_T> operator*(Transform3<T> const& t,
+                                                                          Vector3Impl<T, VectorTag_T> const& p)
+        requires(VectorTraits::IsFinitePoint<VectorTag_T>::value)
+    {
+        Matrix4<T> const& m = t.m;
+        return Vector3Impl<T, VectorTag_T>(m.m11*p.x + m.m12*p.y + m.m13*p.z + m.m14,
+                                           m.m21*p.x + m.m22*p.y + m.m23*p.z + m.m24,
+                                           m.m31*p.x + m.m32*p.y + m.m33*p.z + m.m34);
+    }
+
 };
 
-template<typename T>
-Transform3<T> operator*(Transform3<T> const& lhs, Transform3<T> const& rhs) {
-    return Transform3<T>(lhs.m * rhs.m);
-}
-
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector3Impl<T, VectorTag_T>>
-operator*(Transform3<T> const& t, Vector3Impl<T, VectorTag_T> const& v)
-{
-    Matrix4<T> const& m = t.m;
-    return Vector3Impl<T, VectorTag_T>(m.m11*v.x + m.m12*v.y + m.m13*v.z,
-                                       m.m21*v.x + m.m22*v.y + m.m23*v.z,
-                                       m.m31*v.x + m.m32*v.y + m.m33*v.z);
-}
-
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector3Impl<T, VectorTag_T>>
-operator*(Transform3<T> const& t, Vector3Impl<T, VectorTag_T> const& p)
-{
-    Matrix4<T> const& m = t.m;
-    return Vector3Impl<T, VectorTag_T>(m.m11*p.x + m.m12*p.y + m.m13*p.z + m.m14,
-                                       m.m21*p.x + m.m22*p.y + m.m23*p.z + m.m24,
-                                       m.m31*p.x + m.m32*p.y + m.m33*p.z + m.m34);
-}
-
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<VectorTraits::IsReciprocal<VectorTag_T>::value &&
-                        !VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector3Impl<T, VectorTag_T>>
-operator*(Vector3Impl<T, VectorTag_T> const& n, TransformReciprocal3<T> const& rt)
-{
-    Matrix3<T> const& m = rt.m;
-    return Vector3Impl<T, VectorTag_T>(n.x*m.m11 + n.y*m.m21 + n.z*m.m31,
-                                       n.x*m.m12 + n.y*m.m22 + n.z*m.m32,
-                                       n.x*m.m13 + n.y*m.m23 + n.z*m.m33);
-}
-
-template<typename T>
-std::enable_if_t<std::is_floating_point_v<T>, Point3<T>>
-project(Transform3<T> const& t, Point3<T> const& p)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Point3<T> project(Transform3<T> const& t, Point3<T> const& p)
 {
     Matrix4<T> const& m = t.m;
     T const w = m.m41*p.x + m.m42*p.y + m.m43*p.z + m.m44;
@@ -143,7 +144,7 @@ project(Transform3<T> const& t, Point3<T> const& p)
 }
 
 template<typename T>
-Point3<T> project(Transform3<T> const& t, Point3<T> const& p, T& w)
+[[nodiscard]] constexpr inline Point3<T> project(Transform3<T> const& t, Point3<T> const& p, T& w)
 {
     Matrix4<T> const& m = t.m;
     T const p_w = w;
@@ -154,7 +155,7 @@ Point3<T> project(Transform3<T> const& t, Point3<T> const& p, T& w)
 }
 
 template<typename T>
-inline Transform3<T> make_scale(T scale_x, T scale_y, T scale_z)
+[[nodiscard]] constexpr inline Transform3<T> make_scale(T scale_x, T scale_y, T scale_z)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -165,7 +166,7 @@ inline Transform3<T> make_scale(T scale_x, T scale_y, T scale_z)
 }
 
 template<typename T>
-inline Transform3<T> make_scale(Vector3<T> const& scale_v)
+[[nodiscard]] constexpr inline Transform3<T> make_scale(Vector3<T> const& scale_v)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -176,7 +177,7 @@ inline Transform3<T> make_scale(Vector3<T> const& scale_v)
 }
 
 template<typename T>
-inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_z)
+[[nodiscard]] constexpr inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_z)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -187,7 +188,7 @@ inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_
 }
 
 template<typename T>
-inline Transform3<T> make_translation(Vector3<T> const& translate_v)
+[[nodiscard]] constexpr inline Transform3<T> make_translation(Vector3<T> const& translate_v)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -197,8 +198,8 @@ inline Transform3<T> make_translation(Vector3<T> const& translate_v)
                          z, z, z, o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation_x(T angle)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_rotation_x(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -210,8 +211,8 @@ inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotatio
                          z,   z,    z, o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation_y(T angle)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_rotation_y(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -223,8 +224,8 @@ inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotatio
                             z, z,   z, o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation_z(T angle)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_rotation_z(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -236,8 +237,8 @@ inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotatio
                            z,    z, z, o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotation(T angle, Vector3<T> axis)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_rotation(T angle, Vector3<T> axis)
 {
     axis = normalized(axis);
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
@@ -260,9 +261,8 @@ inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>> make_rotatio
                           z, z, z, o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection(T width, T height, T z_near, T z_far)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_perspective_projection(T width, T height, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -272,9 +272,8 @@ make_perspective_projection(T width, T height, T z_near, T z_far)
                                       z,               z,                    o,                            z);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection_fov(T fov, T aspect_ratio, T z_near, T z_far)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_fov(T fov, T aspect_ratio, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -286,9 +285,9 @@ make_perspective_projection_fov(T fov, T aspect_ratio, T z_near, T z_far)
                               z,      z,                    o,                           z);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection_frustum(T left, T right, T bottom, T top, T z_near, T z_far)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_frustum(T left, T right, T bottom,
+                                                                                 T top, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -302,9 +301,8 @@ make_perspective_projection_frustum(T left, T right, T bottom, T top, T z_near, 
                                       z,               z,                    o,                           z);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection_orthographic(T width, T height, T z_near, T z_far)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_orthographic(T width, T height, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -314,9 +312,9 @@ make_perspective_projection_orthographic(T width, T height, T z_near, T z_far)
                                z,        z,                z,                     o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_perspective_projection_orthographic_frustum(T left, T right, T bottom, T top, T z_near, T z_far)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_orthographic_frustum(T left, T right, T bottom,
+                                                                                              T top, T z_near, T z_far)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -330,9 +328,10 @@ make_perspective_projection_orthographic_frustum(T left, T right, T bottom, T to
                                z,        z,                z,                     o);
 }
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform3<T>>
-make_view_look_at(Vector3<T> position_eye, Vector3<T> target_center, Vector3<T> up)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> make_view_look_at(Vector3<T> position_eye,
+                                                               Vector3<T> target_center,
+                                                               Vector3<T> up)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();

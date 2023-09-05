@@ -13,156 +13,156 @@
 namespace GHULBUS_MATH_NAMESPACE
 {
 namespace swizzler {
-template<typename T>
+template<typename T, typename VectorTag_T>
 class Vec3Swizzler {
 private:
-    Vector3<T> const& v_;
+    Vector3Impl<T, VectorTag_T> const& v_;
 public:
-    Vec3Swizzler(Vector3<T> const& v)
+    constexpr explicit Vec3Swizzler(Vector3Impl<T, VectorTag_T> const& v)
         :v_(v)
     {}
 
-    Vector3<T> xxx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xxx() const
     {
-        return Vector3<T>(v_.x, v_.x, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.x, v_.x);
     }
 
-    Vector3<T> xxy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xxy() const
     {
-        return Vector3<T>(v_.x, v_.x, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.x, v_.y);
     }
 
-    Vector3<T> xxz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xxz() const
     {
-        return Vector3<T>(v_.x, v_.x, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.x, v_.z);
     }
 
-    Vector3<T> xyx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xyx() const
     {
-        return Vector3<T>(v_.x, v_.y, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.y, v_.x);
     }
 
-    Vector3<T> xyy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xyy() const
     {
-        return Vector3<T>(v_.x, v_.y, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.y, v_.y);
     }
 
-    Vector3<T> xyz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xyz() const
     {
-        return Vector3<T>(v_.x, v_.y, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.y, v_.z);
     }
 
-    Vector3<T> xzx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xzx() const
     {
-        return Vector3<T>(v_.x, v_.z, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.z, v_.x);
     }
 
-    Vector3<T> xzy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xzy() const
     {
-        return Vector3<T>(v_.x, v_.z, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.z, v_.y);
     }
 
-    Vector3<T> xzz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> xzz() const
     {
-        return Vector3<T>(v_.x, v_.z, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.x, v_.z, v_.z);
     }
 
-    Vector3<T> yxx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yxx() const
     {
-        return Vector3<T>(v_.y, v_.x, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.x, v_.x);
     }
 
-    Vector3<T> yxy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yxy() const
     {
-        return Vector3<T>(v_.y, v_.x, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.x, v_.y);
     }
 
-    Vector3<T> yxz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yxz() const
     {
-        return Vector3<T>(v_.y, v_.x, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.x, v_.z);
     }
 
-    Vector3<T> yyx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yyx() const
     {
-        return Vector3<T>(v_.y, v_.y, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.y, v_.x);
     }
 
-    Vector3<T> yyy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yyy() const
     {
-        return Vector3<T>(v_.y, v_.y, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.y, v_.y);
     }
 
-    Vector3<T> yyz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yyz() const
     {
-        return Vector3<T>(v_.y, v_.y, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.y, v_.z);
     }
 
-    Vector3<T> yzx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yzx() const
     {
-        return Vector3<T>(v_.y, v_.z, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.z, v_.x);
     }
 
-    Vector3<T> yzy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yzy() const
     {
-        return Vector3<T>(v_.y, v_.z, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.z, v_.y);
     }
 
-    Vector3<T> yzz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> yzz() const
     {
-        return Vector3<T>(v_.y, v_.z, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.y, v_.z, v_.z);
     }
 
-    Vector3<T> zxx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zxx() const
     {
-        return Vector3<T>(v_.z, v_.x, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.x, v_.x);
     }
 
-    Vector3<T> zxy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zxy() const
     {
-        return Vector3<T>(v_.z, v_.x, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.x, v_.y);
     }
 
-    Vector3<T> zxz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zxz() const
     {
-        return Vector3<T>(v_.z, v_.x, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.x, v_.z);
     }
 
-    Vector3<T> zyx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zyx() const
     {
-        return Vector3<T>(v_.z, v_.y, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.y, v_.x);
     }
 
-    Vector3<T> zyy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zyy() const
     {
-        return Vector3<T>(v_.z, v_.y, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.y, v_.y);
     }
 
-    Vector3<T> zyz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zyz() const
     {
-        return Vector3<T>(v_.z, v_.y, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.y, v_.z);
     }
 
-    Vector3<T> zzx() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zzx() const
     {
-        return Vector3<T>(v_.z, v_.z, v_.x);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.z, v_.x);
     }
 
-    Vector3<T> zzy() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zzy() const
     {
-        return Vector3<T>(v_.z, v_.z, v_.y);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.z, v_.y);
     }
 
-    Vector3<T> zzz() const
+    [[nodiscard]] constexpr Vector3Impl<T, VectorTag_T> zzz() const
     {
-        return Vector3<T>(v_.z, v_.z, v_.z);
+        return Vector3Impl<T, VectorTag_T>(v_.z, v_.z, v_.z);
     }
 };
 }
 
-template<typename T>
-inline swizzler::Vec3Swizzler<T> swizzle(Vector3<T> const& v)
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline swizzler::Vec3Swizzler<T, VectorTag_T> swizzle(Vector3Impl<T, VectorTag_T> const& v)
 {
-    return swizzler::Vec3Swizzler<T>(v);
+    return swizzler::Vec3Swizzler<T, VectorTag_T>(v);
 }
 }
 

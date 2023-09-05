@@ -34,6 +34,16 @@ class TransformReciprocal2
 {
 public:
     Matrix2<T> m;
+
+    template<typename VectorTag_T>
+    [[nodiscard]] friend constexpr Vector2Impl<T, VectorTag_T> operator*(Vector2Impl<T, VectorTag_T> const& n,
+                                                                         TransformReciprocal2<T> const& rt)
+        requires(VectorTraits::IsReciprocal<VectorTag_T>::value && !VectorTraits::IsFinitePoint<VectorTag_T>::value)
+    {
+        Matrix2<T> const& m = rt.m;
+        return Vector2Impl<T, VectorTag_T>(n.x*m.m11 + n.y*m.m21,
+                                           n.x*m.m12 + n.y*m.m22);
+    }
 };
 
 /** A homogeneous 2D transformation.
@@ -44,17 +54,17 @@ class Transform2
 public:
     Matrix3<T> m;
 public:
-    Transform2()
+    constexpr Transform2()
         :m(identity3<T>())
     {}
 
-    explicit Transform2(Matrix3<T> const& transform_matrix)
+    constexpr explicit Transform2(Matrix3<T> const& transform_matrix)
         :m(transform_matrix)
     {}
 
-    Transform2(T n11, T n12, T n13,
-               T n21, T n22, T n23,
-               T n31, T n32, T n33)
+    constexpr Transform2(T n11, T n12, T n13,
+                         T n21, T n22, T n23,
+                         T n31, T n32, T n33)
         :m(n11, n12, n13,
            n21, n22, n23,
            n31, n32, n33)
@@ -65,7 +75,7 @@ public:
      * transformation. We follow Lengyel's suggestion here by using the adjugate to properly mirror normals if the
      * winding order changed and instead of transposing, multiply it from the right.
      */
-    TransformReciprocal2<T> reciprocal()
+    [[nodiscard]] constexpr TransformReciprocal2<T> reciprocal()
     {
         Matrix2<T> const upper_left(m.m11, m.m12,
                                     m.m21, m.m22);
@@ -78,55 +88,46 @@ public:
      * if you know beforehand that the transform is in fact orthogonal.
      * @pre this->m * transpose(this->m) ~= identity3()
      */
-    TransformReciprocal2<T> reciprocal(assume_orthogonal_t)
+    [[nodiscard]] constexpr TransformReciprocal2<T> reciprocal(assume_orthogonal_t)
     {
         Matrix2<T> const upper_left(m.m11, m.m12,
                                     m.m21, m.m22);
         return TransformReciprocal2<T>{ transpose(upper_left) };
     }
 
-    Transform2<T>& operator*=(Transform2<T> const& rhs) {
+    constexpr Transform2& operator*=(Transform2 const& rhs) {
         m *= rhs.m;
         return *this;
     }
+
+    [[nodiscard]] friend constexpr Transform2 operator*(Transform2 const& lhs, Transform2 const& rhs) {
+        return Transform2<T>(lhs.m * rhs.m);
+    }
+
+    template<typename VectorTag_T>
+    [[nodiscard]] friend constexpr Vector2Impl<T, VectorTag_T> operator*(Transform2 const& t,
+                                                                         Vector2Impl<T, VectorTag_T> const& v)
+        requires(!VectorTraits::IsFinitePoint<VectorTag_T>::value)
+    {
+        Matrix3<T> const& m = t.m;
+        return Vector2Impl<T, VectorTag_T>(m.m11*v.x + m.m12*v.y,
+                                           m.m21*v.x + m.m22*v.y);
+    }
+
+    template<typename VectorTag_T>
+    [[nodiscard]] friend constexpr Vector2Impl<T, VectorTag_T> operator*(Transform2 const& t,
+                                                                         Vector2Impl<T, VectorTag_T> const& p)
+        requires(VectorTraits::IsFinitePoint<VectorTag_T>::value)
+    {
+        Matrix3<T> const& m = t.m;
+        return Vector2Impl<T, VectorTag_T>(m.m11*p.x + m.m12*p.y + m.m13,
+                                           m.m21*p.x + m.m22*p.y + m.m23);
+    }
+
 };
 
-template<typename T>
-Transform2<T> operator*(Transform2<T> const& lhs, Transform2<T> const& rhs) {
-    return Transform2<T>(lhs.m * rhs.m);
-}
-
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<!VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
-operator*(Transform2<T> const& t, Vector2Impl<T, VectorTag_T> const& v)
-{
-    Matrix3<T> const& m = t.m;
-    return Vector2Impl<T, VectorTag_T>(m.m11*v.x + m.m12*v.y,
-                                       m.m21*v.x + m.m22*v.y);
-}
-
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
-operator*(Transform2<T> const& t, Vector2Impl<T, VectorTag_T> const& p)
-{
-    Matrix3<T> const& m = t.m;
-    return Vector2Impl<T, VectorTag_T>(m.m11*p.x + m.m12*p.y + m.m13,
-                                       m.m21*p.x + m.m22*p.y + m.m23);
-}
-
-template<typename T, typename VectorTag_T>
-inline std::enable_if_t<VectorTraits::IsReciprocal<VectorTag_T>::value &&
-                        !VectorTraits::IsFinitePoint<VectorTag_T>::value, Vector2Impl<T, VectorTag_T>>
-operator*(Vector2Impl<T, VectorTag_T> const& n, TransformReciprocal2<T> const& rt)
-{
-    Matrix2<T> const& m = rt.m;
-    return Vector2Impl<T, VectorTag_T>(n.x*m.m11 + n.y*m.m21,
-                                       n.x*m.m12 + n.y*m.m22);
-}
-
-template<typename T>
-std::enable_if_t<std::is_floating_point_v<T>, Point2<T>>
-project(Transform2<T> const& t, Point2<T> const& p)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Point2<T> project(Transform2<T> const& t, Point2<T> const& p)
 {
     Matrix3<T> const& m = t.m;
     T const w = m.m31*p.x + m.m32*p.y + m.m33;
@@ -135,7 +136,7 @@ project(Transform2<T> const& t, Point2<T> const& p)
 }
 
 template<typename T>
-Point2<T> project(Transform2<T> const& t, Point2<T> const& p, T& w)
+[[nodiscard]] constexpr inline Point2<T> project(Transform2<T> const& t, Point2<T> const& p, T& w)
 {
     Matrix3<T> const& m = t.m;
     T const p_w = w;
@@ -145,7 +146,7 @@ Point2<T> project(Transform2<T> const& t, Point2<T> const& p, T& w)
 }
 
 template<typename T>
-inline Transform2<T> make_scale(T scale_x, T scale_y)
+[[nodiscard]] constexpr inline Transform2<T> make_scale(T scale_x, T scale_y)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -155,7 +156,7 @@ inline Transform2<T> make_scale(T scale_x, T scale_y)
 }
 
 template<typename T>
-inline Transform2<T> make_scale(Vector2<T> const& scale_v)
+[[nodiscard]] constexpr inline Transform2<T> make_scale(Vector2<T> const& scale_v)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -165,7 +166,7 @@ inline Transform2<T> make_scale(Vector2<T> const& scale_v)
 }
 
 template<typename T>
-inline Transform2<T> make_translation(T translate_x, T translate_y)
+[[nodiscard]] constexpr inline Transform2<T> make_translation(T translate_x, T translate_y)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -175,7 +176,7 @@ inline Transform2<T> make_translation(T translate_x, T translate_y)
 }
 
 template<typename T>
-inline Transform2<T> make_translation(Vector2<T> const& translate_v)
+[[nodiscard]] constexpr inline Transform2<T> make_translation(Vector2<T> const& translate_v)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
@@ -185,7 +186,7 @@ inline Transform2<T> make_translation(Vector2<T> const& translate_v)
 }
 
 template<typename T>
-inline std::enable_if_t<std::is_floating_point_v<T>, Transform2<T>> make_rotation(T angle)
+[[nodiscard]] constexpr inline std::enable_if_t<std::is_floating_point_v<T>, Transform2<T>> make_rotation(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();

@@ -16,7 +16,7 @@ namespace GHULBUS_MATH_NAMESPACE
 {
 
 template<typename T>
-inline Line3<T> operator*(Transform3<T> const& transform, Line3<T> const& line) {
+[[nodiscard]] constexpr inline Line3<T> operator*(Transform3<T> const& transform, Line3<T> const& line) {
     return Line3<T>(
         transform * line.p,
         transform * line.v

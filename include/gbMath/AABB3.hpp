@@ -15,11 +15,21 @@
 
 #include <algorithm>
 #include <cmath>
+#include <concepts>
 #include <limits>
+#include <numeric>
 #include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
+template<typename T>
+class AABB3;
+
+template<typename T>
+[[nodiscard]] constexpr inline AABB3<T> empty_aabb3();
+template<typename T>
+[[nodiscard]] constexpr inline AABB3<T> enclose(AABB3<T> const& b, Point3<T> const& p);
+
 template<typename T>
 class AABB3
 {
@@ -27,34 +37,38 @@ public:
     Point3<T> min;
     Point3<T> max;
 
-    AABB3() = default;
-    AABB3(DoNotInitialize_Tag)
+    constexpr AABB3() = default;
+    constexpr explicit AABB3(DoNotInitialize_Tag)
         :min(doNotInitialize), max(doNotInitialize)
     {}
-    AABB3(AABB3 const&) = default;
-    AABB3& operator=(AABB3 const&) = default;
+    constexpr AABB3(AABB3 const&) = default;
+    constexpr AABB3& operator=(AABB3 const&) = default;
 
-    AABB3(Point3<T> const& p)
+    constexpr explicit AABB3(Point3<T> const& p)
         :min(p), max(p)
     {}
 
-    AABB3(Point3<T> const& n_min, Point3<T> const& n_max)
+    constexpr AABB3(Point3<T> const& n_min, Point3<T> const& n_max)
         :min(n_min), max(n_max)
     {}
 
-    friend bool operator==(AABB3<T> const& lhs, AABB3<T> const& rhs)
+    [[nodiscard]] friend constexpr bool operator==(AABB3 const& lhs, AABB3 const& rhs) = default;
+
+    template<std::ranges::range R>
+    [[nodiscard]] static constexpr inline AABB3 from_points(R points)
+        requires(std::same_as<typename std::ranges::range_value_t<R>, Point3<T>> )
     {
-        return (lhs.min == rhs.min) && (lhs.max == rhs.max);
+        return std::accumulate(std::ranges::begin(points), std::ranges::end(points), empty_aabb3<T>(), enclose<T>);
     }
 
-    friend bool operator!=(AABB3<T> const& lhs, AABB3<T> const& rhs)
+    [[nodiscard]] static constexpr inline AABB3 from_points(std::initializer_list<Point3<T>> l)
     {
-        return !(lhs == rhs);
+        return from_points(std::ranges::subrange(l));
     }
 };
 
 template<typename T>
-inline AABB3<T> empty_aabb3()
+[[nodiscard]] constexpr inline AABB3<T> empty_aabb3()
 {
     T const tmin = std::numeric_limits<T>::lowest();
     T const tmax = std::numeric_limits<T>::max();
@@ -62,7 +76,7 @@ inline AABB3<T> empty_aabb3()
 }
 
 template<typename T>
-inline Vector3<T> diagonal(AABB3<T> const& b)
+[[nodiscard]] constexpr inline Vector3<T> diagonal(AABB3<T> const& b)
 {
     return b.max - b.min;
 }
@@ -70,7 +84,7 @@ inline Vector3<T> diagonal(AABB3<T> const& b)
 /** Grow the bounding volume to enclose an additional point.
  */
 template<typename T>
-inline AABB3<T> enclose(AABB3<T> const& b, Point3<T> const& p)
+[[nodiscard]] constexpr inline AABB3<T> enclose(AABB3<T> const& b, Point3<T> const& p)
 {
     return AABB3<T>(Point3<T>(std::min(b.min.x, p.x), std::min(b.min.y, p.y), std::min(b.min.z, p.z)),
                     Point3<T>(std::max(b.max.x, p.x), std::max(b.max.y, p.y), std::max(b.max.z, p.z)));
@@ -79,7 +93,7 @@ inline AABB3<T> enclose(AABB3<T> const& b, Point3<T> const& p)
 /** Grow the bounding volume to enclose another bounding volume.
  */
 template<typename T>
-inline AABB3<T> enclose(AABB3<T> const& b1, AABB3<T> const& b2)
+[[nodiscard]] constexpr inline AABB3<T> enclose(AABB3<T> const& b1, AABB3<T> const& b2)
 {
     return AABB3<T>(Point3<T>(std::min(b1.min.x, b2.min.x),
                               std::min(b1.min.y, b2.min.y),
@@ -92,7 +106,7 @@ inline AABB3<T> enclose(AABB3<T> const& b1, AABB3<T> const& b2)
 /** Checks whether a point intersects with the volume.
  */
 template<typename T>
-inline bool intersects(AABB3<T> const& b, Point3<T> const& p)
+[[nodiscard]] constexpr inline bool intersects(AABB3<T> const& b, Point3<T> const& p)
 {
     if((p.x < b.min.x) || (p.x > b.max.x) ||
        (p.y < b.min.y) || (p.y > b.max.y) ||
@@ -106,7 +120,7 @@ inline bool intersects(AABB3<T> const& b, Point3<T> const& p)
 /** Checks whether two volumes intersect.
  */
 template<typename T>
-inline bool intersects(AABB3<T> const& b1, AABB3<T> const& b2)
+[[nodiscard]] constexpr inline bool intersects(AABB3<T> const& b1, AABB3<T> const& b2)
 {
     // intersects only if there is an overlap on all axes
     if((b1.max.x < b2.min.x) || (b1.min.x > b2.max.x) ||
@@ -119,7 +133,7 @@ inline bool intersects(AABB3<T> const& b1, AABB3<T> const& b2)
 }
 
 template<typename T>
-inline AABB3<T> union_aabb(AABB3<T> const& b1, AABB3<T> const& b2)
+[[nodiscard]] constexpr inline AABB3<T> union_aabb(AABB3<T> const& b1, AABB3<T> const& b2)
 {
     return AABB3<T>(Point3<T>(std::min(b1.min.x, b2.min.x),
                               std::min(b1.min.y, b2.min.y),
@@ -130,7 +144,7 @@ inline AABB3<T> union_aabb(AABB3<T> const& b1, AABB3<T> const& b2)
 }
 
 template<typename T>
-inline AABB3<T> intersect_aabb(AABB3<T> const& b1, AABB3<T> const& b2)
+[[nodiscard]] constexpr inline AABB3<T> intersect_aabb(AABB3<T> const& b1, AABB3<T> const& b2)
 {
     return AABB3<T>(Point3<T>(std::max(b1.min.x, b2.min.x),
                               std::max(b1.min.y, b2.min.y),

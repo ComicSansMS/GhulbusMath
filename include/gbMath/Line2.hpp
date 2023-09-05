@@ -12,6 +12,8 @@
 #include <gbMath/Common.hpp>
 #include <gbMath/Vector2.hpp>
 
+#include <concepts>
+
 namespace GHULBUS_MATH_NAMESPACE
 {
 template<typename T>
@@ -20,56 +22,56 @@ public:
     Point2<T> p;
     Vector2<T> v;
 public:
-    Line2() = default;
-    Line2(DoNotInitialize_Tag)
+    constexpr Line2() = default;
+    constexpr explicit Line2(DoNotInitialize_Tag)
         :p(doNotInitialize), v(doNotInitialize)
     {}
-    Line2(Line2<T> const&) = default;
-    Line2<T>& operator=(Line2<T> const&) = default;
+    constexpr Line2(Line2 const&) = default;
+    constexpr Line2& operator=(Line2 const&) = default;
 
-    Line2(Point2<T> const& np, Vector2<T> const& nv)
+    constexpr Line2(Point2<T> const& np, Vector2<T> const& nv)
         :p(np), v(nv)
     {}
 
-    Line2(Point2<T> const& p1, Point2<T> const& p2)
+    constexpr Line2(Point2<T> const& p1, Point2<T> const& p2)
         :p(p1), v(p2 - p1)
     {}
 
     template<typename U = T>
-    Point2<U> evaluate_at_parameter(U t) const
+    [[nodiscard]] constexpr Point2<U> evaluate_at_parameter(U t) const
     {
         return Point2<U>(p) + Vector2<U>(v) * t;
     }
 };
 
-template<typename T>
-inline std::enable_if_t<std::is_floating_point<T>::value, Line2<T>> normalized(Line2<T> const& l)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Line2<T> normalized(Line2<T> const& l)
 {
     return Line2<T>(l.p, normalized(l.v));
 }
 
 template<typename T>
-inline T distance_squared(Line2<T> const& l, Point2<T> const& p)
+[[nodiscard]] constexpr inline T distance_squared(Line2<T> const& l, Point2<T> const& p)
 {
     auto const r = reject((p - l.p), l.v);
     return dot(r, r);
 }
 
 template<typename T>
-inline T distance_squared_unit(Line2<T> const& l, Point2<T> const& p)
+[[nodiscard]] constexpr inline T distance_squared_unit(Line2<T> const& l, Point2<T> const& p)
 {
     auto const r = reject_unit((p - l.p), l.v);
     return dot(r, r);
 }
 
 template<typename T>
-inline T distance(Line2<T> const& l, Point2<T> const& p)
+[[nodiscard]] constexpr inline T distance(Line2<T> const& l, Point2<T> const& p)
 {
     return length(reject((p - l.p), l.v));
 }
 
 template<typename T>
-inline T distance_unit(Line2<T> const& l, Point2<T> const& p)
+[[nodiscard]] constexpr inline T distance_unit(Line2<T> const& l, Point2<T> const& p)
 {
     return length(reject_unit((p - l.p), l.v));
 }
@@ -89,11 +91,11 @@ struct ScaledLine2Intersection {
     T inverse_scale_factor;     ///< The scale factor by which t1 and t2 need to be divided to retrieve the
                                 ///<  line parameters. For parallel lines, this will be 0.
 
-    ScaledLine2Intersection() = default;
-    ScaledLine2Intersection(ScaledLine2Intersection const&) = default;
-    ScaledLine2Intersection& operator=(ScaledLine2Intersection const&) = default;
+    constexpr ScaledLine2Intersection() = default;
+    constexpr ScaledLine2Intersection(ScaledLine2Intersection const&) = default;
+    constexpr ScaledLine2Intersection& operator=(ScaledLine2Intersection const&) = default;
 
-    ScaledLine2Intersection(T n_t1, T n_t2, T n_inverse_scale_factor)
+    constexpr ScaledLine2Intersection(T n_t1, T n_t2, T n_inverse_scale_factor)
         :t1(n_t1), t2(n_t2), inverse_scale_factor(n_inverse_scale_factor)
     {}
 
@@ -101,7 +103,7 @@ struct ScaledLine2Intersection {
      * @pre inverse_scale_factor != 0
      */
     template<typename U = T>
-    U evaluate_t1() const {
+    [[nodiscard]] constexpr U evaluate_t1() const {
         return static_cast<U>(t1) / static_cast<U>(inverse_scale_factor);
     }
 
@@ -109,7 +111,7 @@ struct ScaledLine2Intersection {
     * @pre inverse_scale_factor != 0
     */
     template<typename U = T>
-    U evaluate_t2() const {
+    [[nodiscard]] constexpr U evaluate_t2() const {
         return static_cast<U>(t2) / static_cast<U>(inverse_scale_factor);
     }
 };
@@ -130,7 +132,7 @@ struct ScaledLine2Intersection {
  * @endcode
  */
 template<typename T>
-[[nodiscard]] inline ScaledLine2Intersection<T> intersect_scaled(Line2<T> const& l1, Line2<T> const& l2)
+[[nodiscard]] constexpr  inline ScaledLine2Intersection<T> intersect_scaled(Line2<T> const& l1, Line2<T> const& l2)
 {
     // The intersection point is obtained by solving the linear system
     //  [ l1.v -l2.v ] [ t ] = [ l2.p - l1.p ]
@@ -150,7 +152,7 @@ template<typename T>
  *         If the two lines coincide, the point coordinates will be NaN.
  */
 template<typename T>
-[[nodiscard]] inline Point2<T> intersect_p(Line2<T> const& l1, Line2<T> const& l2)
+[[nodiscard]] constexpr  inline Point2<T> intersect_p(Line2<T> const& l1, Line2<T> const& l2)
 {
     // We only need to solve one of the ts to get the intersection point.
     T const det = (l1.v.x * l2.v.y) - (l1.v.y * l2.v.x);

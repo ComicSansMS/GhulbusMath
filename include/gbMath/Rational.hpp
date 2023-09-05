@@ -41,7 +41,7 @@ public:
         :num(0), denom(1)
     {}
 
-    explicit constexpr RationalImpl(T i) noexcept
+    constexpr explicit RationalImpl(T i) noexcept
         :num(i), denom(1)
     {}
 

@@ -118,6 +118,14 @@ TEST_CASE("AABB3")
         CHECK(aabb.max == Point3<float>(1.f, 5.f, 3.f));
     }
 
+    SECTION("Construction from a range of points")
+    {
+        AABB3<float> aabb = AABB3<float>::from_points({Point3<float>(1.f,  2.f, 3.f), Point3<float>(0.f, 5.f, 1.f),
+                                                       Point3<float>(1.f, -1.f, 2.f), Point3<float>(3.f, 1.f, -3.f)});
+        CHECK(aabb.min == Point3<float>(0.f, -1.f, -3.f));
+        CHECK(aabb.max == Point3<float>(3.f, 5.f, 3.f));
+    }
+
     SECTION("Enclose encloses two volumes into one")
     {
         AABB3<float> aabb = GHULBUS_MATH_NAMESPACE::empty_aabb3<float>();

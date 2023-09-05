@@ -28,22 +28,22 @@ public:
     Point2<T> center;
     T radius;
 
-    Circle2()
+    constexpr Circle2()
         :center{}, radius{}
     {}
-    Circle2(DoNotInitialize_Tag)
+    constexpr explicit Circle2(DoNotInitialize_Tag)
         :center(doNotInitialize)
     {}
-    Circle2(Circle2 const&) = default;
-    Circle2& operator=(Circle2 const&) = default;
+    constexpr Circle2(Circle2 const&) = default;
+    constexpr Circle2& operator=(Circle2 const&) = default;
 
-    Circle2(Point2<T> const& n_center, T n_radius)
+    constexpr Circle2(Point2<T> const& n_center, T n_radius)
         :center(n_center), radius(n_radius)
     {}
 };
 
 template<typename T>
-inline bool collides(Circle2<T> const& c, Point2<T> const& p)
+[[nodiscard]] constexpr inline bool collides(Circle2<T> const& c, Point2<T> const& p)
 {
     Vector2<T> const dist = c.center - p;
     T const squared_dist = dot(dist, dist);
@@ -54,7 +54,7 @@ inline bool collides(Circle2<T> const& c, Point2<T> const& p)
 }
 
 template<typename T>
-inline bool collides(Circle2<T> const& c1, Circle2<T> const& c2)
+[[nodiscard]] constexpr inline bool collides(Circle2<T> const& c1, Circle2<T> const& c2)
 {
     Vector2<T> const dist = c1.center - c2.center;
     T const squared_dist = dot(dist, dist);
@@ -76,21 +76,21 @@ struct Circle2Line2Intersection
     T b;
     T c;
 
-    Circle2Line2Intersection(T n_a, T n_b, T n_c)
+    constexpr Circle2Line2Intersection(T n_a, T n_b, T n_c)
         :a(n_a), b(n_b), c(n_c)
     {}
 
-    Circle2Line2Intersection() = default;
-    Circle2Line2Intersection(Circle2Line2Intersection const&) = default;
-    Circle2Line2Intersection& operator=(Circle2Line2Intersection const&) = default;
+    constexpr Circle2Line2Intersection() = default;
+    constexpr Circle2Line2Intersection(Circle2Line2Intersection const&) = default;
+    constexpr Circle2Line2Intersection& operator=(Circle2Line2Intersection const&) = default;
 
-    operator bool() const
+    [[nodiscard]] constexpr operator bool() const
     {
         return ((b*b - 4*a*c) >= 0);
     }
 
     template<typename U = T>
-    Circle2Line2IntersectionParameters<U> evaluateT() const
+    [[nodiscard]] constexpr Circle2Line2IntersectionParameters<U> evaluateT() const
     {
         auto const disc = std::sqrt(static_cast<U>(b*b - 4*a*c));
         U const a2 = static_cast<U>(2*a);
@@ -100,7 +100,7 @@ struct Circle2Line2Intersection
 };
 
 template<typename T>
-[[nodiscard]] inline Circle2Line2Intersection<T> intersect(Circle2<T> const& c, Line2<T> const& l)
+[[nodiscard]] constexpr inline Circle2Line2Intersection<T> intersect(Circle2<T> const& c, Line2<T> const& l)
 {
     Vector2<T> p = l.p - c.center;
     T const aa = dot(l.v, l.v);
@@ -117,7 +117,7 @@ struct Circle2Circle2IntersectionPoints
 };
 
 template<typename T>
-[[nodiscard]] inline Circle2Circle2IntersectionPoints<T> intersect(Circle2<T> const& c1, Circle2<T> const& c2)
+[[nodiscard]] constexpr inline Circle2Circle2IntersectionPoints<T> intersect(Circle2<T> const& c1, Circle2<T> const& c2)
 {
     Vector2<T> const v_dist = c2.center - c1.center;
     auto const d = length(v_dist);

@@ -76,7 +76,7 @@ public:
         :x(arr[0]), y(arr[1]), z(arr[2])
     {}
 
-    template<typename U>
+    template<std::convertible_to<T> U>
     constexpr explicit Vector3Impl(Vector3Impl<U, Tag> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z))
     {}

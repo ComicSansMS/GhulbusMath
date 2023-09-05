@@ -33,37 +33,37 @@ public:
     T b;
     T a;
 
-    Color4()
+    constexpr Color4()
         :r{}, g{}, b{}, a{}
     {}
-    Color4(DoNotInitialize_Tag)
+    constexpr Color4(DoNotInitialize_Tag)
     {}
-    Color4(Color4 const&) = default;
-    Color4& operator=(Color4 const&) = default;
+    constexpr Color4(Color4 const&) = default;
+    constexpr Color4& operator=(Color4 const&) = default;
 
-    Color4(T red, T green, T blue) noexcept
+    constexpr Color4(T red, T green, T blue) noexcept
         :r(red), g(green), b(blue), a(1)
     {}
 
-    Color4(T red, T green, T blue, T alpha) noexcept
+    constexpr Color4(T red, T green, T blue, T alpha) noexcept
         :r(red), g(green), b(blue), a(alpha)
     {}
 
-    explicit Color4(T const* arr) noexcept
+    constexpr explicit Color4(T const* arr) noexcept
         :r(arr[0]), g(arr[1]), b(arr[2]), a(arr[3])
     {}
 
-    T& operator[](std::size_t idx) noexcept
+    [[nodiscard]] constexpr T& operator[](std::size_t idx) noexcept
     {
         return (&r)[idx];
     }
 
-    T const& operator[](std::size_t idx) const noexcept
+    [[nodiscard]] constexpr T const& operator[](std::size_t idx) const noexcept
     {
         return (&r)[idx];
     }
 
-    Color4& operator+=(Color4 const& rhs) {
+    constexpr Color4& operator+=(Color4 const& rhs) {
         r += rhs.r;
         g += rhs.g;
         b += rhs.b;
@@ -71,7 +71,7 @@ public:
         return *this;
     }
 
-    Color4& operator-=(Color4 const& rhs) {
+    constexpr Color4& operator-=(Color4 const& rhs) {
         r -= rhs.r;
         g -= rhs.g;
         b -= rhs.b;
@@ -79,7 +79,7 @@ public:
         return *this;
     }
 
-    Color4& operator*=(T rhs) {
+    constexpr Color4& operator*=(T rhs) {
         r *= rhs;
         g *= rhs;
         b *= rhs;
@@ -87,97 +87,48 @@ public:
         return *this;
     }
 
-    Color4& operator/=(T rhs) {
+    constexpr Color4& operator/=(T rhs) {
         r /= rhs;
         g /= rhs;
         b /= rhs;
         a /= rhs;
         return *this;
     }
-};
+    
+    [[nodiscard]] friend constexpr auto operator<=>(Color4 const&, Color4 const&) = default;
 
-template<typename T>
-inline bool operator==(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return (lhs.r == rhs.r) &&
-           (lhs.g == rhs.g) &&
-           (lhs.b == rhs.b) &&
-           (lhs.a == rhs.a);
-}
-
-template<typename T>
-inline bool operator<(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    if(lhs.r != rhs.r) {
-        return lhs.r < rhs.r;
-    } else if(lhs.g != rhs.g) {
-        return lhs.g < rhs.g;
-    } else if(lhs.b != rhs.b) {
-        return lhs.b < rhs.b;
-    } else {
-        return lhs.a < rhs.a;
+    [[nodiscard]] friend constexpr Color4 operator+(Color4 const& lhs, Color4 const& rhs)
+    {
+        return Color4(lhs.r + rhs.r,
+                      lhs.g + rhs.g,
+                      lhs.b + rhs.b,
+                      lhs.a + rhs.a);
     }
-}
 
-template<typename T>
-inline bool operator!=(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return !(lhs == rhs);
-}
+    [[nodiscard]] friend constexpr Color4 operator-(Color4 const& lhs, Color4 const& rhs)
+    {
+        return Color4(lhs.r - rhs.r,
+                      lhs.g - rhs.g,
+                      lhs.b - rhs.b,
+                      lhs.a - rhs.a);
+    }
 
-template<typename T>
-inline bool operator<=(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return !(rhs < lhs);
-}
+    [[nodiscard]] friend constexpr Color4 operator*(Color4 const& v, T s)
+    {
+        return Color4(v.r * s, v.g * s, v.b * s, v.a * s);
+    }
 
-template<typename T>
-inline bool operator>(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return rhs < lhs;
-}
+    [[nodiscard]] friend constexpr Color4 operator*(T s, Color4 const& v)
+    {
+        return Color4(s * v.r, s * v.g, s * v.b, s * v.a);
+    }
 
-template<typename T>
-inline bool operator>=(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return !(lhs < rhs);
-}
+    [[nodiscard]] friend constexpr Color4 operator/(Color4 const& v, T s)
+    {
+        return Color4(v.r / s, v.g / s, v.b / s, v.a / s);
+    }
 
-template<typename T>
-inline Color4<T> operator+(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return Color4<T>(lhs.r + rhs.r,
-                     lhs.g + rhs.g,
-                     lhs.b + rhs.b,
-                     lhs.a + rhs.a);
-}
-
-template<typename T>
-inline Color4<T> operator-(Color4<T> const& lhs, Color4<T> const& rhs)
-{
-    return Color4<T>(lhs.r - rhs.r,
-                     lhs.g - rhs.g,
-                     lhs.b - rhs.b,
-                     lhs.a - rhs.a);
-}
-
-template<typename T>
-inline Color4<T> operator*(Color4<T> const& v, T s)
-{
-    return Color4<T>(v.r * s, v.g * s, v.b * s, v.a * s);
-}
-
-template<typename T>
-inline Color4<T> operator*(T s, Color4<T> const& v)
-{
-    return Color4<T>(s * v.r, s * v.g, s * v.b, s * v.a);
-}
-
-template<typename T>
-inline Color4<T> operator/(Color4<T> const& v, T s)
-{
-    return Color4<T>(v.r / s, v.g / s, v.b / s, v.a / s);
-}
+};
 }
 
 #endif

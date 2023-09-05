@@ -25,25 +25,25 @@ public:
     T y;
     T z;
 
-    ComponentVector3(T vx, T vy, T vz)
+    constexpr ComponentVector3(T vx, T vy, T vz)
         :x(vx), y(vy), z(vz)
     {}
 
-    explicit ComponentVector3(T const* arr)
+    constexpr explicit ComponentVector3(T const* arr)
         :x(arr[0]), y(arr[1]), z(arr[2])
     {}
 
-    T& operator[](std::size_t idx)
+    [[nodiscard]] constexpr T& operator[](std::size_t idx)
     {
         return (&x)[idx];
     }
 
-    T const& operator[](std::size_t idx) const
+    [[nodiscard]] constexpr T const& operator[](std::size_t idx) const
     {
         return (&x)[idx];
     }
 
-    ComponentVector3& operator+=(ComponentVector3 const& rhs)
+    constexpr ComponentVector3& operator+=(ComponentVector3 const& rhs)
     {
         x += rhs.x;
         y += rhs.y;
@@ -51,7 +51,7 @@ public:
         return *this;
     }
 
-    ComponentVector3& operator-=(ComponentVector3 const& rhs)
+    constexpr ComponentVector3& operator-=(ComponentVector3 const& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -59,7 +59,7 @@ public:
         return *this;
     }
 
-    ComponentVector3& operator*=(T s)
+    constexpr ComponentVector3& operator*=(T s)
     {
         x *= s;
         y *= s;
@@ -67,64 +67,47 @@ public:
         return *this;
     }
 
-    ComponentVector3& operator/=(T s)
+    constexpr ComponentVector3& operator/=(T s)
     {
         x /= s;
         y /= s;
         z /= s;
         return *this;
     }
+
+    [[nodiscard]] friend constexpr bool operator==(ComponentVector3 const&, ComponentVector3 const&) = default;
+
+    [[nodiscard]] friend constexpr ComponentVector3 operator+(ComponentVector3 const& lhs,
+                                                              ComponentVector3 const& rhs)
+    {
+        return ComponentVector3(lhs.x + rhs.x,
+                                lhs.y + rhs.y,
+                                lhs.z + rhs.z);
+    }
+
+    [[nodiscard]] friend constexpr ComponentVector3 operator-(ComponentVector3 const& lhs,
+                                                              ComponentVector3 const& rhs)
+    {
+        return ComponentVector3(lhs.x - rhs.x,
+                                lhs.y - rhs.y,
+                                lhs.z - rhs.z);
+    }
+
+    [[nodiscard]] friend constexpr ComponentVector3 operator*(ComponentVector3 const& v, T s)
+    {
+        return ComponentVector3<T>(v.x * s, v.y * s, v.z * s);
+    }
+
+    [[nodiscard]] friend constexpr ComponentVector3 operator*(T s, ComponentVector3 const& v)
+    {
+        return ComponentVector3<T>(s * v.x, s * v.y, s * v.z);
+    }
+
+    [[nodiscard]] friend constexpr ComponentVector3 operator/(ComponentVector3 const& v, T s)
+    {
+        return ComponentVector3<T>(v.x / s, v.y / s, v.z / s);
+    }
 };
-
-template<typename T>
-inline bool operator==(ComponentVector3<T> const& lhs, ComponentVector3<T> const& rhs)
-{
-    return (lhs.x == rhs.x) &&
-           (lhs.y == rhs.y) &&
-           (lhs.z == rhs.z);
-}
-
-template<typename T>
-inline bool operator!=(ComponentVector3<T> const& lhs, ComponentVector3<T> const& rhs)
-{
-    return !(lhs == rhs);
-}
-
-template<typename T>
-inline ComponentVector3<T> operator+(ComponentVector3<T> const& lhs,
-                                     ComponentVector3<T> const& rhs)
-{
-    return ComponentVector3<T>(lhs.x + rhs.x,
-                               lhs.y + rhs.y,
-                               lhs.z + rhs.z);
-}
-
-template<typename T>
-inline ComponentVector3<T> operator-(ComponentVector3<T> const& lhs,
-                                     ComponentVector3<T> const& rhs)
-{
-    return ComponentVector3<T>(lhs.x - rhs.x,
-                               lhs.y - rhs.y,
-                               lhs.z - rhs.z);
-}
-
-template<typename T>
-inline ComponentVector3<T> operator*(ComponentVector3<T> const& v, T s)
-{
-    return ComponentVector3<T>(v.x * s, v.y * s, v.z * s);
-}
-
-template<typename T>
-inline ComponentVector3<T> operator*(T s, ComponentVector3<T> const& v)
-{
-    return ComponentVector3<T>(s * v.x, s * v.y, s * v.z);
-}
-
-template<typename T>
-inline ComponentVector3<T> operator/(ComponentVector3<T> const& v, T s)
-{
-    return ComponentVector3<T>(v.x / s, v.y / s, v.z / s);
-}
 
 }
 

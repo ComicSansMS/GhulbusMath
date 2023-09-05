@@ -22,46 +22,46 @@ private:
     Matrix3<T> m_rowMatrix;
     Matrix3<T> m_inverseTransposeRowMatrix;
 public:
-    Basis3()
+    constexpr Basis3()
         :m_rowMatrix(identity3<T>()), m_inverseTransposeRowMatrix(identity3<T>())
     {}
 
-    Basis3(Vector3<T> const& x, Vector3<T> const& y, Vector3<T> const& z)
+    constexpr Basis3(Vector3<T> const& x, Vector3<T> const& y, Vector3<T> const& z)
         :m_rowMatrix(x.x, x.y, x.z, y.x, y.y, y.z, z.x, z.y, z.z),
          m_inverseTransposeRowMatrix(transpose(inverse(m_rowMatrix)))
     {}
 
-    Vector3<T> x() const {
+    [[nodiscard]] constexpr Vector3<T> x() const {
         return m_rowMatrix.row(0);
     }
 
-    Vector3<T> y() const {
+    [[nodiscard]] constexpr Vector3<T> y() const {
         return m_rowMatrix.row(1);
     }
 
-    Vector3<T> z() const {
+    [[nodiscard]] constexpr Vector3<T> z() const {
         return m_rowMatrix.row(2);
     }
 
-    Matrix3<T> rowMatrix() const {
+    [[nodiscard]] constexpr Matrix3<T> rowMatrix() const {
         return m_rowMatrix;
     }
 
-    Matrix3<T> columnMatrix() const {
+    [[nodiscard]] constexpr Matrix3<T> columnMatrix() const {
         return transpose(m_rowMatrix);
     }
 
-    Vector3<T> fromComponentVector(ComponentVector3<T> const& cv) const {
+    [[nodiscard]] constexpr Vector3<T> fromComponentVector(ComponentVector3<T> const& cv) const {
         return (cv.x * x() + cv.y * y() + cv.z * z());
     }
 
-    ComponentVector3<T> toComponentVector(Vector3<T> const& v) const {
+    [[nodiscard]] constexpr ComponentVector3<T> toComponentVector(Vector3<T> const& v) const {
         auto const r = m_inverseTransposeRowMatrix * v;
         return ComponentVector3<T>(r.x, r.y, r.z);
     }
 
     template <typename TT>
-    friend inline Basis3<TT> contravariant(Basis3<TT> const& b) {
+    [[nodiscard]] friend constexpr Basis3<TT> contravariant(Basis3<TT> const& b) {
         Basis3<TT> ret;
         ret.m_rowMatrix = transpose(b.m_inverseTransposeRowMatrix);
         ret.m_inverseTransposeRowMatrix = transpose(b.m_rowMatrix);

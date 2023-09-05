@@ -52,7 +52,7 @@ public:
          m41(n41), m42(n42), m43(n43), m44(n44)
     {}
 
-    template<typename U>
+    template<std::convertible_to<T> U>
     constexpr explicit Matrix4(Matrix4<U> const& rhs)
         :m11(static_cast<T>(rhs.m11)), m12(static_cast<T>(rhs.m12)), m13(static_cast<T>(rhs.m13)), m14(static_cast<T>(rhs.m14)),
          m21(static_cast<T>(rhs.m21)), m22(static_cast<T>(rhs.m22)), m23(static_cast<T>(rhs.m23)), m24(static_cast<T>(rhs.m24)),
@@ -96,7 +96,7 @@ public:
         return Vector4<T>(m[idx], m[idx + 4], m[idx + 8], m[idx + 12]);
     }
 
-    constexpr Matrix4<T>& operator+=(Matrix4<T> const& rhs)
+    constexpr Matrix4& operator+=(Matrix4 const& rhs)
     {
         m11 += rhs.m11;  m12 += rhs.m12;  m13 += rhs.m13;  m14 += rhs.m14;
         m21 += rhs.m21;  m22 += rhs.m22;  m23 += rhs.m23;  m24 += rhs.m24;
@@ -105,7 +105,7 @@ public:
         return *this;
     }
 
-    constexpr Matrix4<T>& operator-=(Matrix4<T> const& rhs)
+    constexpr Matrix4& operator-=(Matrix4 const& rhs)
     {
         m11 -= rhs.m11;  m12 -= rhs.m12;  m13 -= rhs.m13;  m14 -= rhs.m14;
         m21 -= rhs.m21;  m22 -= rhs.m22;  m23 -= rhs.m23;  m24 -= rhs.m24;
@@ -114,7 +114,7 @@ public:
         return *this;
     }
 
-    constexpr Matrix4<T>& operator*=(T f)
+    constexpr Matrix4& operator*=(T f)
     {
         m11 *= f;  m12 *= f;  m13 *= f;  m14 *= f;
         m21 *= f;  m22 *= f;  m23 *= f;  m24 *= f;
@@ -123,7 +123,7 @@ public:
         return *this;
     }
 
-    constexpr Matrix4<T>& operator/=(T f)
+    constexpr Matrix4& operator/=(T f)
     {
         m11 /= f;  m12 /= f;  m13 /= f;  m14 /= f;
         m21 /= f;  m22 /= f;  m23 /= f;  m24 /= f;
@@ -132,7 +132,7 @@ public:
         return *this;
     }
 
-    constexpr Matrix4<T>& operator*=(Matrix4<T> const& rhs)
+    constexpr Matrix4& operator*=(Matrix4 const& rhs)
     {
         *this = (*this) * rhs;
         return *this;

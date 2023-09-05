@@ -74,7 +74,7 @@ public:
         :x(arr[0]), y(arr[1])
     {}
 
-    template<typename U>
+    template<std::convertible_to<T> U>
     constexpr explicit Vector2Impl(Vector2Impl<U, Tag> const& v)
         :x(static_cast<T>(v.x)), y(static_cast<T>(v.y))
     {}

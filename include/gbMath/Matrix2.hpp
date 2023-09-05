@@ -41,7 +41,7 @@ public:
         :m11(n11), m12(n12), m21(n21), m22(n22)
     {}
 
-    template<typename U>
+    template<std::convertible_to<T> U>
     constexpr explicit Matrix2(Matrix2<U> const& rhs)
         :m11(static_cast<T>(rhs.m11)), m12(static_cast<T>(rhs.m12)),
          m21(static_cast<T>(rhs.m21)), m22(static_cast<T>(rhs.m22))

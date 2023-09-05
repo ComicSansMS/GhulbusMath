@@ -10,6 +10,9 @@ private:
     std::vector<int>* lhsIds_;
     std::vector<int>* rhsIds_;
 public:
+    MultiplicationOrderAwareOperand()
+        :id_(-1)
+    {}
     MultiplicationOrderAwareOperand(int id, std::vector<int>& lhsIds, std::vector<int>& rhsIds)
         :id_(id), lhsIds_(&lhsIds), rhsIds_(&rhsIds)
     {}

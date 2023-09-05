@@ -13,41 +13,41 @@
 namespace GHULBUS_MATH_NAMESPACE
 {
 namespace swizzler {
-template<typename T>
+template<typename T, typename VectorTag_T>
 class Vec2Swizzler {
 private:
-    Vector2<T> const& v_;
+    Vector2Impl<T, VectorTag_T> const& v_;
 public:
-    Vec2Swizzler(Vector2<T> const& v)
+    constexpr explicit Vec2Swizzler(Vector2Impl<T, VectorTag_T> const& v)
         :v_(v)
     {}
 
-    Vector2<T> xx() const
+    [[nodiscard]] constexpr Vector2Impl<T, VectorTag_T> xx() const
     {
-        return Vector2<T>(v_.x, v_.x);
+        return Vector2Impl<T, VectorTag_T>(v_.x, v_.x);
     }
 
-    Vector2<T> xy() const
+    [[nodiscard]] constexpr Vector2Impl<T, VectorTag_T> xy() const
     {
-        return Vector2<T>(v_.x, v_.y);
+        return Vector2Impl<T, VectorTag_T>(v_.x, v_.y);
     }
 
-    Vector2<T> yx() const
+    [[nodiscard]] constexpr Vector2Impl<T, VectorTag_T> yx() const
     {
-        return Vector2<T>(v_.y, v_.x);
+        return Vector2Impl<T, VectorTag_T>(v_.y, v_.x);
     }
 
-    Vector2<T> yy() const
+    [[nodiscard]] constexpr Vector2Impl<T, VectorTag_T> yy() const
     {
-        return Vector2<T>(v_.y, v_.y);
+        return Vector2Impl<T, VectorTag_T>(v_.y, v_.y);
     }
 };
 }
 
-template<typename T>
-inline swizzler::Vec2Swizzler<T> swizzle(Vector2<T> const& v)
+template<typename T, typename VectorTag_T>
+[[nodiscard]] constexpr inline swizzler::Vec2Swizzler<T, VectorTag_T> swizzle(Vector2Impl<T, VectorTag_T> const& v)
 {
-    return swizzler::Vec2Swizzler<T>(v);
+    return swizzler::Vec2Swizzler<T, VectorTag_T>(v);
 }
 }
 

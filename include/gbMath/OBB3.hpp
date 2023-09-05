@@ -28,20 +28,20 @@ public:
     Matrix3<T> orientation;
     Vector3<T> halfwidth;
 
-    OBB3() = default;
-    OBB3(DoNotInitialize_Tag)
+    constexpr OBB3() = default;
+    constexpr explicit OBB3(DoNotInitialize_Tag)
         :center(doNotInitialize), orientation(doNotInitialize), halfwidth(doNotInitialize)
     {}
-    OBB3(OBB3 const&) = default;
-    OBB3& operator=(OBB3 const&) = default;
+    constexpr OBB3(OBB3 const&) = default;
+    constexpr OBB3& operator=(OBB3 const&) = default;
 
-    OBB3(Point3<T> const& n_center, Matrix3<T> const& n_orientation, Vector3<T> const& n_halfwidth)
+    constexpr OBB3(Point3<T> const& n_center, Matrix3<T> const& n_orientation, Vector3<T> const& n_halfwidth)
         :center(n_center), orientation(n_orientation), halfwidth(n_halfwidth)
     {}
 };
 
 template<typename T>
-bool intersects(OBB3<T> const& o1, OBB3<T> const& o2, T epsilon = traits::Constants<T>::Zero())
+[[nodiscard]] constexpr inline bool intersects(OBB3<T> const& o1, OBB3<T> const& o2, T epsilon = traits::Constants<T>::Zero())
 {
     // compute the rotation matrix expressing o2's axes in o1's coordinate frame
     Matrix3<T> const r_ba(

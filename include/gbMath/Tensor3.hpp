@@ -20,11 +20,11 @@ class Tensor3 {
 public:
     Matrix3<T> m;
 public:
-    Tensor3()
+    constexpr Tensor3()
         :m(identity3<T>())
     {}
 
-    Tensor3(Basis3<T> const& basis)
+    constexpr explicit Tensor3(Basis3<T> const& basis)
     {
         Vector3<T> const x = basis.x();
         Vector3<T> const y = basis.y();
@@ -45,7 +45,7 @@ public:
 };
 
 template<typename T>
-inline Tensor3<T> contravariant(Tensor3<T> const& t)
+[[nodiscard]] constexpr inline Tensor3<T> contravariant(Tensor3<T> const& t)
 {
     Tensor3<T> ret;
     ret.m = inverse(t.m);
