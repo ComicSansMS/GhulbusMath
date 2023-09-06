@@ -12,6 +12,13 @@ TEST_CASE("Matrix4")
     using GHULBUS_MATH_NAMESPACE::Matrix4;
     using GHULBUS_MATH_NAMESPACE::doNotInitialize;
 
+    SECTION("Static properties")
+    {
+        static_assert(std::same_as<Matrix4<float>::ValueType, float>);
+        static_assert(std::same_as<Matrix4<int>::ValueType, int>);
+        static_assert(std::same_as<Matrix4<double>::ValueType, double>);
+    }
+
     SECTION("Default constructor initializes to 0")
     {
         Matrix4<float> const m;

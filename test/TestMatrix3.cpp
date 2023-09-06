@@ -9,6 +9,13 @@ TEST_CASE("Matrix3")
     using GHULBUS_MATH_NAMESPACE::Matrix3;
     using GHULBUS_MATH_NAMESPACE::doNotInitialize;
 
+    SECTION("Static properties")
+    {
+        static_assert(std::same_as<Matrix3<float>::ValueType, float>);
+        static_assert(std::same_as<Matrix3<int>::ValueType, int>);
+        static_assert(std::same_as<Matrix3<double>::ValueType, double>);
+    }
+
     SECTION("Default construction initializes to 0")
     {
         Matrix3<float> const m;

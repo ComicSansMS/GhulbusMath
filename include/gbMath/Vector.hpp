@@ -41,6 +41,7 @@ class Vector {
 public:
     using ValueType = T;
     static_assert(N > 0, "Vector must have at least one component.");
+    static const std::size_t N = N;
 
     std::array<T, N> v;
 
@@ -250,7 +251,7 @@ template<std::size_t N>
 }
 
 template<std::floating_point T, std::size_t N>
-[[nodiscard]] constexpr inline Vector<T, N> normalized(Vector<T, N> const& v)
+[[nodiscard]] inline Vector<T, N> normalized(Vector<T, N> const& v)
 {
     T const len = length(v);
     return v / len;

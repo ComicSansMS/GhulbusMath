@@ -13,6 +13,13 @@ TEST_CASE("Vector4")
     using GHULBUS_MATH_NAMESPACE::Vector4;
     using GHULBUS_MATH_NAMESPACE::doNotInitialize;
 
+    SECTION("Static properties")
+    {
+        static_assert(std::same_as<Vector4<float>::ValueType, float>);
+        static_assert(std::same_as<Vector4<int>::ValueType, int>);
+        static_assert(std::same_as<Vector4<double>::ValueType, double>);
+    }
+
     SECTION("Default constructor initializes to 0")
     {
         Vector4<float> v;

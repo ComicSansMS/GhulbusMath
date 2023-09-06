@@ -16,6 +16,13 @@ TEST_CASE("Vector2")
     using GHULBUS_MATH_NAMESPACE::doNotInitialize;
     using Catch::Approx;
 
+    SECTION("Static properties")
+    {
+        static_assert(std::same_as<Vector2<float>::ValueType, float>);
+        static_assert(std::same_as<Vector2<int>::ValueType, int>);
+        static_assert(std::same_as<Vector2<double>::ValueType, double>);
+    }
+
     SECTION("Default constructor initializes to 0")
     {
         Vector2<float> v;
