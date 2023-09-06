@@ -8,6 +8,7 @@
  */
 
 #include <gbMath/config.hpp>
+#include <gbMath/Matrix.hpp>
 #include <gbMath/Matrix2.hpp>
 #include <gbMath/Matrix3.hpp>
 #include <gbMath/Matrix4.hpp>
@@ -67,6 +68,28 @@ struct std::formatter<GHULBUS_MATH_NAMESPACE::Matrix4<T>, Char_T>
     }
 };
 
+template<class T, std::size_t M, std::size_t N, class Char_T>
+struct std::formatter<GHULBUS_MATH_NAMESPACE::Matrix<T, M, N>, Char_T>
+{
+    constexpr auto parse(std::format_parse_context& ctx) {
+        return ctx.begin();
+    }
+
+    template<class FormatContext>
+    auto format(GHULBUS_MATH_NAMESPACE::Matrix<T, M, N> const& m, FormatContext& ctx) const
+    {
+        std::format_to(ctx.out(), "[");
+        for (std::size_t i = 0; i < M; ++i) {
+            std::format_to(ctx.out(), " [{}", m(i, 0));
+            for (std::size_t j = 1; j < N; ++j) {
+                std::format_to(ctx.out(), " {}", m(i, j));
+            }
+            std::format_to(ctx.out(), "]");
+        }
+        return std::format_to(ctx.out(), " ]");
+    }
+};
+
 namespace GHULBUS_MATH_NAMESPACE
 {
     template<typename T>
@@ -83,6 +106,12 @@ namespace GHULBUS_MATH_NAMESPACE
 
     template<typename T>
     std::ostream& operator<<(std::ostream& os, Matrix4<T> const& rhs)
+    {
+        return os << std::format("{}", rhs);
+    }
+
+    template<typename T, std::size_t M, std::size_t N>
+    std::ostream& operator<<(std::ostream& os, Matrix<T, M, N> const& rhs)
     {
         return os << std::format("{}", rhs);
     }
@@ -115,6 +144,21 @@ std::ostream& operator<<(std::ostream& os, Matrix4<T> const& rhs)
        << "] [" << rhs.m21 << ' ' << rhs.m22 << ' ' << rhs.m23 << ' ' << rhs.m24
        << "] [" << rhs.m31 << ' ' << rhs.m32 << ' ' << rhs.m33 << ' ' << rhs.m34
        << "] [" << rhs.m41 << ' ' << rhs.m42 << ' ' << rhs.m43 << ' ' << rhs.m44 << "] ]";
+    return os;
+}
+
+template<typename T, std::size_t M, std::size_t N>
+std::ostream& operator<<(std::ostream& os, Matrix<T, M, N> const& rhs)
+{
+    os << "[";
+    for (std::size_t i = 0; i < M; ++i) {
+        os << " [" << rhs(i, 0);
+        for (std::size_t j = 1; j < N; ++j) {
+            os << ' ' << rhs(i, j);
+        }
+        os << ']';
+    }
+    os << " ]";
     return os;
 }
 }

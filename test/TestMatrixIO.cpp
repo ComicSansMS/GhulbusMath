@@ -9,6 +9,7 @@ TEST_CASE("MatrixIO")
     using GHULBUS_MATH_NAMESPACE::Matrix2;
     using GHULBUS_MATH_NAMESPACE::Matrix3;
     using GHULBUS_MATH_NAMESPACE::Matrix4;
+    using GHULBUS_MATH_NAMESPACE::Matrix;
 
     std::stringstream sstr;
 
@@ -34,5 +35,18 @@ TEST_CASE("MatrixIO")
                               9, 10, 11, 12,
                              13, 14, 15, 16);
         CHECK(sstr.str() == "[ [1 2 3 4] [5 6 7 8] [9 10 11 12] [13 14 15 16] ]");
+    }
+
+    SECTION("Matrix MxN ostream insertion")
+    {
+        sstr << Matrix<int, 3, 5>(1, 2, 3, 4, 5,
+                                  6, 7, 8, 9, 10,
+                                  11, 12, 13, 14, 15);
+        CHECK(sstr.str() == "[ [1 2 3 4 5] [6 7 8 9 10] [11 12 13 14 15] ]");
+
+        sstr = std::stringstream{};
+        sstr << Matrix<int, 1, 1>(-42);
+        CHECK(sstr.str() == "[ [-42] ]");
+
     }
 }

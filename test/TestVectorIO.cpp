@@ -9,6 +9,7 @@ TEST_CASE("VectorIO")
     using GHULBUS_MATH_NAMESPACE::Vector2;
     using GHULBUS_MATH_NAMESPACE::Vector3;
     using GHULBUS_MATH_NAMESPACE::Vector4;
+    using GHULBUS_MATH_NAMESPACE::Vector;
 
     std::stringstream sstr;
 
@@ -82,5 +83,35 @@ TEST_CASE("VectorIO")
     {
         sstr << Vector4<unsigned char>(1, 2, 3, 4);
         CHECK(sstr.str() == "[1 2 3 4]");
+    }
+
+    SECTION("VectorN ostream insertion")
+    {
+        sstr << Vector<int, 6>(1, 2, 3, 4, 5, 6);
+        CHECK(sstr.str() == "[1 2 3 4 5 6]");
+
+        sstr = std::stringstream{};
+        sstr << Vector<int, 1>(42);
+        CHECK(sstr.str() == "[42]");
+    }
+
+    SECTION("VectorN ostream insertion char")
+    {
+        sstr << Vector<char, 6>((char)1, (char)2, (char)3, (char)4, (char)5, (char)6);
+        CHECK(sstr.str() == "[1 2 3 4 5 6]");
+    }
+
+    SECTION("VectorN ostream insertion signed char")
+    {
+        sstr << Vector<signed char, 6>((signed char)1, (signed char)2, (signed char)3,
+                                       (signed char)4, (signed char)5, (signed char)6);
+        CHECK(sstr.str() == "[1 2 3 4 5 6]");
+    }
+
+    SECTION("VectorN ostream insertion unsigned char")
+    {
+        sstr << Vector<unsigned char, 6>((unsigned char)1, (unsigned char)2, (unsigned char)3,
+                                         (unsigned char)4, (unsigned char)5, (unsigned char)6);
+        CHECK(sstr.str() == "[1 2 3 4 5 6]");
     }
 }
