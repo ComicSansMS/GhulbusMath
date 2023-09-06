@@ -246,6 +246,13 @@ TEST_CASE("Vector")
         CHECK(v_const[5] == -5.0f);
     }
 
+    SECTION("Unary minus")
+    {
+        Vector<float, 6> const v(11.f, -22.f, 33.f, 44.f, -55.f, -66.f);
+
+        CHECK(-v == Vector<float, 6>(-11.f, 22.f, -33.f, -44.f, 55.f, 66.f));
+    }
+
     SECTION("Vector Addition Member")
     {
         Vector<float, 6> v1(11.f, 22.f, 33.f, 44.f, 55.f, 66.f);

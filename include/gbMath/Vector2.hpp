@@ -149,6 +149,11 @@ public:
 
     [[nodiscard]] friend constexpr auto operator<=>(Vector2Impl const&, Vector2Impl const&) = default;
 
+    [[nodiscard]] friend constexpr Vector2Impl operator-(Vector2Impl const& v)
+    {
+        return Vector2Impl(-v.x, -v.y);
+    }
+
     [[nodiscard]] friend constexpr Vector2Impl operator+(Vector2Impl const& lhs,
                                                          Vector2Impl const& rhs)
     {
@@ -230,25 +235,25 @@ Point2<T> operator-(Point2<T> const& lhs,
 
 
 template<typename T, typename VectorTag_T>
-[[nodiscard]] constexpr inline double length(Vector2Impl<T, VectorTag_T> const& v)
+[[nodiscard]] inline double length(Vector2Impl<T, VectorTag_T> const& v)
 {
     return std::hypot(static_cast<double>(v.x), static_cast<double>(v.y));
 }
 
 template<typename VectorTag_T>
-[[nodiscard]] constexpr inline float length(Vector2Impl<float, VectorTag_T> const& v)
+[[nodiscard]] inline float length(Vector2Impl<float, VectorTag_T> const& v)
 {
     return std::hypot(v.x, v.y);
 }
 
 template<typename VectorTag_T>
-[[nodiscard]] constexpr inline long double length(Vector2Impl<long double, VectorTag_T> const& v)
+[[nodiscard]] inline long double length(Vector2Impl<long double, VectorTag_T> const& v)
 {
     return std::hypot(v.x, v.y);
 }
 
 template<std::floating_point T, typename VectorTag_T>
-[[nodiscard]] constexpr inline Vector2Impl<T, VectorTag_T> normalized(Vector2Impl<T, VectorTag_T> const& v)
+[[nodiscard]] inline Vector2Impl<T, VectorTag_T> normalized(Vector2Impl<T, VectorTag_T> const& v)
 {
     T const len = length(v);
     return Vector2Impl<T, VectorTag_T>(v.x / len, v.y / len);
@@ -272,13 +277,13 @@ template<typename T>
 }
 
 template<std::floating_point T, typename VectorTag_T>
-[[nodiscard]] constexpr inline T angle_vector(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] inline T angle_vector(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs) / (length(lhs) * length(rhs)));
 }
 
 template<std::floating_point T, typename VectorTag_T>
-[[nodiscard]] constexpr inline T angle_vector_unit(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] inline T angle_vector_unit(Vector2Impl<T, VectorTag_T> const& lhs, Vector2Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs));
 }

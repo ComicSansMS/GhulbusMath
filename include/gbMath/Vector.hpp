@@ -40,6 +40,7 @@ template<typename T, std::size_t N>
 class Vector {
 public:
     using ValueType = T;
+    static_assert(N > 0, "Vector must have at least one component.");
 
     std::array<T, N> v;
 
@@ -163,6 +164,13 @@ public:
         return (rhs <= lhs);
     }
 #endif
+
+    [[nodiscard]] friend constexpr Vector operator-(Vector const& lhs)
+    {
+        Vector ret(doNotInitialize);
+        std::transform(begin(lhs.v), end(lhs.v), begin(ret.v), [](T const& n) { return -n; });
+        return ret;
+    }
 
     [[nodiscard]] friend constexpr Vector operator+(Vector const& lhs, Vector const& rhs)
     {

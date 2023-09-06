@@ -157,6 +157,11 @@ public:
 
     [[nodiscard]] friend constexpr auto operator<=>(Vector3Impl const&, Vector3Impl const&) = default;
 
+    [[nodiscard]] friend constexpr Vector3Impl operator-(Vector3Impl const& v)
+    {
+        return Vector3Impl(-v.x, -v.y, -v.z);
+    }
+
     [[nodiscard]] friend constexpr Vector3Impl operator+(Vector3Impl const& lhs,
                                                          Vector3Impl const& rhs)
     {
@@ -247,25 +252,25 @@ Point3<T> operator-(Point3<T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs
 }
 
 template<typename T, typename VectorTag_T>
-[[nodiscard]] constexpr inline double length(Vector3Impl<T, VectorTag_T> const& v)
+[[nodiscard]] inline double length(Vector3Impl<T, VectorTag_T> const& v)
 {
-    return std::sqrt(static_cast<double>(dot(v, v)));
+    return std::hypot(static_cast<double>(v.x), static_cast<double>(v.y), static_cast<double>(v.z));
 }
 
 template<typename VectorTag_T>
-[[nodiscard]] constexpr inline float length(Vector3Impl<float, VectorTag_T> const& v)
+[[nodiscard]] inline float length(Vector3Impl<float, VectorTag_T> const& v)
 {
-    return std::sqrt(dot(v, v));
+    return std::hypot(v.x, v.y, v.z);
 }
 
 template<typename VectorTag_T>
-[[nodiscard]] constexpr inline long double length(Vector3Impl<long double, VectorTag_T> const& v)
+[[nodiscard]] inline long double length(Vector3Impl<long double, VectorTag_T> const& v)
 {
-    return std::sqrt(dot(v, v));
+    return std::hypot(v.x, v.y, v.z);
 }
 
 template<std::floating_point T, typename VectorTag_T>
-[[nodiscard]] constexpr inline Vector3Impl<T, VectorTag_T> normalized(Vector3Impl<T, VectorTag_T> const& v)
+[[nodiscard]] inline Vector3Impl<T, VectorTag_T> normalized(Vector3Impl<T, VectorTag_T> const& v)
 {
     T const len = length(v);
     return Vector3Impl<T, VectorTag_T>(v.x / len, v.y / len, v.z / len);
@@ -292,13 +297,13 @@ template<typename T, typename VectorTag_T>
 }
 
 template<std::floating_point T, typename VectorTag_T>
-[[nodiscard]] constexpr inline T angle_vector(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] inline T angle_vector(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs) / (length(lhs) * length(rhs)));
 }
 
 template<std::floating_point T, typename VectorTag_T>
-[[nodiscard]] constexpr inline T angle_vector_unit(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
+[[nodiscard]] inline T angle_vector_unit(Vector3Impl<T, VectorTag_T> const& lhs, Vector3Impl<T, VectorTag_T> const& rhs)
 {
     return std::acos(dot(lhs, rhs));
 }

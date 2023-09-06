@@ -14,6 +14,7 @@ TEST_CASE("Vector3")
     using GHULBUS_MATH_NAMESPACE::Normal3;
     using GHULBUS_MATH_NAMESPACE::Vector3;
     using GHULBUS_MATH_NAMESPACE::doNotInitialize;
+    using Catch::Approx;
 
     SECTION("Default constructor initializes to 0")
     {
@@ -208,6 +209,12 @@ TEST_CASE("Vector3")
         CHECK(v_const[2] == 17.0f);
     }
 
+    SECTION("Unary minus")
+    {
+        Vector3<float> v3(1.f, -5.f, 32.f);
+        CHECK(-v3 == Vector3<float>(-1.f, 5.f, -32.f));
+    }
+
     SECTION("Vector Addition Member")
     {
         Vector3<float> v1(11.f, 22.f, 33.f);
@@ -352,7 +359,7 @@ TEST_CASE("Vector3")
     SECTION("Vector length")
     {
         CHECK(length(Vector3<int>(3, -5, 12)) == std::sqrt(178.0));
-        CHECK(length(Vector3<float>(3.f, -5.f, 12.f)) == std::sqrt(178.f));
+        CHECK(length(Vector3<float>(3.f, -5.f, 12.f)) == Approx(std::sqrt(178.f)));
         CHECK(length(Vector3<long double>(3.0, -5.0, 12.0)) == std::sqrt(static_cast<long double>(178.0)));
     }
 
@@ -362,8 +369,9 @@ TEST_CASE("Vector3")
         CHECK(normalized(Vector3<float>(0.f, 20.f, 0.f)) == Vector3<float>(0.f, 1.f, 0.f));
         CHECK(normalized(Vector3<float>(0.f, 0.f, 30.f)) == Vector3<float>(0.f, 0.f, 1.f));
         CHECK(normalized(Vector3<float>(-10.f, 0.f, 0.f)) == Vector3<float>(-1.f, 0.f, 0.f));
-        CHECK(normalized(Vector3<float>(5.f, 5.f, 5.f)) ==
-            Vector3<float>(1.f / std::sqrt(3.f), 1.f / std::sqrt(3.f), 1.f / std::sqrt(3.f)));
+        CHECK(normalized(Vector3<float>(5.f, 5.f, 5.f)).x == Approx(1.f / std::sqrt(3.f)));
+        CHECK(normalized(Vector3<float>(5.f, 5.f, 5.f)).y == Approx(1.f / std::sqrt(3.f)));
+        CHECK(normalized(Vector3<float>(5.f, 5.f, 5.f)).z == Approx(1.f / std::sqrt(3.f)));
     }
 
     SECTION("Cross product")

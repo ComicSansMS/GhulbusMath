@@ -107,6 +107,11 @@ public:
 
     [[nodiscard]] friend constexpr auto operator<=>(Vector4 const&, Vector4 const&) = default;
 
+    [[nodiscard]] friend constexpr Vector4 operator-(Vector4 const& v)
+    {
+        return Vector4(-v.x, -v.y, -v.z, -v.w);
+    }
+
     [[nodiscard]] friend constexpr Vector4 operator+(Vector4 const& lhs, Vector4 const& rhs)
     {
         return Vector4(lhs.x + rhs.x,
@@ -161,7 +166,7 @@ template<typename T>
 }
 
 template<std::floating_point T>
-[[nodiscard]] constexpr inline Vector4<T> normalized(Vector4<T> const& v)
+[[nodiscard]] inline Vector4<T> normalized(Vector4<T> const& v)
 {
     T const len = length(v);
     return Vector4<T>(v.x / len, v.y / len, v.z / len, v.w / len);

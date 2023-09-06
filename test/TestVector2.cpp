@@ -185,6 +185,12 @@ TEST_CASE("Vector2")
         CHECK(v_const[1] == 23.5f);
     }
 
+    SECTION("Unary minus")
+    {
+        Vector2<float> v2(1.f, -5.f);
+        CHECK(-v2 == Vector2<float>(-1.f, 5.f));
+    }
+
     SECTION("Vector Addition Member")
     {
         Vector2<float> v1(11.f, 22.f);

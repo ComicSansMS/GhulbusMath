@@ -31,8 +31,8 @@ class Matrix
 {
 public:
     using ValueType = T;
-    static_assert(M > 0, "Matrix must have at least one row");
-    static_assert(N > 0, "Matrix must have at least one column");
+    static_assert(M > 0, "Matrix must have at least one row.");
+    static_assert(N > 0, "Matrix must have at least one column.");
 
     std::array<T, M*N> m;
 
