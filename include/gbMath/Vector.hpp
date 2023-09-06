@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <functional>
 #include <numeric>
+#include <type_traits>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
