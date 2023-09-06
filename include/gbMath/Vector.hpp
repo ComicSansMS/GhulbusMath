@@ -41,7 +41,7 @@ class Vector {
 public:
     using ValueType = T;
     static_assert(N > 0, "Vector must have at least one component.");
-    static const std::size_t N = N;
+    using Dimension = std::integral_constant<std::size_t, N>;
 
     std::array<T, N> v;
 

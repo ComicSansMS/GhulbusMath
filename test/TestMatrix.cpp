@@ -15,12 +15,12 @@ TEST_CASE("Matrix")
         static_assert(std::same_as<Matrix<float, 3, 2>::ValueType, float>);
         static_assert(std::same_as<Matrix<int, 3, 2>::ValueType, int>);
         static_assert(std::same_as<Matrix<double, 3, 2>::ValueType, double>);
-        static_assert(Matrix<float, 3, 2>::M == 3);
-        static_assert(Matrix<float, 3, 2>::N == 2);
-        static_assert(Matrix<double, 5, 2>::M == 5);
-        static_assert(Matrix<double, 5, 2>::N == 2);
-        static_assert(Matrix<float, 42, 2>::M == 42);
-        static_assert(Matrix<float, 42, 4>::N == 4);
+        static_assert(Matrix<float, 3, 2>::Rows::value == 3);
+        static_assert(Matrix<float, 3, 2>::Columns::value == 2);
+        static_assert(Matrix<double, 5, 2>::Rows::value == 5);
+        static_assert(Matrix<double, 5, 2>::Columns::value == 2);
+        static_assert(Matrix<float, 42, 2>::Rows::value == 42);
+        static_assert(Matrix<float, 42, 4>::Columns::value == 4);
     }
 
     SECTION("Default constructor initializes to 0")

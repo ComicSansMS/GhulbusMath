@@ -19,9 +19,9 @@ TEST_CASE("Vector")
         static_assert(std::same_as<Vector<float, 3>::ValueType, float>);
         static_assert(std::same_as<Vector<int, 3>::ValueType, int>);
         static_assert(std::same_as<Vector<double, 3>::ValueType, double>);
-        static_assert(Vector<float, 3>::N == 3);
-        static_assert(Vector<double, 5>::N == 5);
-        static_assert(Vector<float, 42>::N == 42);
+        static_assert(Vector<float, 3>::Dimension::value == 3);
+        static_assert(Vector<double, 5>::Dimension::value == 5);
+        static_assert(Vector<float, 42>::Dimension::value == 42);
     }
 
     SECTION("Default constructor initializes to 0")

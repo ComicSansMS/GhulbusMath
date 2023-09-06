@@ -22,6 +22,7 @@
 #include <cmath>
 #include <concepts>
 #include <numeric>
+#include <type_traits>
 #include <utility>
 
 namespace GHULBUS_MATH_NAMESPACE
@@ -33,8 +34,8 @@ public:
     using ValueType = T;
     static_assert(M > 0, "Matrix must have at least one row.");
     static_assert(N > 0, "Matrix must have at least one column.");
-    static const std::size_t M = M;
-    static const std::size_t N = N;
+    using Rows = std::integral_constant<std::size_t, M>;
+    using Columns = std::integral_constant<std::size_t, N>;
 
     std::array<T, M*N> m;
 
