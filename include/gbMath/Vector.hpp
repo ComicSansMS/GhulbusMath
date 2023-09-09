@@ -257,6 +257,18 @@ template<std::floating_point T, std::size_t N>
     T const len = length(v);
     return v / len;
 }
+
+template<typename T, std::size_t N>
+[[nodiscard]] constexpr inline T max_component(Vector<T, N> const& v)
+{
+    return *std::max_element(begin(v.v), end(v.v));
+}
+
+template<typename T, std::size_t N>
+[[nodiscard]] constexpr inline T min_component(Vector<T, N> const& v)
+{
+    return *std::min_element(begin(v.v), end(v.v));
+}
 }
 
 #endif

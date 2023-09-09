@@ -339,15 +339,13 @@ template<typename T, typename VectorTag_T>
 template<typename T, typename VectorTag_T>
 [[nodiscard]] constexpr inline T max_component(Vector3Impl<T, VectorTag_T> const& v)
 {
-    auto const max_yz = (v.y < v.z) ? v.z : v.y;
-    return (v.x < max_yz) ? max_yz : v.x;
+    return std::max({ v.x, v.y, v.z });
 }
 
 template<typename T, typename VectorTag_T>
 [[nodiscard]] constexpr inline T min_component(Vector3Impl<T, VectorTag_T> const& v)
 {
-    auto const min_yz = (v.y < v.z) ? v.y : v.z;
-    return (v.x < min_yz) ? v.x : min_yz;
+    return std::min({ v.x, v.y, v.z });
 }
 
 template<typename T, typename VectorTag_T>

@@ -420,4 +420,20 @@ TEST_CASE("Vector4")
         CHECK(normalized(Vector4<float>(5.f, 5.f, 5.f, 5.f)) ==
             Vector4<float>(1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f)));
     }
+
+    SECTION("Max component")
+    {
+        CHECK(max_component(Vector4<int>(10, 5, -1, 3)) == 10);
+        CHECK(max_component(Vector4<int>(10, 50, -1, 3)) == 50);
+        CHECK(max_component(Vector4<int>(10, 50, 51, 3)) == 51);
+        CHECK(max_component(Vector4<int>(10, 50, 51, 63)) == 63);
+    }
+
+    SECTION("Min component")
+    {
+        CHECK(min_component(Vector4<int>(10, 5, -1, 3)) == -1);
+        CHECK(min_component(Vector4<int>(10, 5, 11, 3)) == 3);
+        CHECK(min_component(Vector4<int>(10, 5, 11, 30)) == 5);
+        CHECK(min_component(Vector4<int>(10, 50, 11, 30)) == 10);
+    }
 }

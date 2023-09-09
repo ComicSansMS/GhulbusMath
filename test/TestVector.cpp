@@ -473,6 +473,26 @@ TEST_CASE("Vector")
             Vector<float, 4>(1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f), 1.f / std::sqrt(4.f)));
     }
 
+    SECTION("Max component")
+    {
+        CHECK(max_component(Vector<int, 6>(10, 5, -1, 3, 6, 7)) == 10);
+        CHECK(max_component(Vector<int, 6>(10, 50, -1, 3, 6, 7)) == 50);
+        CHECK(max_component(Vector<int, 6>(10, 50, 51, 3, 6, 7)) == 51);
+        CHECK(max_component(Vector<int, 6>(10, 50, 51, 63, 6, 7)) == 63);
+        CHECK(max_component(Vector<int, 6>(10, 50, 51, 63, 64, 7)) == 64);
+        CHECK(max_component(Vector<int, 6>(10, 50, 51, 63, 64, 70)) == 70);
+    }
+
+    SECTION("Min component")
+    {
+        CHECK(min_component(Vector<int, 6>(10, 5, -1, 3, 11, 22)) == -1);
+        CHECK(min_component(Vector<int, 6>(10, 5, 25, 3, 11, 22)) == 3);
+        CHECK(min_component(Vector<int, 6>(10, 5, 25, 30, 11, 22)) == 5);
+        CHECK(min_component(Vector<int, 6>(10, 50, 25, 30, 11, 22)) == 10);
+        CHECK(min_component(Vector<int, 6>(25, 50, 25, 30, 11, 22)) == 11);
+        CHECK(min_component(Vector<int, 6>(25, 50, 25, 30, 110, 22)) == 22);
+    }
+
     SECTION("Construction from Vector2")
     {
         using GHULBUS_MATH_NAMESPACE::Vector2;

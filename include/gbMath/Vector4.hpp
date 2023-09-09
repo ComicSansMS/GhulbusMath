@@ -171,6 +171,19 @@ template<std::floating_point T>
     T const len = length(v);
     return Vector4<T>(v.x / len, v.y / len, v.z / len, v.w / len);
 }
+
+
+template<typename T>
+[[nodiscard]] constexpr inline T max_component(Vector4<T> const& v)
+{
+    return std::max({ v.x, v.y, v.z, v.w });
+}
+
+template<typename T>
+[[nodiscard]] constexpr inline T min_component(Vector4<T> const& v)
+{
+    return std::min({ v.x, v.y, v.z, v.w });
+}
 }
 
 #endif

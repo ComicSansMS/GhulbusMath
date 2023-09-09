@@ -319,13 +319,13 @@ template<typename T, typename VectorTag_T>
 template<typename T, typename VectorTag_T>
 [[nodiscard]] constexpr inline T max_component(Vector2Impl<T, VectorTag_T> const& v)
 {
-    return (v.x < v.y) ? v.y : v.x;
+    return std::max(v.x, v.y);
 }
 
 template<typename T, typename VectorTag_T>
 [[nodiscard]] constexpr inline T min_component(Vector2Impl<T, VectorTag_T> const& v)
 {
-    return (v.x < v.y) ? v.x : v.y;
+    return std::min(v.x, v.y);
 }
 
 template<typename T, typename VectorTag_T>
