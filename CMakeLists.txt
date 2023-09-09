@@ -44,6 +44,7 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Color4.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Common.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/ComponentVector3.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/GhulbusMath.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line2.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Line3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix.hpp
@@ -80,6 +81,7 @@ set(GB_MATH_TEST_SOURCES
     ${GB_MATH_TEST_DIR}/TestColor4.cpp
     ${GB_MATH_TEST_DIR}/TestCommon.cpp
     ${GB_MATH_TEST_DIR}/TestComponentVector3.cpp
+    ${GB_MATH_TEST_DIR}/TestGhulbusMath.cpp
     ${GB_MATH_TEST_DIR}/TestLine2.cpp
     ${GB_MATH_TEST_DIR}/TestLine3.cpp
     ${GB_MATH_TEST_DIR}/TestMatrix.cpp
