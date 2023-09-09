@@ -15,7 +15,7 @@
 #include <gbMath/Vector3.hpp>
 
 #include <cmath>
-#include <type_traits>
+#include <concepts>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
@@ -130,8 +130,13 @@ public:
                                            m.m21*p.x + m.m22*p.y + m.m23*p.z + m.m24,
                                            m.m31*p.x + m.m32*p.y + m.m33*p.z + m.m34);
     }
-
 };
+
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform3<T> inverse(Transform3<T> const& t)
+{
+    return Transform3<T>(inverse(t.m));
+}
 
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Point3<T> project(Transform3<T> const& t, Point3<T> const& p)
@@ -152,6 +157,17 @@ template<typename T>
     return Point3<T>((m.m11*p.x + m.m12*p.y + m.m13*p.z + m.m14*p_w),
                      (m.m21*p.x + m.m22*p.y + m.m23*p.z + m.m24*p_w),
                      (m.m31*p.x + m.m32*p.y + m.m33*p.z + m.m34*p_w));
+}
+
+template<typename T>
+[[nodiscard]] constexpr inline Transform3<T> make_scale3(T scale)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform3<T>(scale, z,     z,     z,
+                         z,     scale, z,     z,
+                         z,     z,     scale, z,
+                         z,     z,     z,     o);
 }
 
 template<typename T>

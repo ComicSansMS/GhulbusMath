@@ -1,4 +1,5 @@
 #include <gbMath/Transform3.hpp>
+#include <gbMath/MatrixIO.hpp>
 #include <gbMath/VectorIO.hpp>
 
 #include <catch.hpp>
@@ -117,6 +118,28 @@ TEST_CASE("Transform3")
         CHECK(t.reciprocal(orth).m == Matrix3<float>(0.f,-1.f, 0.f,
                                                      1.f, 0.f, 0.f,
                                                      0.f, 0.f, 1.f));
+    }
+
+    SECTION("Inverse")
+    {
+        Transform3<float> t(2.f, 0.f, 0.f,   6.f,
+                            0.f, 4.f, 0.f, -12.f,
+                            0.f, 0.f, 8.f,  48.f,
+                            0.f, 0.f, 0.f,   1.f);
+        Transform3<float> t_inverse = inverse(t);
+        CHECK(t_inverse.m == Matrix4<float>(1.f/2.f,     0.f,     0.f, -3.f,
+                                                0.f, 1.f/4.f,     0.f,  3.f,
+                                                0.f,     0.f, 1.f/8.f, -6.f,
+                                                0.f,     0.f,     0.f,  1.f));
+    }
+
+    SECTION("Scale matrix uniform")
+    {
+        auto scale = GHULBUS_MATH_NAMESPACE::make_scale3(4.f);
+        CHECK(scale.m == Matrix4<float>(4.f, 0.f, 0.f, 0.f,
+                                        0.f, 4.f, 0.f, 0.f,
+                                        0.f, 0.f, 4.f, 0.f,
+                                        0.f, 0.f, 0.f, 1.f));
     }
 
     SECTION("Scale matrix from components")

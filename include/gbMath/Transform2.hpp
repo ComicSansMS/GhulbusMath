@@ -15,7 +15,7 @@
 #include <gbMath/Vector2.hpp>
 
 #include <cmath>
-#include <type_traits>
+#include <concepts>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
@@ -123,8 +123,13 @@ public:
         return Vector2Impl<T, VectorTag_T>(m.m11*p.x + m.m12*p.y + m.m13,
                                            m.m21*p.x + m.m22*p.y + m.m23);
     }
-
 };
+
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform2<T> inverse(Transform2<T> const& t)
+{
+    return Transform2<T>(inverse(t.m));
+}
 
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Point2<T> project(Transform2<T> const& t, Point2<T> const& p)
@@ -144,6 +149,17 @@ template<typename T>
     return Point2<T>((m.m11*p.x + m.m12*p.y + m.m13*p_w),
                      (m.m21*p.x + m.m22*p.y + m.m23*p_w));
 }
+
+template<typename T>
+[[nodiscard]] constexpr inline Transform2<T> make_scale2(T scale)
+{
+    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
+    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    return Transform2<T>(scale, z,     z,
+                         z,     scale, z,
+                         z,     z,     o);
+}
+
 
 template<typename T>
 [[nodiscard]] constexpr inline Transform2<T> make_scale(T scale_x, T scale_y)
@@ -185,8 +201,8 @@ template<typename T>
                          z, z, o);
 }
 
-template<typename T>
-[[nodiscard]] constexpr inline std::enable_if_t<std::is_floating_point_v<T>, Transform2<T>> make_rotation(T angle)
+template<std::floating_point T>
+[[nodiscard]] constexpr inline Transform2<T> make_rotation(T angle)
 {
     T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
     T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
