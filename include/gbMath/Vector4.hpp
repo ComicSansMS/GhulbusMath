@@ -12,6 +12,7 @@
 #include <gbMath/Common.hpp>
 #include <gbMath/NumberTypeTraits.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <compare>
 #include <concepts>
@@ -185,7 +186,6 @@ template<typename T>
 {
     return std::min({ v.x, v.y, v.z, v.w });
 }
-
 
 template<typename T>
 [[nodiscard]] constexpr inline Vector4<T> lerp(Vector4<T> const& v1,

@@ -13,6 +13,7 @@
 #include <gbMath/NumberTypeTraits.hpp>
 #include <gbMath/VectorTraits.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <compare>
 #include <concepts>
