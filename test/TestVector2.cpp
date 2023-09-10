@@ -553,6 +553,23 @@ TEST_CASE("Vector2")
         CHECK(Normal2<float>::from_vector(Point2<float>(1.f, 2.f).to_vector()) == Normal2<float>(1.f, 2.f));
     }
 
+    SECTION("Floating point vectors can be converted to std::complex")
+    {
+        CHECK(Vector2<float>(1.f, 2.f).to_complex() == std::complex<float>(1.f, 2.f));
+        CHECK(Vector2<double>(-31.0, 25.0).to_complex() == std::complex<double>(-31.0, 25.0));
+        CHECK(Vector2<long double>(64.l, -4.l).to_complex() == std::complex<long double>(64.l, -4.l));
+    }
+
+    SECTION("Floating point vectors can be constructed from std::complex")
+    {
+        CHECK(Vector2<float>::from_complex(std::complex<float>(1.f, 2.f)) == Vector2<float>(1.f, 2.f));
+        CHECK(Vector2<double>::from_complex(std::complex<double>(-31.0, 25.0)) == Vector2<double>(-31.0, 25.0));
+        CHECK(Vector2<long double>::from_complex(std::complex<long double>(64.l, -4.l)) ==
+            Vector2<long double>(64.l, -4.l));
+        CHECK(Vector2<float>::from_complex(std::complex<float>(2.f, 5.f) * std::complex<float>(-1.f, 0.f))
+            == Vector2<float>(-2.f, -5.f));
+    }
+
     SECTION("Max component")
     {
         CHECK(max_component(Vector2<int>(10, 5)) == 10);

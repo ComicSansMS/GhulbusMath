@@ -15,6 +15,7 @@
 
 #include <cmath>
 #include <compare>
+#include <complex>
 #include <concepts>
 #include <cstdint>
 
@@ -87,6 +88,18 @@ public:
     [[nodiscard]] static constexpr Vector2Impl from_vector(Vector2<T> const& v)
     {
         return Vector2Impl(v.x, v.y);
+    }
+
+    [[nodiscard]] constexpr std::complex<T> to_complex() const
+        requires(std::floating_point<T>)
+    {
+        return std::complex<T>(x, y);
+    }
+
+    [[nodiscard]] static constexpr Vector2Impl from_complex(std::complex<T> const& c)
+        requires(std::floating_point<T>)
+    {
+        return Vector2Impl(c.real(), c.imag());
     }
 
     [[nodiscard]] constexpr T& operator[](std::size_t idx)
