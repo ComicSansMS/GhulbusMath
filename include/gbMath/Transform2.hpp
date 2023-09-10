@@ -153,8 +153,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform2<T> make_scale2(T scale)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform2<T>(scale, z,     z,
                          z,     scale, z,
                          z,     z,     o);
@@ -164,8 +164,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform2<T> make_scale(T scale_x, T scale_y)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform2<T>(scale_x, z,       z,
                          z,       scale_y, z,
                          z,       z,       o);
@@ -174,8 +174,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform2<T> make_scale(Vector2<T> const& scale_v)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform2<T>(scale_v.x, z,         z,
                          z,         scale_v.y, z,
                          z,         z,         o);
@@ -184,8 +184,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform2<T> make_translation(T translate_x, T translate_y)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform2<T>(o, z, translate_x,
                          z, o, translate_y,
                          z, z, o);
@@ -194,8 +194,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform2<T> make_translation(Vector2<T> const& translate_v)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform2<T>(o, z, translate_v.x,
                          z, o, translate_v.y,
                          z, z, o);
@@ -204,8 +204,8 @@ template<typename T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform2<T> make_rotation(T angle)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const sin = std::sin(angle);
     T const cos = std::cos(angle);
     return Transform2<T>(cos, -sin, z,

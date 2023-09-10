@@ -162,8 +162,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform3<T> make_scale3(T scale)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(scale, z,     z,     z,
                          z,     scale, z,     z,
                          z,     z,     scale, z,
@@ -173,8 +173,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform3<T> make_scale(T scale_x, T scale_y, T scale_z)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(scale_x, z,       z,       z,
                          z,       scale_y, z,       z,
                          z,       z,       scale_z, z,
@@ -184,8 +184,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform3<T> make_scale(Vector3<T> const& scale_v)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(scale_v.x, z,         z,         z,
                          z,         scale_v.y, z,         z,
                          z,         z,         scale_v.z, z,
@@ -195,8 +195,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform3<T> make_translation(T translate_x, T translate_y, T translate_z)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(o, z, z, translate_x,
                          z, o, z, translate_y,
                          z, z, o, translate_z,
@@ -206,8 +206,8 @@ template<typename T>
 template<typename T>
 [[nodiscard]] constexpr inline Transform3<T> make_translation(Vector3<T> const& translate_v)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(o, z, z, translate_v.x,
                          z, o, z, translate_v.y,
                          z, z, o, translate_v.z,
@@ -217,8 +217,8 @@ template<typename T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_rotation_x(T angle)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const sin = std::sin(angle);
     T const cos = std::cos(angle);
     return Transform3<T>(o,   z,    z, z,
@@ -230,8 +230,8 @@ template<std::floating_point T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_rotation_y(T angle)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const sin = std::sin(angle);
     T const cos = std::cos(angle);
     return Transform3<T>( cos, z, sin, z,
@@ -243,8 +243,8 @@ template<std::floating_point T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_rotation_z(T angle)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const sin = std::sin(angle);
     T const cos = std::cos(angle);
     return Transform3<T>(cos, -sin, z, z,
@@ -257,8 +257,8 @@ template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_rotation(T angle, Vector3<T> axis)
 {
     axis = normalized(axis);
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const cos = std::cos(angle);
     T const one_cos = o - cos;
     T const sin = std::sin(angle);
@@ -280,8 +280,8 @@ template<std::floating_point T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_perspective_projection(T width, T height, T z_near, T z_far)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(2*z_near/width,               z,                    z,                            z,
                                       z, 2*z_near/height,                    z,                            z,
                                       z,               z, z_far/(z_far-z_near), z_near*z_far/(z_near-z_far),
@@ -291,8 +291,8 @@ template<std::floating_point T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_fov(T fov, T aspect_ratio, T z_near, T z_far)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const yscale = o / std::tan(fov / T{ 2 });
     T const xscale = yscale / aspect_ratio;
     return Transform3<T>(xscale,      z,                    z,                           z,
@@ -305,8 +305,8 @@ template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_frustum(T left, T right, T bottom,
                                                                                  T top, T z_near, T z_far)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const width = right - left;
     T const height = top - bottom;
     T const lr = left + right;
@@ -320,8 +320,8 @@ template<std::floating_point T>
 template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_orthographic(T width, T height, T z_near, T z_far)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     return Transform3<T>(2/width,        z,                z,                     z,
                                z, 2/height,                z,                     z,
                                z,        z, o/(z_far-z_near), z_near/(z_near-z_far),
@@ -332,8 +332,8 @@ template<std::floating_point T>
 [[nodiscard]] constexpr inline Transform3<T> make_perspective_projection_orthographic_frustum(T left, T right, T bottom,
                                                                                               T top, T z_near, T z_far)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     T const width = right - left;
     T const height = top - bottom;
     T const lr = left + right;
@@ -349,8 +349,8 @@ template<std::floating_point T>
                                                                Vector3<T> target_center,
                                                                Vector3<T> up)
 {
-    T const z = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::Zero();
-    T const o = ::GHULBUS_MATH_NAMESPACE::traits::Constants<T>::One();
+    T const z = traits::Constants<T>::Zero();
+    T const o = traits::Constants<T>::One();
     Vector3<T> const v_view = normalized(target_center - position_eye);
     Vector3<T> const v_right = normalized(cross(up, v_view));
     Vector3<T> const v_up = cross(v_view, v_right);
