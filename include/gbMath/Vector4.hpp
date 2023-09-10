@@ -10,6 +10,7 @@
 #include <gbMath/config.hpp>
 
 #include <gbMath/Common.hpp>
+#include <gbMath/NumberTypeTraits.hpp>
 
 #include <cmath>
 #include <compare>
@@ -183,6 +184,19 @@ template<typename T>
 [[nodiscard]] constexpr inline T min_component(Vector4<T> const& v)
 {
     return std::min({ v.x, v.y, v.z, v.w });
+}
+
+
+template<typename T>
+[[nodiscard]] constexpr inline Vector4<T> lerp(Vector4<T> const& v1,
+                                               Vector4<T> const& v2,
+                                               T t)
+{
+    auto const one_minus_t = traits::Constants<T>::One() - t;
+    return Vector4<T>(one_minus_t * v1.x + t * v2.x,
+                      one_minus_t * v1.y + t * v2.y,
+                      one_minus_t * v1.z + t * v2.z,
+                      one_minus_t * v1.w + t * v2.w);
 }
 }
 
