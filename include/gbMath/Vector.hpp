@@ -269,6 +269,19 @@ template<typename T, std::size_t N>
 {
     return *std::min_element(begin(v.v), end(v.v));
 }
+
+template<typename T, std::size_t N>
+[[nodiscard]] constexpr inline Vector<T, N> lerp(Vector<T, N> const& v1,
+                                                 Vector<T, N> const& v2,
+                                                 T t)
+{
+    auto const one_minus_t = traits::Constants<T>::One() - t;
+    Vector<T, N> ret(doNotInitialize);
+    std::transform(begin(v1.v), end(v1.v), begin(v2.v), begin(ret.v), [=](T n1, T n2) {
+            return one_minus_t * n1 + t * n2;
+        });
+    return ret;
+}
 }
 
 #endif
