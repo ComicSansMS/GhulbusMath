@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cmath>
 #include <concepts>
+#include <cstdint>
 #include <limits>
 #include <numeric>
 #include <type_traits>
@@ -24,6 +25,10 @@ namespace GHULBUS_MATH_NAMESPACE
 {
 template<typename T>
 class AABB3;
+
+using AABB3f = AABB3<float>;
+using AABB3d = AABB3<double>;
+using AABB3i = AABB3<std::int32_t>;
 
 template<typename T>
 [[nodiscard]] constexpr inline AABB3<T> empty_aabb3();

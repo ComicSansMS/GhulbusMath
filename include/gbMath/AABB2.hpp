@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cmath>
 #include <concepts>
+#include <cstdint>
 #include <initializer_list>
 #include <limits>
 #include <numeric>
@@ -26,6 +27,10 @@ namespace GHULBUS_MATH_NAMESPACE
 {
 template<typename T>
 class AABB2;
+
+using AABB2f = AABB2<float>;
+using AABB2d = AABB2<double>;
+using AABB2i = AABB2<std::int32_t>;
 
 template<typename T>
 [[nodiscard]] constexpr inline AABB2<T> empty_aabb2();

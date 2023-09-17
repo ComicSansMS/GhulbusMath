@@ -16,9 +16,17 @@
 
 #include <cmath>
 #include <concepts>
+#include <cstdint>
 
 namespace GHULBUS_MATH_NAMESPACE
 {
+template<typename T>
+class Matrix3;
+
+using Matrix3f = Matrix3<float>;
+using Matrix3d = Matrix3<double>;
+using Matrix3i = Matrix3<std::int32_t>;
+
 template<typename T>
 class Matrix3
 {
