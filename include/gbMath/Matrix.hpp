@@ -388,15 +388,19 @@ struct LUDecomposition {
         :m(doNotInitialize), indices(doNotInitialize)
     {}
 
-    void mark_singular()
+    constexpr void mark_singular()
     {
         m = Matrix<T, N, N>{};
         indices = Vector<std::size_t, N>{};
         det_sign = traits::Constants<T>::Zero();
     }
 
-    [[nodiscard]] constexpr explicit operator bool() {
+    [[nodiscard]] constexpr explicit operator bool() const {
         return det_sign != traits::Constants<T>::Zero();
+    }
+
+    [[nodiscard]] constexpr bool operator!() const {
+        return !static_cast<bool>(*this);
     }
 
     [[nodiscard]] constexpr Matrix<T, N, N> getL() const {
@@ -435,6 +439,32 @@ struct LUDecomposition {
             ret *= m(i, i);
         }
         return det_sign * ret;
+    }
+
+    [[nodiscard]] constexpr Vector<T, N> solveFor(Vector<T, N> const& r) const {
+        Vector<T, N> ret(doNotInitialize);
+        for (std::size_t i = 0; i < N; ++i) { ret[i] = r[indices[i]]; }
+
+        // forward substitution for Ly = r
+        for (std::size_t i = 0; i < N; ++i) {
+            //ret[i] = r[indices[i]];
+            T sum = ret[i];
+            for (std::size_t k = 0; k < i; ++k) {
+                sum -= m(i, k) * ret[k];
+            }
+            ret[i] = sum;
+        }
+
+        // backward substitution for Ux = y
+        for (std::size_t i = N - 1; ; --i) {
+            T sum = ret[i];
+            for (std::size_t k = i + 1; k < N; ++k) {
+                sum -= m(i, k) * ret[k];
+            }
+            ret[i] = sum / m(i, i);
+            if (i == 0) { break; }
+        }
+        return ret;
     }
 };
 

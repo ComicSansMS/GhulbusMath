@@ -1,5 +1,9 @@
 #include <gbMath/Matrix.hpp>
 
+#include <gbMath/MatrixIO.hpp>
+#include <gbMath/VectorIO.hpp>
+
+
 #include <catch.hpp>
 
 #include <iterator>
@@ -604,7 +608,8 @@ TEST_CASE("LU Decomposition")
                                     4.f, 15.f, 3.f);
 
         LUDecomposition<float, 3> const lud = lu_decompose(m);
-
+        REQUIRE(static_cast<bool>(lud));
+        REQUIRE(lud);
         auto l = lud.getL();
         CHECK(l == Matrix<float, 3, 3>(    1.f,  0.f, 0.f,
                                        1.f/3.f,  1.f, 0.f,
@@ -634,7 +639,7 @@ TEST_CASE("LU Decomposition")
         auto u = lud.getU();
         auto p = lud.getP();
         auto lu = p * l * u;
-        
+
         auto const [r, c] = m.dimension();
         for (std::size_t i = 0; i < r; ++i) {
             for (std::size_t j = 0; j < c; ++j) {
@@ -644,6 +649,65 @@ TEST_CASE("LU Decomposition")
 
         CHECK(lud.getDeterminant() == Approx(-29931807057498744.f/29041807.f));
     }
+
+    SECTION("LUD Singular")
+    {
+        LUDecomposition<float, 4> lud;
+        lud.mark_singular();
+        CHECK_FALSE(static_cast<bool>(lud));
+        CHECK(!lud);
+        CHECK(lud.getDeterminant() == 0.f);
+    }
+
+    SECTION("Solve system of linear equations")
+    {
+        {
+            Matrix<float, 3, 3> m(1.f, 2.f, 1.f,
+                                  3.f, 2.f, 4.f,
+                                  4.f, 4.f, 3.f);
+            auto const lud = lu_decompose(m);
+            REQUIRE(lud);
+            auto const x = lud.solveFor(Vector<float, 3>(5.f, 17.f, 26.f));
+            CHECK(x == Vector<float, 3>(9.f, -1.f, -2.f));
+        }
+        {
+            Matrix<float, 4, 4> m(1.f, 2.f, 1.f, -1.f,
+                                  3.f, 2.f, 4.f,  4.f,
+                                  4.f, 4.f, 3.f,  4.f,
+                                  2.f, 0.f, 1.f,  5.f);
+            auto const lud = lu_decompose(m);
+            REQUIRE(lud);
+            auto const x = lud.solveFor(Vector<float, 4>(5.f, 16.f, 22.f, 15.f));
+            CHECK(x == Vector<float, 4>(16.f, -6.f, -2.f, -3.f));
+        }
+        {
+            Matrix<float, 4, 4> m(1.f, 2.f, 1.f, -1.f,
+                                  3.f, 6.f, 4.f,  4.f,
+                                  4.f, 4.f, 3.f,  4.f,
+                                  2.f, 0.f, 1.f,  5.f);
+            auto const lud = lu_decompose(m);
+            REQUIRE(lud);
+            auto const x = lud.solveFor(Vector<float, 4>(5.f, 16.f, 22.f, 15.f));
+            using Catch::Approx;
+            CHECK(x[0] == Approx(4.f));
+            CHECK(x[1] == Approx(-12.f));
+            CHECK(x[2] == Approx(22.f));
+            CHECK(x[3] == Approx(-3.f));
+        }
+        {
+            Matrix<float, 4, 4> m(1.f, 2.f, 1.f, -1.f,
+                                  3.f, 6.f, 4.f,  4.f,
+                                  4.f, 8.f, 3.f,  4.f,
+                                  2.f, 4.f, 1.f,  5.f);
+            auto const lud = lu_decompose(m);
+            CHECK(!lud);
+        }
+    }
+}
+
+TEST_CASE("Fixed-Size Matrix Interaction")
+{
+    using GHULBUS_MATH_NAMESPACE::Matrix;
 
     SECTION("Construction from Matrix2")
     {
