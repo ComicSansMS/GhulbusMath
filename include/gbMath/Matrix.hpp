@@ -457,12 +457,10 @@ struct LUDecomposition {
 
     [[nodiscard]] constexpr Vector<T, N> solveFor(Vector<T, N> const& r) const {
         Vector<T, N> ret(doNotInitialize);
-        for (std::size_t i = 0; i < N; ++i) { ret[i] = r[indices[i]]; }
 
         // forward substitution for Ly = r
         for (std::size_t i = 0; i < N; ++i) {
-            //ret[i] = r[indices[i]];
-            T sum = ret[i];
+            T sum = r[indices[i]];
             for (std::size_t k = 0; k < i; ++k) {
                 sum -= m(i, k) * ret[k];
             }
