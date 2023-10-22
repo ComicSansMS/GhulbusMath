@@ -650,13 +650,31 @@ TEST_CASE("LU Decomposition")
         CHECK(lud.getDeterminant() == Approx(-29931807057498744.f/29041807.f));
     }
 
-    SECTION("LUD Singular")
+    SECTION("LUDecomposition Singular")
     {
         LUDecomposition<float, 4> lud;
         lud.mark_singular();
         CHECK_FALSE(static_cast<bool>(lud));
         CHECK(!lud);
         CHECK(lud.getDeterminant() == 0.f);
+    }
+
+    SECTION("lu_decompose() Singular")
+    {
+        {
+            Matrix<float, 3, 3> m(1.f, 2.f, 1.f,
+                                  0.f, 0.f, 0.f,
+                                  4.f, 4.f, 3.f);
+            auto const lud = lu_decompose(m);
+            CHECK(!lud);
+        }
+        {
+            Matrix<float, 3, 3> m(1.f, 2.f, 1.f,
+                                  2.f, 4.f, 2.f,
+                                  4.f, 4.f, 3.f);
+            auto const lud = lu_decompose(m);
+            CHECK(!lud);
+        }
     }
 
     SECTION("Solve system of linear equations")
