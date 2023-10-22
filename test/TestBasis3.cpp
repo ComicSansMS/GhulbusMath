@@ -1,5 +1,6 @@
 #include <gbMath/Basis3.hpp>
-#include <gbMath/VectorIO.hpp>
+#include <gbMath/MatrixIO3.hpp>
+#include <gbMath/VectorIO3.hpp>
 
 #include <catch.hpp>
 

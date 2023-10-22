@@ -1,5 +1,5 @@
 #include <gbMath/Circle2.hpp>
-#include <gbMath/VectorIO.hpp>
+#include <gbMath/VectorIO2.hpp>
 
 #include <catch.hpp>
 

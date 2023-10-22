@@ -1,6 +1,7 @@
 #include <gbMath/Transform2.hpp>
-#include <gbMath/MatrixIO.hpp>
-#include <gbMath/VectorIO.hpp>
+#include <gbMath/MatrixIO2.hpp>
+#include <gbMath/MatrixIO3.hpp>
+#include <gbMath/VectorIO2.hpp>
 
 #include <catch.hpp>
 

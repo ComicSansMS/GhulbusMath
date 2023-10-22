@@ -1,5 +1,5 @@
 #include <gbMath/Line3.hpp>
-#include <gbMath/VectorIO.hpp>
+#include <gbMath/VectorIO3.hpp>
 
 #include <catch.hpp>
 

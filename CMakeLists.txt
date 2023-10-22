@@ -52,6 +52,10 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix3.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Matrix4.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO2.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO3.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixIO4.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixION.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/MatrixPolicies.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/NumberTypeTraits.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/OBB3.hpp
@@ -69,6 +73,10 @@ set(GB_MATH_HEADER_FILES
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector3Swizzle.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/Vector4.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO2.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO3.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorIO4.hpp
+    ${GB_MATH_INCLUDE_DIR}/gbMath/VectorION.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorSwizzle.hpp
     ${GB_MATH_INCLUDE_DIR}/gbMath/VectorTraits.hpp
 )

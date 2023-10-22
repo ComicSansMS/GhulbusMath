@@ -1,6 +1,6 @@
 #include <gbMath/Matrix4.hpp>
-#include <gbMath/MatrixIO.hpp>
-#include <gbMath/VectorIO.hpp>
+#include <gbMath/MatrixIO4.hpp>
+#include <gbMath/VectorIO4.hpp>
 
 #include <catch.hpp>
 

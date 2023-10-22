@@ -1,5 +1,5 @@
 #include <gbMath/Vector4.hpp>
-#include <gbMath/VectorIO.hpp>
+#include <gbMath/VectorIO4.hpp>
 
 #include <test_utils/MultiplicationOrderAwareOperand.hpp>
 
