@@ -568,6 +568,27 @@ TEST_CASE("Matrix-Vector Interaction")
         CHECK(m.column(7) == Vector<float, 2>(8.f, 16.f));
     }
 
+    SECTION("Set Row")
+    {
+        Matrix<float, 8, 2> m(1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f);
+        m.set_row(0, Vector<float, 2>(5.f, 23.f));
+        m.set_row(2, Vector<float, 2>(99.f, -42.f));
+        m.set_row(7, Vector<float, 2>(0.f, 0.f));
+        CHECK(m == Matrix<float, 8, 2>(5.f, 23.f, 3.f, 4.f, 99.f, -42.f, 7.f, 8.f,
+            9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 0.f, 0.f));
+    }
+
+    SECTION("Set Column")
+    {
+        Matrix<float, 2, 8> m(1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f,
+                              9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f);
+        m.set_column(0, Vector<float, 2>(5.f, 23.f));
+        m.set_column(2, Vector<float, 2>(99.f, -42.f));
+        m.set_column(7, Vector<float, 2>(0.f, 0.f));
+        CHECK(m == Matrix<float, 2, 8>( 5.f,  2.f,  99.f,  4.f,  5.f,  6.f,  7.f, 0.f,
+                                       23.f, 10.f, -42.f, 12.f, 13.f, 14.f, 15.f, 0.f));
+    }
+
     SECTION("Matrix-vector multiplication")
     {
         Vector<float, 4> const v(3.f, 5.f, 7.f, 11.f);
@@ -719,6 +740,39 @@ TEST_CASE("LU Decomposition")
                                   2.f, 4.f, 1.f,  5.f);
             auto const lud = lu_decompose(m);
             CHECK(!lud);
+        }
+    }
+    SECTION("Inverse")
+    {
+        {
+            auto const lud = lu_decompose(Matrix<float, 4, 4>(1.f, 4.f, 1.f, -2.f,
+                                                              2.f, 9.f, 3.f, -3.f,
+                                                              2.f, 8.f, 3.f, -1.f,
+                                                              1.f, 3.f, 0.f, -1.f));
+            REQUIRE(lud);
+            Matrix<float, 4, 4> const inv( 7.5f, -5.5f,  3.f, -1.5f,
+                                          -3.f,    2.f, -1.f,  1.f,
+                                           2.5f, -1.5f,  1.f, -1.5f,
+                                          -1.5f,  0.5f,  0.f,  0.5f);
+            Matrix<float, 4, 4> const m = lud.getInverse();
+            for (std::size_t i = 0; i < inv.m.size(); ++i) {
+                CHECK(m[i] == Catch::Approx(inv[i]));
+            }
+        }
+        {
+            auto const lud = lu_decompose(Matrix<float, 4, 4>( 15.f, -11.f,  6.f, -3.f,
+                                                               -6.f,   4.f, -2.f,  2.f,
+                                                                5.f,  -3.f,  2.f, -3.f,
+                                                               -3.f,   1.f,  0.f,  1.f));
+            REQUIRE(lud);
+            Matrix<float, 4, 4> const inv(0.5f,   2.f,  0.5f,  -1.f,
+                                           1.f,  4.5f,  1.5f, -1.5f,
+                                           1.f,   4.f,  1.5f, -0.5f,
+                                           0.5f, 1.5f,   0.f, -0.5f);
+            Matrix<float, 4, 4> const m = lud.getInverse();
+            for (std::size_t i = 0; i < inv.m.size(); ++i) {
+                CHECK_THAT(m[i], Catch::Matchers::WithinAbs(inv[i], 1.e-5f));
+            }
         }
     }
 }

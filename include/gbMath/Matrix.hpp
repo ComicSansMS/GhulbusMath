@@ -147,6 +147,20 @@ public:
         return ret;
     }
 
+    constexpr void set_row(std::size_t idx, Vector<T, N> const& r)
+    {
+        for (std::size_t j = 0; j < N; ++j) {
+            m[idx * N + j] = r[j];
+        }
+    }
+
+    constexpr void set_column(std::size_t idx, Vector<T, M> const& c)
+    {
+        for (std::size_t j = 0; j < M; ++j) {
+            m[j * N + idx] = c[j];
+        }
+    }
+
     constexpr void swap_rows(std::size_t r1, std::size_t r2)
     {
         using std::swap;
@@ -463,6 +477,16 @@ struct LUDecomposition {
             }
             ret[i] = sum / m(i, i);
             if (i == 0) { break; }
+        }
+        return ret;
+    }
+
+    [[nodiscard]] constexpr Matrix<T, N, N> getInverse() const {
+        Matrix<T, N, N> ret(doNotInitialize);
+        for (std::size_t k = 0; k < N; ++k) {
+            Vector<T, N> v;
+            v[k] = traits::Constants<T>::One();
+            ret.set_column(k, solveFor(v));
         }
         return ret;
     }
