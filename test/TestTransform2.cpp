@@ -103,6 +103,14 @@ TEST_CASE("Transform2")
                                                      1.f, 0.f));
     }
 
+    SECTION("Translation")
+    {
+        Transform2<float> t(0.f, 0.f, 11.f,
+                            0.f, 0.f, 29.f,
+                            0.f, 0.f, 0.f);
+        CHECK(t.translation() == Vector2<float>{ 11.f, 29.f });
+    }
+
     SECTION("Inverse")
     {
         Transform2<float> t(4.f, 0.f, 9.f,
@@ -112,7 +120,6 @@ TEST_CASE("Transform2")
         CHECK(t_inverse.m == Matrix3<float>(1.f/4.f, 0.f,     -2.25f,
                                             0.f,     1.f/2.f, -2.5f,
                                             0.f,     0.f,      1.f));
-        
     }
 
     SECTION("Scale matrix uniform")

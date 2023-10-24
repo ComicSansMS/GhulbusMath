@@ -95,6 +95,12 @@ public:
         return TransformReciprocal2<T>{ transpose(upper_left) };
     }
 
+    /** Retrieve the translation component of the transform.
+     */
+    [[nodiscard]] constexpr Vector2<T> translation() const {
+        return Vector2<T>(m.m13, m.m23);
+    }
+
     constexpr Transform2& operator*=(Transform2 const& rhs) {
         m *= rhs.m;
         return *this;

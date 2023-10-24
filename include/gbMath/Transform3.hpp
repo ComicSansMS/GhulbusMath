@@ -100,6 +100,12 @@ public:
         return TransformReciprocal3<T>{ transpose(upper_left) };
     }
 
+    /** Retrieve the translation component of the transform.
+     */
+    [[nodiscard]] constexpr Vector3<T> translation() const {
+        return Vector3<T>(m.m14, m.m24, m.m34);
+    }
+
     constexpr Transform3& operator*=(Transform3 const& rhs) {
         m *= rhs.m;
         return *this;

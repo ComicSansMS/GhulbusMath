@@ -121,6 +121,15 @@ TEST_CASE("Transform3")
                                                      0.f, 0.f, 1.f));
     }
 
+    SECTION("Translation")
+    {
+        Transform3<float> t(0.f, 0.f, 0.f, 11.f,
+                            0.f, 0.f, 0.f, 29.f,
+                            0.f, 0.f, 0.f, 48.f,
+                            0.f, 0.f, 0.f, 0.f);
+        CHECK(t.translation() == Vector3<float>{ 11.f, 29.f, 48.f });
+    }
+
     SECTION("Inverse")
     {
         Transform3<float> t(2.f, 0.f, 0.f,   6.f,
