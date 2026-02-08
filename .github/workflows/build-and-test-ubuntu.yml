@@ -45,7 +45,7 @@ jobs:
       - name: 🔍 Test
         run: |
             cd build
-            ctest -C ${{matrix.build_type}}
+            ctest -C ${{matrix.build_type}} --rerun-failed --output-on-failure
       - name: 👮‍♂️ Code Coverage
         if: matrix.config.cc == 'gcc-12' && matrix.build_type == 'Debug'
         run: |

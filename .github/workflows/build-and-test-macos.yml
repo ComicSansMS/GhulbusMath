@@ -37,4 +37,4 @@ jobs:
       - name: 🔍 Test
         run: |
             cd build
-            ctest -C ${{matrix.build_type}}
+            ctest -C ${{matrix.build_type}} --rerun-failed --output-on-failure
